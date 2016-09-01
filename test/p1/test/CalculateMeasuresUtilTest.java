@@ -19,6 +19,7 @@ public final class CalculateMeasuresUtilTest {
     CalculateMeasuresUtil.Measures measures = CalculateMeasuresUtil.calculateMeasures(birthWeightTable, birthWeightTable.length, 0.0, 5.0);
     assertDoubleEquals(measures.average, 24.0);
     assertDoubleEquals(measures.mode, 24.0);
+    assertDoubleEquals(measures.median, 24.0);
   }
 
 }
