@@ -7,8 +7,8 @@ import java.util.Map;
 
 public final class CalculateMeasuresUtil {
 
-  private static List<Double> getMotherAgeList(double[][] birthWeightTable, int numberOfRows,
-      double minInfantWeight, double maxInfantWeight) {
+  private static List<Double> getMotherAgeList(
+      double[][] birthWeightTable, int numberOfRows, double minInfantWeight, double maxInfantWeight) {
     List<Double> motherAgeList = new ArrayList<>();
     int size = Math.min(birthWeightTable.length, numberOfRows);
     for (int i = 0; i < size; i++) {
@@ -30,8 +30,8 @@ public final class CalculateMeasuresUtil {
     return sum / doubleList.size();
   }
 
-  public static Measures calculateMeasures(double[][] birthWeightTable, int numberOfRows,
-      double minInfantWeight, double maxInfantWeight) {
+  public static Measures calculateMeasures(
+      double[][] birthWeightTable, int numberOfRows, double minInfantWeight, double maxInfantWeight) {
     double average;
     double median;
     double mode;
