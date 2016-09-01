@@ -4,6 +4,9 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Random;
+
+import static java.util.Collections.swap;
 
 public final class CalculateMeasuresUtil {
 
@@ -53,12 +56,39 @@ public final class CalculateMeasuresUtil {
 
   // calculate median
 
+  private static int getPivotIndex(int left, int right) {
+    Random random = new Random();
+    return left + random.nextInt(right - left + 1);
+  }
+
+  private static int partition(List<Double> doubleList, int left, int right, int pivotIndex) {
+    double pivotValue = doubleList.get(pivotIndex);
+    swap(doubleList, pivotIndex, right);
+    int resultIndex = left;
+    for (int i = left; i < right - 1; i++) {
+      if (doubleList.get(i) < pivotValue) {
+        swap(doubleList, resultIndex, i);
+        resultIndex++;
+      }
+    }
+    swap(doubleList, right, resultIndex);
+    return resultIndex;
+  }
+
   private static double select(List<Double> doubleList, int left, int right, int n) {
     double resultElement;
     if (left == right) {
       resultElement = doubleList.get(left);
     } else {
-      resultElement = 0;
+      int pivotIndex = getPivotIndex(left, right);
+      pivotIndex = partition(doubleList, left, right, pivotIndex);
+      if (n == pivotIndex) {
+        resultElement = doubleList.get(n);
+      } else if (n < pivotIndex) {
+        resultElement = select(doubleList, left, pivotIndex - 1, n);
+      } else {
+        resultElement = select(doubleList, pivotIndex + 1, right, n);
+      }
     }
     return resultElement;
   }
