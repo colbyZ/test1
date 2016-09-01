@@ -14,13 +14,26 @@ public final class CalculateMeasuresUtilTest {
   @Test
   public void simple() {
     double[][] birthWeightTable = {
-        {24.0, 4.5}
+        {24.0, 4.5},
     };
     CalculateMeasuresUtil.Measures measures =
         CalculateMeasuresUtil.calculateMeasures(birthWeightTable, birthWeightTable.length, 0.0, 5.0);
     assertDoubleEquals(measures.average, 24.0);
     assertDoubleEquals(measures.mode, 24.0);
     assertDoubleEquals(measures.median, 24.0);
+  }
+
+  @Test
+  public void two() {
+    double[][] birthWeightTable = {
+        {24.0, 4.5},
+        {25.0, 4.5},
+    };
+    CalculateMeasuresUtil.Measures measures =
+        CalculateMeasuresUtil.calculateMeasures(birthWeightTable, birthWeightTable.length, 0.0, 5.0);
+    assertDoubleEquals(measures.average, 24.5);
+    assertDoubleEquals(measures.mode, 24.0);
+    assertDoubleEquals(measures.median, 24.5);
   }
 
 }

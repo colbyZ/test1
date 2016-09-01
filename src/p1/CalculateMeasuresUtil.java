@@ -71,7 +71,10 @@ public final class CalculateMeasuresUtil {
     double median;
     int size = doubleList.size();
     if (size % 2 == 0) {
-      median = 0;
+      int midN = size / 2;
+      double m1 = select(doubleList, midN - 1);
+      double m2 = select(doubleList, midN);
+      median = (m1 + m2) / 2.0;
     } else {
       int midN = size / 2;
       median = select(doubleList, midN);
