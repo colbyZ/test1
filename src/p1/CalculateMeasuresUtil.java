@@ -1,11 +1,14 @@
 package p1;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public final class CalculateMeasuresUtil {
 
-  private static List<Double> getMotherAgeList(double[][] birthWeightTable, int numberOfRows, double minInfantWeight, double maxInfantWeight) {
+  private static List<Double> getMotherAgeList(double[][] birthWeightTable, int numberOfRows,
+      double minInfantWeight, double maxInfantWeight) {
     List<Double> motherAgeList = new ArrayList<>();
     int size = Math.min(birthWeightTable.length, numberOfRows);
     for (int i = 0; i < size; i++) {
@@ -27,7 +30,8 @@ public final class CalculateMeasuresUtil {
     return sum / doubleList.size();
   }
 
-  public static Measures calculateMeasures(double[][] birthWeightTable, int numberOfRows, double minInfantWeight, double maxInfantWeight) {
+  public static Measures calculateMeasures(double[][] birthWeightTable, int numberOfRows,
+      double minInfantWeight, double maxInfantWeight) {
     double average;
     double median;
     double mode;
@@ -44,8 +48,36 @@ public final class CalculateMeasuresUtil {
     return new Measures(average, median, mode);
   }
 
+  private static Map<Double, Integer> getCountMap(List<Double> motherAgeList) {
+    Map<Double, Integer> countMap = new HashMap<>();
+    for (Double d : motherAgeList) {
+      Integer count = countMap.get(d);
+      if (count == null) {
+        count = 1;
+      } else {
+        count++;
+      }
+      countMap.put(d, count);
+    }
+    return countMap;
+  }
+
+  private static double getMaxCountValue(Map<Double, Integer> countMap) {
+    int maxCount = 0;
+    double maxCountValue = Double.NaN;
+    for (Map.Entry<Double, Integer> entry : countMap.entrySet()) {
+      Integer count = entry.getValue();
+      if (count > maxCount) {
+        maxCount = count;
+        maxCountValue = entry.getKey();
+      }
+    }
+    return maxCountValue;
+  }
+
   private static double calculateMode(List<Double> motherAgeList) {
-    return 0;
+    Map<Double, Integer> countMap = getCountMap(motherAgeList);
+    return getMaxCountValue(countMap);
   }
 
   public static final class Measures {
