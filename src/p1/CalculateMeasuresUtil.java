@@ -51,6 +51,12 @@ public final class CalculateMeasuresUtil {
     return getMaxCountValue(countMap);
   }
 
+  // calculate median
+
+  private static double calculateMedian(List<Double> doubleList) {
+    return 0;
+  }
+
   // filter by infant weight, get mother age list
 
   private static List<Double> getMotherAgeList(
@@ -82,7 +88,7 @@ public final class CalculateMeasuresUtil {
       mode = Double.NaN;
     } else {
       average = calculateAverage(motherAgeList);
-      median = 0;
+      median = calculateMedian(motherAgeList);
       mode = calculateMode(motherAgeList);
     }
     return new Measures(average, median, mode);
