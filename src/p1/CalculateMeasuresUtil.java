@@ -53,8 +53,30 @@ public final class CalculateMeasuresUtil {
 
   // calculate median
 
+  private static double select(List<Double> doubleList, int left, int right, int n) {
+    double resultElement;
+    if (left == right) {
+      resultElement = doubleList.get(left);
+    } else {
+      resultElement = 0;
+    }
+    return resultElement;
+  }
+
+  private static double select(List<Double> doubleList, int n) {
+    return select(doubleList, 0, doubleList.size() - 1, n);
+  }
+
   private static double calculateMedian(List<Double> doubleList) {
-    return 0;
+    double median;
+    int size = doubleList.size();
+    if (size % 2 == 0) {
+      median = 0;
+    } else {
+      int midN = size / 2;
+      median = select(doubleList, midN);
+    }
+    return median;
   }
 
   // filter by infant weight, get mother age list
