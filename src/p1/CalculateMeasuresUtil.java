@@ -65,7 +65,7 @@ public final class CalculateMeasuresUtil {
     double pivotValue = doubleList.get(pivotIndex);
     swap(doubleList, pivotIndex, right);
     int resultIndex = left;
-    for (int i = left; i < right - 1; i++) {
+    for (int i = left; i < right; i++) {
       if (doubleList.get(i) < pivotValue) {
         swap(doubleList, resultIndex, i);
         resultIndex++;
@@ -94,7 +94,8 @@ public final class CalculateMeasuresUtil {
   }
 
   private static double select(List<Double> doubleList, int n) {
-    return select(doubleList, 0, doubleList.size() - 1, n);
+    List<Double> doubleListCopy = new ArrayList<>(doubleList);
+    return select(doubleListCopy, 0, doubleList.size() - 1, n);
   }
 
   private static double calculateMedian(List<Double> doubleList) {
