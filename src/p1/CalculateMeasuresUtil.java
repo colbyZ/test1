@@ -57,7 +57,7 @@ public final class CalculateMeasuresUtil {
   // calculate median
 
   private static int getPivotIndex(int left, int right) {
-    Random random = new Random();
+    Random random = new Random(0L);
     return left + random.nextInt(right - left + 1);
   }
 
