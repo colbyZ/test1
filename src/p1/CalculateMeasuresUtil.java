@@ -84,7 +84,7 @@ public final class CalculateMeasuresUtil {
   }
 
   /**
-   * Finds the nth smallest element
+   * Find the nth smallest element
    *
    * @param right index (inclusive)
    * @param n nth smallest element
