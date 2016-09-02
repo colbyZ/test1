@@ -54,7 +54,7 @@ public final class CalculateMeasuresUtil {
     return getMaxCountValue(countMap);
   }
 
-  // calculate median
+  // calculate median (quick select algorithm)
 
   private static int getPivotIndex(int left, int right) {
     // fixed seed for reproducible results
@@ -66,7 +66,6 @@ public final class CalculateMeasuresUtil {
    * Partition the list into two parts: smaller than the pivot value and larger than the pivot value
    * and return the new value of the pivot index
    *
-   * @param left index
    * @param right index (inclusive)
    * @return new value of the pivot index
    */
@@ -87,7 +86,6 @@ public final class CalculateMeasuresUtil {
   /**
    * Finds the nth smallest element
    *
-   * @param left index
    * @param right index (inclusive)
    * @param n nth smallest element
    * @return the value of the nth smallest element
