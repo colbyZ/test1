@@ -57,10 +57,19 @@ public final class CalculateMeasuresUtil {
   // calculate median
 
   private static int getPivotIndex(int left, int right) {
+    // fixed seed for reproducible results
     Random random = new Random(0L);
     return left + random.nextInt(right - left + 1);
   }
 
+  /**
+   * Partition the list into two parts: smaller than the pivot value and larger than the pivot value
+   * and return the new value of the pivot index
+   *
+   * @param left index
+   * @param right index (inclusive)
+   * @return new value of the pivot index
+   */
   private static int partition(List<Double> doubleList, int left, int right, int pivotIndex) {
     double pivotValue = doubleList.get(pivotIndex);
     swap(doubleList, pivotIndex, right);
@@ -75,9 +84,18 @@ public final class CalculateMeasuresUtil {
     return resultIndex;
   }
 
+  /**
+   * Finds the nth smallest element
+   *
+   * @param left index
+   * @param right index (inclusive)
+   * @param n nth smallest element
+   * @return the value of the nth smallest element
+   */
   private static double select(List<Double> doubleList, int left, int right, int n) {
     double resultElement;
     if (left == right) {
+      // just one element
       resultElement = doubleList.get(left);
     } else {
       int pivotIndex = getPivotIndex(left, right);
@@ -85,8 +103,10 @@ public final class CalculateMeasuresUtil {
       if (n == pivotIndex) {
         resultElement = doubleList.get(n);
       } else if (n < pivotIndex) {
+        // search in the lower (left) part
         resultElement = select(doubleList, left, pivotIndex - 1, n);
       } else {
+        // search in the upper (right) part
         resultElement = select(doubleList, pivotIndex + 1, right, n);
       }
     }
@@ -94,6 +114,7 @@ public final class CalculateMeasuresUtil {
   }
 
   private static double select(List<Double> doubleList, int n) {
+    // make a copy to preserve the original because partition() rearranges items in place
     List<Double> doubleListCopy = new ArrayList<>(doubleList);
     return select(doubleListCopy, 0, doubleList.size() - 1, n);
   }
@@ -102,11 +123,13 @@ public final class CalculateMeasuresUtil {
     double median;
     int size = doubleList.size();
     if (size % 2 == 0) {
+      // even
       int midN = size / 2;
       double m1 = select(doubleList, midN - 1);
       double m2 = select(doubleList, midN);
       median = (m1 + m2) / 2.0;
     } else {
+      // odd
       int midN = size / 2;
       median = select(doubleList, midN);
     }
