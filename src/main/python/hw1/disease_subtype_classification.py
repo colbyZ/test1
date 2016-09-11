@@ -85,7 +85,7 @@ def evaluate_and_print(df, population_group_id):
         population_group_id, 100.0 * correct_percentage)
 
 
-def main():
+def problem2():
     np.random.seed(109)
 
     df = pd.read_csv('dataset_HW1.txt')
@@ -96,6 +96,14 @@ def main():
     evaluate_and_print(children_data, 'children')
     evaluate_and_print(adult_women_data, 'adult women')
     evaluate_and_print(adult_male_data, 'adult men')
+
+
+def problem3():
+    print 'problem 3'
+
+
+def main():
+    problem3()
 
 
 if __name__ == '__main__':
