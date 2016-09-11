@@ -1,3 +1,4 @@
+import math
 import pandas as pd
 from sklearn.cross_validation import train_test_split
 
@@ -15,15 +16,23 @@ def compute_means(df):
     return means
 
 
+def distance(marker1, marker2, m1_mean, m2_mean):
+    sq1 = math.pow(marker1 - m1_mean, 2)
+    sq2 = math.pow(marker2 - m2_mean, 2)
+    return math.sqrt(sq1 + sq2)
+
+
 def classify_markers(marker1, marker2, means):
-    print [index for index, row in means.iterrows()]
+    distances = [distance(marker1, marker2, row['marker_1'], row['marker_2']) for index, row in means.iterrows()]
+    print distances
+    min_value = min(distances)
+    print min_value
 
     return 0
 
 
 def classify_row(row, means):
-    distance = classify_markers(row['marker_1'], row['marker_2'], means)
-    return 0
+    return classify_markers(row['marker_1'], row['marker_2'], means)
 
 
 def classify_df(df, means):
