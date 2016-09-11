@@ -1,4 +1,5 @@
 import math
+
 import pandas as pd
 from sklearn.cross_validation import train_test_split
 
@@ -24,11 +25,9 @@ def distance(marker1, marker2, m1_mean, m2_mean):
 
 def classify_markers(marker1, marker2, means):
     distances = [distance(marker1, marker2, row['marker_1'], row['marker_2']) for index, row in means.iterrows()]
-    print distances
     min_value = min(distances)
-    print min_value
-
-    return 0
+    min_index = distances.index(min_value)
+    return min_index
 
 
 def classify_row(row, means):
@@ -41,9 +40,8 @@ def classify_df(df, means):
 
 def classify(train, test):
     means = compute_means(train)
-    classify_df(test, means)
-
-    print means
+    classified_subtypes = classify_df(test, means)
+    return classified_subtypes
 
 
 def main():
