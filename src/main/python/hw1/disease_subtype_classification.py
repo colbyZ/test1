@@ -98,8 +98,42 @@ def problem2():
     evaluate_and_print(adult_male_data, 'adult men')
 
 
+# ==== problem 3 ====================================================================================================
+
+
+def classify_prob3(train, test):
+    # means = compute_means(train)
+    # predicted_disease_subtypes = classify_df(test, means)
+    # return predicted_disease_subtypes
+    return None
+
+
+def evaluate_df_prob3(df):
+    train, test = split(df)
+    predicted_disease_subtypes = classify_prob3(train, test)
+    # actual_disease_subtypes = [row['subtype'] for index, row in test.iterrows()]
+    # correct_percentage = evaluate(actual_disease_subtypes, predicted_disease_subtypes)
+    # return correct_percentage
+    return 0.0
+
+
+def evaluate_and_print_prob3(df, population_group_id):
+    correct_percentage = evaluate_df_prob3(df)
+    print 'percentage of the new patients who are correctly classified (%s): %.1f%%' % (
+        population_group_id, 100.0 * correct_percentage)
+
+
 def problem3():
-    print 'problem 3'
+    np.random.seed(1090)
+
+    df = pd.read_csv('dataset_HW1.txt')
+    children_data = df[df['patient_age'] < 18]
+    adult_women_data = df[(df['patient_age'] > 17) & (df['patient_gender'] == 'female')]
+    adult_male_data = df[(df['patient_age'] > 17) & (df['patient_gender'] == 'male')]
+
+    evaluate_and_print_prob3(children_data, 'children')
+    evaluate_and_print_prob3(adult_women_data, 'adult women')
+    evaluate_and_print_prob3(adult_male_data, 'adult men')
 
 
 def main():
