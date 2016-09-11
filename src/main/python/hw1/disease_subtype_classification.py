@@ -1,4 +1,6 @@
 import math
+from itertools import izip
+from operator import itemgetter
 
 import pandas as pd
 from sklearn.cross_validation import train_test_split
@@ -24,10 +26,10 @@ def distance(marker1, marker2, m1_mean, m2_mean):
 
 
 def classify_markers(marker1, marker2, means):
-    distances = [distance(marker1, marker2, row['marker_1'], row['marker_2']) for index, row in means.iterrows()]
-    min_value = min(distances)
-    min_index = distances.index(min_value)
-    return min_index
+    index_distance_pairs = [(index, distance(marker1, marker2, row['marker_1'], row['marker_2']))
+                            for index, row in means.iterrows()]
+    min_pair = min(index_distance_pairs, key=itemgetter(1))
+    return min_pair[0]
 
 
 def classify_row(row, means):
@@ -40,8 +42,16 @@ def classify_df(df, means):
 
 def classify(train, test):
     means = compute_means(train)
-    classified_subtypes = classify_df(test, means)
-    return classified_subtypes
+    predicted_disease_subtypes = classify_df(test, means)
+    return predicted_disease_subtypes
+
+
+def evaluate(actual_disease_subtypes, predicted_disease_subtypes):
+    correct_count = 0
+    for actual_subtype, predicted_subtype in izip(actual_disease_subtypes, predicted_disease_subtypes):
+        correct_count += (1 if actual_subtype == predicted_subtype else 0)
+    correct_percentage = 1.0 * correct_count / len(actual_disease_subtypes)
+    return correct_percentage
 
 
 def main():
@@ -49,7 +59,11 @@ def main():
     children_data = df[df['patient_age'] < 18]
 
     children_train, children_test = train_test_split(children_data, test_size=0.3, random_state=109)
-    classify(children_train, children_test)
+    predicted_disease_subtypes = classify(children_train, children_test)
+    actual_disease_subtypes = [row['subtype'] for index, row in children_test.iterrows()]
+
+    correct_percentage = evaluate(actual_disease_subtypes, predicted_disease_subtypes)
+    print 'percentage of the new patients who are correctly classified: %.2f%%' % (100.0 * correct_percentage)
 
 
 if __name__ == '__main__':
