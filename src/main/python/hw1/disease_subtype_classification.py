@@ -2,8 +2,8 @@ import math
 from itertools import izip
 from operator import itemgetter
 
+import numpy as np
 import pandas as pd
-from sklearn.cross_validation import train_test_split
 
 
 def compute_means(df):
@@ -54,8 +54,25 @@ def evaluate(actual_disease_subtypes, predicted_disease_subtypes):
     return correct_percentage
 
 
+def split(df):
+    test_size = 0.3
+    length = df.shape[0]
+
+    indices = list(df.index)
+    np.random.shuffle(indices)
+
+    test_length = int(round(test_size * length))
+    test_indices = indices[:test_length]
+    train_indices = indices[test_length:]
+
+    test = df.loc[test_indices]
+    train = df.loc[train_indices]
+
+    return train, test
+
+
 def evaluate_df(df):
-    train, test = train_test_split(df, test_size=0.3, random_state=109)
+    train, test = split(df)
     predicted_disease_subtypes = classify(train, test)
     actual_disease_subtypes = [row['subtype'] for index, row in test.iterrows()]
     correct_percentage = evaluate(actual_disease_subtypes, predicted_disease_subtypes)
@@ -69,6 +86,8 @@ def evaluate_and_print(df, population_group_id):
 
 
 def main():
+    np.random.seed(109)
+
     df = pd.read_csv('dataset_HW1.txt')
     children_data = df[df['patient_age'] < 18]
     adult_women_data = df[(df['patient_age'] > 17) & (df['patient_gender'] == 'female')]
