@@ -134,7 +134,7 @@ def evaluate_and_print_prob3(df, population_group_id):
 
 
 def problem3():
-    np.random.seed(1090)
+    # np.random.seed(1090)
 
     df = pd.read_csv('dataset_HW1.txt')
     children_data = df[df['patient_age'] < 18]
