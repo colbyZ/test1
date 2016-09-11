@@ -54,16 +54,29 @@ def evaluate(actual_disease_subtypes, predicted_disease_subtypes):
     return correct_percentage
 
 
+def evaluate_df(df):
+    train, test = train_test_split(df, test_size=0.3, random_state=109)
+    predicted_disease_subtypes = classify(train, test)
+    actual_disease_subtypes = [row['subtype'] for index, row in test.iterrows()]
+    correct_percentage = evaluate(actual_disease_subtypes, predicted_disease_subtypes)
+    return correct_percentage
+
+
+def evaluate_and_print(df, population_group_id):
+    correct_percentage = evaluate_df(df)
+    print 'percentage of the new patients who are correctly classified (%s): %.1f%%' % (
+        population_group_id, 100.0 * correct_percentage)
+
+
 def main():
     df = pd.read_csv('dataset_HW1.txt')
     children_data = df[df['patient_age'] < 18]
+    adult_women_data = df[(df['patient_age'] > 17) & (df['patient_gender'] == 'female')]
+    adult_male_data = df[(df['patient_age'] > 17) & (df['patient_gender'] == 'male')]
 
-    children_train, children_test = train_test_split(children_data, test_size=0.3, random_state=109)
-    predicted_disease_subtypes = classify(children_train, children_test)
-    actual_disease_subtypes = [row['subtype'] for index, row in children_test.iterrows()]
-
-    correct_percentage = evaluate(actual_disease_subtypes, predicted_disease_subtypes)
-    print 'percentage of the new patients who are correctly classified: %.2f%%' % (100.0 * correct_percentage)
+    evaluate_and_print(children_data, 'children')
+    evaluate_and_print(adult_women_data, 'adult women')
+    evaluate_and_print(adult_male_data, 'adult men')
 
 
 if __name__ == '__main__':
