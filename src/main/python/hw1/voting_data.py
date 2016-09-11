@@ -32,14 +32,16 @@ def main():
     df = pd.read_excel('table01.xls')
 
     columns = df.columns
-    print columns.values[0], '\n'
+    print "The first column:\n'%s'\n" % columns.values[0]
 
+    print "Column A:"
     for j in range(3):
         start = 6 + 76 * j
         list1 = [df.loc[i][0] for i in range(start, start + 75)]
         print list1
     print
 
+    print "Column headers in rows 4 through 6:"
     column_headers = df.loc[2:4]
     column_header_info_list = [get_column_header_info(column_headers, index) for index, column in enumerate(columns)]
     for info in column_header_info_list:
