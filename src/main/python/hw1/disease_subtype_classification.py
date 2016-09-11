@@ -101,20 +101,30 @@ def problem2():
 # ==== problem 3 ====================================================================================================
 
 
+def classify_markers_prob3(marker1, marker2, train):
+    # we iterate over the rows of the train dataframe and get the list of pairs: (subtype, distance)
+    subtype_distance_pairs = [(row['subtype'], distance(marker1, marker2, row['marker_1'], row['marker_2']))
+                              for index, row in train.iterrows()]
+    # find the pair with the minimum distance
+    min_pair = min(subtype_distance_pairs, key=itemgetter(1))
+    # return its subtype
+    return min_pair[0]
+
+
+def classify_row_prob3(row, train):
+    return classify_markers_prob3(row['marker_1'], row['marker_2'], train)
+
+
 def classify_prob3(train, test):
-    # means = compute_means(train)
-    # predicted_disease_subtypes = classify_df(test, means)
-    # return predicted_disease_subtypes
-    return None
+    return [classify_row_prob3(row, train) for index, row in test.iterrows()]
 
 
 def evaluate_df_prob3(df):
     train, test = split(df)
     predicted_disease_subtypes = classify_prob3(train, test)
-    # actual_disease_subtypes = [row['subtype'] for index, row in test.iterrows()]
-    # correct_percentage = evaluate(actual_disease_subtypes, predicted_disease_subtypes)
-    # return correct_percentage
-    return 0.0
+    actual_disease_subtypes = [row['subtype'] for index, row in test.iterrows()]
+    correct_percentage = evaluate(actual_disease_subtypes, predicted_disease_subtypes)
+    return correct_percentage
 
 
 def evaluate_and_print_prob3(df, population_group_id):
