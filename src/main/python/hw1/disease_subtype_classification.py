@@ -20,16 +20,16 @@ def compute_means(df):
 
 
 def distance(marker1, marker2, m1_mean, m2_mean):
-    sq1 = math.pow(marker1 - m1_mean, 2)
-    sq2 = math.pow(marker2 - m2_mean, 2)
+    sq1 = (marker1 - m1_mean) ** 2
+    sq2 = (marker2 - m2_mean) ** 2
     return math.sqrt(sq1 + sq2)
 
 
 def classify_markers(marker1, marker2, means):
-    index_distance_pairs = [(index, distance(marker1, marker2, row['marker_1'], row['marker_2']))
-                            for index, row in means.iterrows()]
-    min_pair = min(index_distance_pairs, key=itemgetter(1))
-    return min_pair[0]
+    index_distance_pairs = ((index, distance(marker1, marker2, row['marker_1'], row['marker_2']))
+                            for index, row in means.iterrows())
+    min_index, _ = min(index_distance_pairs, key=itemgetter(1))
+    return min_index
 
 
 def classify_row(row, means):
@@ -37,26 +37,27 @@ def classify_row(row, means):
 
 
 def classify_df(df, means):
-    return [classify_row(row, means) for index, row in df.iterrows()]
+    return (classify_row(row, means) for index, row in df.iterrows())
 
 
 def classify(train, test):
-    means = compute_means(train)
-    predicted_disease_subtypes = classify_df(test, means)
+    predicted_disease_subtypes = classify_df(test, compute_means(train))
     return predicted_disease_subtypes
 
 
 def evaluate(actual_disease_subtypes, predicted_disease_subtypes):
     correct_count = 0
-    for actual_subtype, predicted_subtype in izip(actual_disease_subtypes, predicted_disease_subtypes):
-        correct_count += (1 if actual_subtype == predicted_subtype else 0)
-    correct_percentage = 1.0 * correct_count / len(actual_disease_subtypes)
+    total_count = 0
+    for actual, predicted in izip(actual_disease_subtypes, predicted_disease_subtypes):
+        correct_count += actual == predicted
+        total_count += 1
+    correct_percentage = float(correct_count) / total_count
     return correct_percentage
 
 
 def split(df):
     test_size = 0.3
-    length = df.shape[0]
+    length = len(df)
 
     indices = list(df.index)
     np.random.shuffle(indices)
@@ -74,7 +75,7 @@ def split(df):
 def evaluate_df(df):
     train, test = split(df)
     predicted_disease_subtypes = classify(train, test)
-    actual_disease_subtypes = [row['subtype'] for index, row in test.iterrows()]
+    actual_disease_subtypes = (row['subtype'] for index, row in test.iterrows())
     correct_percentage = evaluate(actual_disease_subtypes, predicted_disease_subtypes)
     return correct_percentage
 
@@ -103,12 +104,12 @@ def problem2():
 
 def classify_markers_prob3(marker1, marker2, train):
     # we iterate over the rows of the train dataframe and get the list of pairs: (subtype, distance)
-    subtype_distance_pairs = [(row['subtype'], distance(marker1, marker2, row['marker_1'], row['marker_2']))
-                              for index, row in train.iterrows()]
+    subtype_distance_pairs = ((row['subtype'], distance(marker1, marker2, row['marker_1'], row['marker_2']))
+                              for index, row in train.iterrows())
     # find the pair with the minimum distance
-    min_pair = min(subtype_distance_pairs, key=itemgetter(1))
+    min_subtype, _ = min(subtype_distance_pairs, key=itemgetter(1))
     # return its subtype
-    return min_pair[0]
+    return min_subtype
 
 
 def classify_row_prob3(row, train):
@@ -116,13 +117,13 @@ def classify_row_prob3(row, train):
 
 
 def classify_prob3(train, test):
-    return [classify_row_prob3(row, train) for index, row in test.iterrows()]
+    return (classify_row_prob3(row, train) for index, row in test.iterrows())
 
 
 def evaluate_df_prob3(df):
     train, test = split(df)
     predicted_disease_subtypes = classify_prob3(train, test)
-    actual_disease_subtypes = [row['subtype'] for index, row in test.iterrows()]
+    actual_disease_subtypes = (row['subtype'] for index, row in test.iterrows())
     correct_percentage = evaluate(actual_disease_subtypes, predicted_disease_subtypes)
     return correct_percentage
 
