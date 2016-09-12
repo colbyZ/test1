@@ -103,7 +103,7 @@ def problem2():
 
 
 def classify_markers_prob3(marker1, marker2, train):
-    # we iterate over the rows of the train dataframe and get the list of pairs: (subtype, distance)
+    # we iterate over the rows of the train dataframe and get the pairs: (subtype, distance)
     subtype_distance_pairs = ((row['subtype'], distance(marker1, marker2, row['marker_1'], row['marker_2']))
                               for index, row in train.iterrows())
     # find the pair with the minimum distance
