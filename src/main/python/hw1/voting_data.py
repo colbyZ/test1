@@ -49,8 +49,8 @@ def main():
 
 
 def main2():
-    df = pd.read_excel('table01.xls', skiprows=3, skip_footer=5, header=[0, 1, 2], index_col=0)
-    print df
+    df = pd.read_excel('table01.xls', skiprows=7, skip_footer=5, index_col=0, parse_cols=[0, 1, 2, 4, 10, 15, 16])
+    print df.head(n=10)
 
 
 if __name__ == '__main__':
