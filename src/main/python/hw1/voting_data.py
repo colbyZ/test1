@@ -49,8 +49,7 @@ def main():
 
 
 def main2():
-    df = pd.read_excel('table01.xls', skiprows=3, skip_footer=5, index_col=0, header=[0, 1, 2],
-                       parse_cols=[0, 1, 2, 3, 4, 9, 10, 15, 16])
+    df = pd.read_excel('table01.xls', skiprows=3, skip_footer=5, index_col=0, header=[0, 1, 2])
     print df.head(n=15)
     print df.columns.values
 
