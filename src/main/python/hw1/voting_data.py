@@ -61,14 +61,36 @@ def get_gender_label_list(index_values):
     return gender_label_list
 
 
+def clean_column_value(s):
+    return '' if s.startswith('Unnamed: ') else s
+
+
+def concat_column_values(v1, v2):
+    return v1 + ' - ' + v2 if v2 else v1
+
+
+def get_column_label_list(values):
+    str_list = []
+    for v in values:
+        v0 = v[0]
+        v1 = clean_column_value(v[1])
+        v2 = clean_column_value(v[2])
+        s = concat_column_values(v0, v1)
+        s = concat_column_values(s, v2)
+        str_list.append(s)
+    return str_list
+
+
 def main2():
     df = pd.read_excel('table01.xls', skiprows=3, skip_footer=5, header=[0, 1, 2], index_col=0)
-    # print df.index
+    print df.columns.values
+
+    column_label_list = get_column_label_list(df.columns.values)
+    print column_label_list
+
     gender_label_list = get_gender_label_list(df.index.values)
-    print gender_label_list
     df.insert(0, 'gender', gender_label_list)
-    # df.set_index(['gender', 'index'], inplace=True)
-    print df
+    # print df
 
 
 if __name__ == '__main__':
