@@ -49,6 +49,9 @@ def main():
         print info
 
 
+# main2()
+
+
 def get_gender_label_list(index_values):
     current_label = ''
     gender_labels = ['Both sexes', 'Male', 'Female', '']
