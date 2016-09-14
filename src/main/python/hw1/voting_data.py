@@ -1,3 +1,4 @@
+import matplotlib.pyplot as plt
 import pandas as pd
 
 
@@ -85,15 +86,14 @@ def get_indices_to_drop():
     ind_list = []
     for j in range(3):
         st = j * 76
-        ind_list.extend([st + 0, st + 1])
-        ind_list.extend(range(st + 3, st + 11))
+        ind_list.extend(range(st + 0, st + 11))
         if j < 2:
             ind_list.extend([st + 75])
     return ind_list
 
 
 def get_age_list():
-    ind_list = [0]
+    ind_list = []
     ind_list.extend(range(18, 81))
     ind_list.append(85)
     return ind_list
@@ -105,22 +105,36 @@ def main2():
     column_label_list = get_column_label_list(df.columns.values)
     df.columns = column_label_list
 
-    df = df.drop(df.columns[[2, 4, 5, 6, 7, 9, 10, 11, 12, 13]], axis=1)
+    df = df.drop(df.columns[[2, 4, 5, 6, 7, 8, 10, 11, 12, 13]], axis=1)
 
     gender_label_list = get_gender_label_list(df.index.values)
     df.insert(0, 'gender', gender_label_list)
+
+    total_df = df.iloc[[2, 78, 154]]
+    total_df = total_df.set_index(['gender'])
 
     indices_to_drop = get_indices_to_drop()
     df = df.drop(df.index[indices_to_drop])
 
     age_list = 3 * get_age_list()
+    # for i, item in enumerate(df.index):
+    #     print i, item, age_list[i]
     df.insert(1, 'age', age_list)
 
     df = df.set_index(['gender', 'age'])
 
-    print df.head()
-    # for i, item in enumerate(df.index):
-    #     print i, item, age_list[i]
+    # print df.head()
+    print df.columns
+
+    # print all_reported_registered
+    plt.plot(df.loc['Male'][['US Citizen - Reported registered - Percent']], label='Male')
+    plt.plot(df.loc['Female'][['US Citizen - Reported registered - Percent']], label='Female')
+    plt.plot(df.loc['Male'][['US Citizen - Reported voted - Percent']], label='Male')
+    plt.plot(df.loc['Female'][['US Citizen - Reported voted - Percent']], label='Female')
+    plt.xlabel('Age')
+    plt.ylabel('Percent')
+    plt.legend(loc='lower right')
+    plt.show()
 
 
 if __name__ == '__main__':
