@@ -83,14 +83,15 @@ def get_column_label_list(values):
 
 def main2():
     df = pd.read_excel('table01.xls', skiprows=3, skip_footer=5, header=[0, 1, 2], index_col=0)
-    print df.columns.values
 
     column_label_list = get_column_label_list(df.columns.values)
+    print df.columns
     print column_label_list
+    df.columns = column_label_list
 
     gender_label_list = get_gender_label_list(df.index.values)
     df.insert(0, 'gender', gender_label_list)
-    # print df
+    print df.head()
 
 
 if __name__ == '__main__':
