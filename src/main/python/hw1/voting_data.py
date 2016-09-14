@@ -92,6 +92,13 @@ def get_indices_to_drop():
     return ind_list
 
 
+def get_age_list():
+    ind_list = [0]
+    ind_list.extend(range(18, 81))
+    ind_list.append(85)
+    return ind_list
+
+
 def main2():
     df = pd.read_excel('table01.xls', skiprows=3, skip_footer=5, header=[0, 1, 2], index_col=0)
 
@@ -102,11 +109,14 @@ def main2():
     df.insert(0, 'gender', gender_label_list)
 
     indices_to_drop = get_indices_to_drop()
-    # print indices_to_drop
     df = df.drop(df.index[indices_to_drop])
+
+    age_list = 3 * get_age_list()
+    df.insert(1, 'age', age_list)
+
     print df
     # for i, item in enumerate(df.index):
-    #     print i, item
+    #     print i, item, age_list[i]
 
 
 if __name__ == '__main__':
