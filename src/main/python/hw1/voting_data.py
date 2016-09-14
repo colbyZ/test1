@@ -48,10 +48,27 @@ def main():
         print info
 
 
+def get_gender_label_list(index_values):
+    current_label = ''
+    gender_labels = ['Both sexes', 'Male', 'Female', '']
+    index = 0
+    gender_label_list = []
+    for v in index_values:
+        if v == gender_labels[index]:
+            current_label = gender_labels[index]
+            index += 1
+        gender_label_list.append(current_label)
+    return gender_label_list
+
+
 def main2():
-    df = pd.read_excel('table01.xls', skiprows=3, skip_footer=5, index_col=0, header=[0, 1, 2])
-    print df.head(n=15)
-    print df.columns.values
+    df = pd.read_excel('table01.xls', skiprows=3, skip_footer=5, header=[0, 1, 2], index_col=0)
+    # print df.index
+    gender_label_list = get_gender_label_list(df.index.values)
+    print gender_label_list
+    df.insert(0, 'gender', gender_label_list)
+    # df.set_index(['gender', 'index'], inplace=True)
+    print df
 
 
 if __name__ == '__main__':
