@@ -105,6 +105,8 @@ def main2():
     column_label_list = get_column_label_list(df.columns.values)
     df.columns = column_label_list
 
+    df = df.drop(df.columns[[2, 4, 5, 6, 7, 9, 10, 11, 12, 13]], axis=1)
+
     gender_label_list = get_gender_label_list(df.index.values)
     df.insert(0, 'gender', gender_label_list)
 
@@ -114,7 +116,9 @@ def main2():
     age_list = 3 * get_age_list()
     df.insert(1, 'age', age_list)
 
-    print df
+    df = df.set_index(['gender', 'age'])
+
+    print df.head()
     # for i, item in enumerate(df.index):
     #     print i, item, age_list[i]
 
