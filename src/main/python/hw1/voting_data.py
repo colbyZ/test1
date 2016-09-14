@@ -81,17 +81,32 @@ def get_column_label_list(values):
     return str_list
 
 
+def get_indices_to_drop():
+    ind_list = []
+    for j in range(3):
+        st = j * 76
+        ind_list.extend([st + 0, st + 1])
+        ind_list.extend(range(st + 3, st + 11))
+        if j < 2:
+            ind_list.extend([st + 75])
+    return ind_list
+
+
 def main2():
     df = pd.read_excel('table01.xls', skiprows=3, skip_footer=5, header=[0, 1, 2], index_col=0)
 
     column_label_list = get_column_label_list(df.columns.values)
-    print df.columns
-    print column_label_list
     df.columns = column_label_list
 
     gender_label_list = get_gender_label_list(df.index.values)
     df.insert(0, 'gender', gender_label_list)
-    print df.head()
+
+    indices_to_drop = get_indices_to_drop()
+    # print indices_to_drop
+    df = df.drop(df.index[indices_to_drop])
+    print df
+    # for i, item in enumerate(df.index):
+    #     print i, item
 
 
 if __name__ == '__main__':
