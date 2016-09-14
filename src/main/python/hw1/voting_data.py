@@ -51,7 +51,6 @@ def main():
 
 # main2()
 
-
 def get_gender_label_list(index_values):
     current_label = ''
     gender_labels = ['Both sexes', 'Male', 'Female', '']
@@ -102,42 +101,52 @@ def get_age_list():
     return ind_list
 
 
-def main2():
+def read_excel():
     df = pd.read_excel('table01.xls', skiprows=3, skip_footer=5, header=[0, 1, 2], index_col=0)
 
-    column_label_list = get_column_label_list(df.columns.values)
-    df.columns = column_label_list
+    # create simple column names instead of multi-level ones
+    df.columns = get_column_label_list(df.columns.values)
 
+    # we drop the columns that we are not interested in
     df = df.drop(df.columns[[2, 4, 5, 6, 7, 8, 10, 11, 12, 13]], axis=1)
 
+    # create the gender column so that later we can create an index with the gender component
     gender_label_list = get_gender_label_list(df.index.values)
     df.insert(0, 'gender', gender_label_list)
 
+    # create a separate 'total' dataframe
     total_df = df.iloc[[2, 78, 154]]
     total_df = total_df.set_index(['gender'])
 
+    # drop all rows except for the individual age ones
     indices_to_drop = get_indices_to_drop()
-    df = df.drop(df.index[indices_to_drop])
+    age_df = df.drop(df.index[indices_to_drop])
 
+    # create the age column
     age_list = 3 * get_age_list()
-    # for i, item in enumerate(df.index):
-    #     print i, item, age_list[i]
-    df.insert(1, 'age', age_list)
+    age_df.insert(1, 'age', age_list)
 
-    df = df.set_index(['gender', 'age'])
+    # create ('gender', 'age') multi index for the main dataframe
+    age_df = age_df.set_index(['gender', 'age'])
 
-    # print df.head()
-    print df.columns
+    return age_df, total_df
+
+
+def main2():
+    age_df, total_df = read_excel()
+    print 'total dataframe:\n%s\n' % total_df
+    print 'age dataframe:\n%s\n' % age_df.head()
+    print 'age dataframe (female):\n%s\n' % age_df.loc['Female'].head()
 
     # print all_reported_registered
-    plt.plot(df.loc['Male'][['US Citizen - Reported registered - Percent']], label='Male')
-    plt.plot(df.loc['Female'][['US Citizen - Reported registered - Percent']], label='Female')
-    plt.plot(df.loc['Male'][['US Citizen - Reported voted - Percent']], label='Male')
-    plt.plot(df.loc['Female'][['US Citizen - Reported voted - Percent']], label='Female')
+    plt.plot(age_df.loc['Male'][['US Citizen - Reported registered - Percent']], label='Male')
+    plt.plot(age_df.loc['Female'][['US Citizen - Reported registered - Percent']], label='Female')
+    plt.plot(age_df.loc['Male'][['US Citizen - Reported voted - Percent']], label='Male')
+    plt.plot(age_df.loc['Female'][['US Citizen - Reported voted - Percent']], label='Female')
     plt.xlabel('Age')
     plt.ylabel('Percent')
     plt.legend(loc='lower right')
-    plt.show()
+    # plt.show()
 
 
 if __name__ == '__main__':
