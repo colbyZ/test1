@@ -108,7 +108,7 @@ def read_excel():
     df.columns = get_column_label_list(df.columns.values)
 
     # we drop the columns that we are not interested in
-    df = df.drop(df.columns[[2, 4, 5, 6, 7, 8, 10, 11, 12, 13]], axis=1)
+    df = df.drop(df.columns[[4, 5, 6, 7, 10, 11, 12, 13]], axis=1)
 
     # create the gender column so that later we can create an index with the gender component
     gender_label_list = get_gender_label_list(df.index.values)
@@ -144,7 +144,7 @@ def show_plot(title, plot_info_1, plot_info_2):
 
 def main2():
     age_df, total_df = read_excel()
-    # print 'total dataframe:\n%s\n' % total_df
+    print 'total dataframe:\n%s\n' % total_df
     # print 'age dataframe:\n%s\n' % age_df.head()
     # print 'age dataframe (female):\n%s\n' % age_df.loc['Female'].head()
 
@@ -155,10 +155,10 @@ def main2():
     #     (age_df.loc['Both sexes'][['US Citizen - Reported registered - Percent']], 'registered'),
     #     (age_df.loc['Both sexes'][['US Citizen - Reported voted - Percent']], 'voted'))
 
-    show_plot(
-        'Reported voted by gender',
-        (age_df.loc['Female'][['US Citizen - Reported voted - Percent']], 'female'),
-        (age_df.loc['Male'][['US Citizen - Reported voted - Percent']], 'male'))
+    # show_plot(
+    #     'Reported voted by gender',
+    #     (age_df.loc['Female'][['US Citizen - Reported voted - Percent']], 'female'),
+    #     (age_df.loc['Male'][['US Citizen - Reported voted - Percent']], 'male'))
 
 
 if __name__ == '__main__':
