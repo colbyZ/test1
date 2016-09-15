@@ -132,14 +132,22 @@ def read_excel():
     return age_df, total_df
 
 
-def show_plot(title, plot_info_1, plot_info_2):
+def show_plot(title, plot_info_1, plot_info_2, ylabel):
     plt.plot(plot_info_1[0], label=plot_info_1[1])
     plt.plot(plot_info_2[0], label=plot_info_2[1])
     plt.xlabel('Age')
-    plt.ylabel('Percent')
+    plt.ylabel(ylabel)
     plt.legend(loc='lower right')
     plt.title(title)
     plt.show()
+
+
+def show_percent_plot(title, plot_info_1, plot_info_2):
+    show_plot(title, plot_info_1, plot_info_2, 'Percent')
+
+
+def show_number_plot(title, plot_info_1, plot_info_2):
+    show_plot(title, plot_info_1, plot_info_2, 'Population')
 
 
 def main2():
