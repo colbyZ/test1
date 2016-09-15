@@ -132,21 +132,33 @@ def read_excel():
     return age_df, total_df
 
 
-def main2():
-    age_df, total_df = read_excel()
-    print 'total dataframe:\n%s\n' % total_df
-    print 'age dataframe:\n%s\n' % age_df.head()
-    print 'age dataframe (female):\n%s\n' % age_df.loc['Female'].head()
-
-    # print all_reported_registered
-    plt.plot(age_df.loc['Male'][['US Citizen - Reported registered - Percent']], label='Male')
-    plt.plot(age_df.loc['Female'][['US Citizen - Reported registered - Percent']], label='Female')
-    plt.plot(age_df.loc['Male'][['US Citizen - Reported voted - Percent']], label='Male')
-    plt.plot(age_df.loc['Female'][['US Citizen - Reported voted - Percent']], label='Female')
+def show_plot(title, plot_info_1, plot_info_2):
+    plt.plot(plot_info_1[0], label=plot_info_1[1])
+    plt.plot(plot_info_2[0], label=plot_info_2[1])
     plt.xlabel('Age')
     plt.ylabel('Percent')
     plt.legend(loc='lower right')
-    # plt.show()
+    plt.title(title)
+    plt.show()
+
+
+def main2():
+    age_df, total_df = read_excel()
+    # print 'total dataframe:\n%s\n' % total_df
+    # print 'age dataframe:\n%s\n' % age_df.head()
+    # print 'age dataframe (female):\n%s\n' % age_df.loc['Female'].head()
+
+    # print total_df.loc[:][['US Citizen - Reported registered - Percent', 'US Citizen - Reported voted - Percent']]
+
+    # show_plot(
+    #     'Registered vs Voted',
+    #     (age_df.loc['Both sexes'][['US Citizen - Reported registered - Percent']], 'registered'),
+    #     (age_df.loc['Both sexes'][['US Citizen - Reported voted - Percent']], 'voted'))
+
+    show_plot(
+        'Reported voted by gender',
+        (age_df.loc['Female'][['US Citizen - Reported voted - Percent']], 'female'),
+        (age_df.loc['Male'][['US Citizen - Reported voted - Percent']], 'male'))
 
 
 if __name__ == '__main__':
