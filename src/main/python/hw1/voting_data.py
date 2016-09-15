@@ -152,16 +152,18 @@ def show_number_plot(title, plot_info_1, plot_info_2):
 
 def main2():
     age_df, total_df = read_excel()
-    print 'total dataframe:\n%s\n' % total_df
+    # print 'total dataframe:\n%s\n' % total_df
     # print 'age dataframe:\n%s\n' % age_df.head()
     # print 'age dataframe (female):\n%s\n' % age_df.loc['Female'].head()
 
+    print age_df.columns
+
     # print total_df.loc[:][['US Citizen - Reported registered - Percent', 'US Citizen - Reported voted - Percent']]
 
-    # show_plot(
-    #     'Registered vs Voted',
-    #     (age_df.loc['Both sexes'][['US Citizen - Reported registered - Percent']], 'registered'),
-    #     (age_df.loc['Both sexes'][['US Citizen - Reported voted - Percent']], 'voted'))
+    show_number_plot(
+        'Reported voted by gender',
+        (age_df.loc['Female'][['US Citizen - Reported voted - Number']], 'female'),
+        (age_df.loc['Male'][['US Citizen - Reported voted - Number']], 'male'))
 
     # show_plot(
     #     'Reported voted by gender',
