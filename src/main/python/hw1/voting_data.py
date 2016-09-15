@@ -72,6 +72,10 @@ def concat_column_values(v1, v2):
     return v1 + ' - ' + v2 if v2 else v1
 
 
+def d(*args):
+    return ' - '.join(value for value in args if value)
+
+
 def get_column_label_list(values):
     str_list = []
     for v in values:
@@ -90,13 +94,12 @@ def get_indices_to_drop():
         st = j * 76
         ind_list.extend(range(st + 0, st + 11))
         if j < 2:
-            ind_list.extend([st + 75])
+            ind_list.append(st + 75)
     return ind_list
 
 
 def get_age_list():
-    ind_list = []
-    ind_list.extend(range(18, 81))
+    ind_list = list(range(18, 81))
     ind_list.append(85)
     return ind_list
 
