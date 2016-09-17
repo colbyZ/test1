@@ -109,6 +109,11 @@ def linear_reg_fit(train):
     return slope, intercept
 
 
+def linear_reg_predict(test, slope, intercept):
+    predicted_test = test.copy()
+    return predicted_test
+
+
 def score(predicted, actual):
     rss = 0.0
     tss = 0.0
@@ -127,12 +132,14 @@ def compare_with_sklearn():
 
     train, test = split(df, 0.7)
 
-    # predicted_test = knn_predict(1, train, test[['x']])
+    test_x = test[['x']]
+    predicted_test = knn_predict(1, train, test_x)
     # s = score(predicted_test, test)
     # print s
 
     slope, intercept = linear_reg_fit(train)
-    print slope, intercept
+    predicted_test = linear_reg_predict(test_x, slope, intercept)
+    # print predicted_test.head()
 
 
 if __name__ == '__main__':
