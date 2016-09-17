@@ -97,7 +97,7 @@ def plot_missing(ax1, ax2, predicted_knn, r_knn, predicted_lin, r_lin, k, no_y_i
     return ax1, ax2
 
 
-def model_based_data_imputation():
+def handling_missing_data():
     # number of neighbours
     k = 10
 
@@ -106,7 +106,6 @@ def model_based_data_imputation():
     ### How can you get around this?
     ### For HW2 it's still ok to copy and paste, for HW3, we will need you to see where functional
     ### abstraction and iteration are called for and implement them.
-
 
     # plot predicted points
     fig, ((ax1, ax2), (ax3, ax4), (ax5, ax6)) = plt.subplots(3, 2, figsize=(15, 10))
@@ -193,4 +192,4 @@ def model_based_data_imputation():
 
 
 if __name__ == '__main__':
-    model_based_data_imputation()
+    handling_missing_data()
