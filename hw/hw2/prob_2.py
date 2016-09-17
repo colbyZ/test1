@@ -71,7 +71,7 @@ def fill_lin_reg(missing_df, full_df, no_y_ind, with_y_ind):
 #       no_y_ind (indices of rows with missing y-values),
 #       with_y_ind (indices of rows with no missing y-values)
 
-def plot_missing(ax1, ax2, predicted_knn, r_knn, predicted_lin, r_lin, k, no_y_ind, with_y_ind):
+def plot_missing(ax1, ax2, predicted_knn, r_knn, predicted_lin, r_lin, k, no_y_ind, with_y_ind, dataset_i):
     ax1.scatter(predicted_knn.loc[with_y_ind]['x'].values,
                 predicted_knn.loc[with_y_ind]['y'].values,
                 color='blue')
@@ -80,7 +80,7 @@ def plot_missing(ax1, ax2, predicted_knn, r_knn, predicted_lin, r_lin, k, no_y_i
                 predicted_knn.loc[no_y_ind]['y'].values,
                 color='red')
 
-    ax1.set_title('KNN, R^2:' + str(r_knn))
+    ax1.set_title('Dataset %d, KNN, R^2: %.3f' % (dataset_i, r_knn))
 
     ax2.scatter(predicted_lin.loc[with_y_ind]['x'].values,
                 predicted_lin.loc[with_y_ind]['y'].values,
@@ -90,118 +90,17 @@ def plot_missing(ax1, ax2, predicted_knn, r_knn, predicted_lin, r_lin, k, no_y_i
                 predicted_lin.loc[no_y_ind]['y'].values,
                 color='green')
 
-    ax2.set_title('Lin Reg, R^2:' + str(r_lin))
+    ax2.set_title('Lin Reg, R^2: %.3f' % r_lin)
 
 
 def handling_missing_data():
     # number of neighbours
     k = 10
 
-    ### CODING TIP: You have to generate data for six different datasets, is it a good idea
-    ### to copy and paste the same block of code over and over again for six times?
-    ### How can you get around this?
-    ### For HW2 it's still ok to copy and paste, for HW3, we will need you to see where functional
-    ### abstraction and iteration are called for and implement them.
-
-    # plot predicted points
-    fig, ((ax1, ax2), (ax3, ax4), (ax5, ax6)) = plt.subplots(3, 2, figsize=(15, 10))
-
-    # Read dataset 1
-    missing_df = pd.read_csv('./dataset/dataset_1_missing.txt')
-    full_df = pd.read_csv('./dataset/dataset_1_full.txt')
-
-    no_y_ind = missing_df[missing_df['y'].isnull()].index
-    with_y_ind = missing_df[missing_df['y'].notnull()].index
-
-    predicted_knn, r_knn = fill_knn(missing_df,
-                                    full_df,
-                                    no_y_ind,
-                                    with_y_ind,
-                                    k)
-
-    predicted_lin, r_lin = fill_lin_reg(missing_df,
-                                        full_df,
-                                        no_y_ind,
-                                        with_y_ind)
-
-    ax5, ax6 = plot_missing(ax5,
-                            ax6,
-                            predicted_knn, r_knn,
-                            predicted_lin, r_lin,
-                            k,
-                            no_y_ind,
-                            with_y_ind)
-
-    # Read dataset 4
-    missing_df = pd.read_csv('./dataset/dataset_4_missing.txt')
-    full_df = pd.read_csv('./dataset/dataset_4_full.txt')
-
-    no_y_ind = missing_df[missing_df['y'].isnull()].index
-    with_y_ind = missing_df[missing_df['y'].notnull()].index
-
-    predicted_knn, r_knn = fill_knn(missing_df,
-                                    full_df,
-                                    no_y_ind,
-                                    with_y_ind,
-                                    k)
-
-    predicted_lin, r_lin = fill_lin_reg(missing_df,
-                                        full_df,
-                                        no_y_ind,
-                                        with_y_ind)
-
-    ax1, ax2 = plot_missing(ax1,
-                            ax2,
-                            predicted_knn, r_knn,
-                            predicted_lin, r_lin,
-                            k,
-                            no_y_ind,
-                            with_y_ind)
-
-    # Read dataset 6
-    missing_df = pd.read_csv('./dataset/dataset_6_missing.txt')
-    full_df = pd.read_csv('./dataset/dataset_6_full.txt')
-
-    no_y_ind = missing_df[missing_df['y'].isnull()].index
-    with_y_ind = missing_df[missing_df['y'].notnull()].index
-
-    predicted_knn, r_knn = fill_knn(missing_df,
-                                    full_df,
-                                    no_y_ind,
-                                    with_y_ind,
-                                    k)
-
-    predicted_lin, r_lin = fill_lin_reg(missing_df,
-                                        full_df,
-                                        no_y_ind,
-                                        with_y_ind)
-
-    ax3, ax4 = plot_missing(ax3,
-                            ax4,
-                            predicted_knn, r_knn,
-                            predicted_lin, r_lin,
-                            k,
-                            no_y_ind,
-                            with_y_ind)
-
-    plt.show()
-
-
-def handling_missing_data2():
-    # number of neighbours
-    k = 10
-
-    ### CODING TIP: You have to generate data for six different datasets, is it a good idea
-    ### to copy and paste the same block of code over and over again for six times?
-    ### How can you get around this?
-    ### For HW2 it's still ok to copy and paste, for HW3, we will need you to see where functional
-    ### abstraction and iteration are called for and implement them.
-
-    n_datasets = 1
+    n_datasets = 6
 
     # plot predicted points
     fig, ax_pairs = plt.subplots(n_datasets, 2, figsize=(15, 3.3 * n_datasets))
-    print ax_pairs
 
     for dataset_i in range(0, n_datasets):
         # Read dataset i
@@ -215,17 +114,15 @@ def handling_missing_data2():
         predicted_knn, r_knn = fill_knn(missing_df, full_df, no_y_ind, with_y_ind, k)
         predicted_lin, r_lin = fill_lin_reg(missing_df, full_df, no_y_ind, with_y_ind)
 
-        plot_missing(
-            ax_pairs[2 * dataset_i],
-            ax_pairs[2 * dataset_i + 1],
-            predicted_knn, r_knn,
-            predicted_lin, r_lin,
-            k,
-            no_y_ind,
-            with_y_ind)
+        ax_pair = ax_pairs[dataset_i]
+        plot_missing(ax_pair[0], ax_pair[1],
+                     predicted_knn, r_knn,
+                     predicted_lin, r_lin,
+                     k, no_y_ind, with_y_ind, dataset_i_1)
 
+    plt.tight_layout()
     plt.show()
 
 
 if __name__ == '__main__':
-    handling_missing_data2()
+    handling_missing_data()
