@@ -76,13 +76,9 @@ def knn_predict_one_point(k, sorted_train, sorted_x_list, test_x):
     return total / k
 
 
-def get_column_list(df, column_label):
-    return df[column_label].tolist()
-
-
 def knn_predict(k, train, test):
     sorted_train = train.sort_values(by='x')
-    sorted_x_list = get_column_list(sorted_train, 'x')
+    sorted_x_list = sorted_train['x'].tolist()
     predicted_test = test.copy()
 
     predicted_test['y'] = [knn_predict_one_point(k, sorted_train, sorted_x_list, row['x'])
@@ -93,9 +89,9 @@ def knn_predict(k, train, test):
 def score(predicted, actual):
     rss = 0.0
     tss = 0.0
-    actual_y_list = get_column_list(actual, 'y')
+    actual_y_list = actual['y'].tolist()
     actual_y_mean = np.mean(actual_y_list)
-    for predicted_value, actual_value in izip(get_column_list(predicted, 'y'), actual_y_list):
+    for predicted_value, actual_value in izip(predicted['y'].tolist(), actual_y_list):
         rss += (actual_value - predicted_value) ** 2
         tss += (actual_value - actual_y_mean) ** 2
     return 1.0 - rss / tss
