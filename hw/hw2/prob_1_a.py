@@ -25,7 +25,7 @@ def distance(x1, x2):
     return abs(x1 - x2)
 
 
-def find_best_neighbors(sorted_x_list, neighbors_range, test_x):
+def find_best_neighbors_range(sorted_x_list, neighbors_range, test_x):
     current_left_index = neighbors_range[0]
     current_right_index = neighbors_range[1]
     best_range = current_left_index, current_right_index
@@ -64,7 +64,7 @@ def get_initial_range(k, insertion_index, length):
 def find_nearest_neighbors(k, sorted_x_list, test_x):
     insertion_index = bisect.bisect_left(sorted_x_list, test_x)
     initial_range = get_initial_range(k, insertion_index, len(sorted_x_list))
-    best_neighbors = find_best_neighbors(sorted_x_list, initial_range, test_x)
+    best_neighbors = find_best_neighbors_range(sorted_x_list, initial_range, test_x)
     print best_neighbors
 
 
