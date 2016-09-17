@@ -4,6 +4,7 @@ from itertools import izip
 import numpy as np
 import pandas as pd
 from sklearn.cross_validation import train_test_split as sk_split
+from sklearn.linear_model import LinearRegression as Lin_Reg
 from sklearn.neighbors import KNeighborsRegressor as KNN
 
 
@@ -176,6 +177,11 @@ def evaluate_sklearn_implementation(df, k_list):
         s = neighbors.score(x_test, y_test)
         print 'KNN, k: %d, score: %.3f' % (k, s)
 
+    regression = Lin_Reg()
+    regression.fit(x_train, y_train)
+    s = regression.score(x_test, y_test)
+    print 'linear regression, score: %.3f' % s
+
 
 def compare_with_sklearn():
     np.random.seed(1090)
@@ -183,7 +189,7 @@ def compare_with_sklearn():
     df = pd.read_csv('dataset/dataset_1_full.txt')
     k_list = generate_k_list()
 
-    # evaluate_our_implementation(df, k_list)
+    evaluate_our_implementation(df, k_list)
     evaluate_sklearn_implementation(df, k_list)
 
 
