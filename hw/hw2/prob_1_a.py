@@ -130,22 +130,28 @@ def score(predicted, actual):
     return 1.0 - rss / tss
 
 
+def evaluate_our_implementation(df):
+    print 'our implementation'
+    train, test = split(df, 0.7)
+
+    test_x = test[['x']]
+    for k in range(1, 101):
+        predicted_test = knn_predict(k, train, test_x)
+        s = score(predicted_test, test)
+        print 'KNN, k: %d, score: %.4f' % (k, s)
+
+    slope, intercept = linear_reg_fit(train)
+    predicted_test = linear_reg_predict(test_x, slope, intercept)
+    s = score(predicted_test, test)
+    print 'linear regression, score: %.4f' % s
+
+
 def compare_with_sklearn():
     np.random.seed(1090)
 
     df = pd.read_csv('dataset/dataset_1_full.txt')
 
-    train, test = split(df, 0.7)
-
-    test_x = test[['x']]
-    predicted_test = knn_predict(1, train, test_x)
-    # s = score(predicted_test, test)
-    # print s
-
-    slope, intercept = linear_reg_fit(train)
-    predicted_test = linear_reg_predict(test_x, slope, intercept)
-    s = score(predicted_test, test)
-    print s
+    evaluate_our_implementation(df)
 
 
 if __name__ == '__main__':
