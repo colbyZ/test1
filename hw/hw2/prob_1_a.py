@@ -162,7 +162,7 @@ def evaluate_our_implementation(df, k_list):
     predicted_test = linear_reg_predict(test_x, slope, intercept)
     s = score(predicted_test, test)
     elapsed_time = time.time() - start
-    print 'linear regression, score: %.3f, time: %.2f' % (s, elapsed_time)
+    print 'linear regression, score: %.3f, time: %.2f\n' % (s, elapsed_time)
 
 
 def reshape(df, column_name):
