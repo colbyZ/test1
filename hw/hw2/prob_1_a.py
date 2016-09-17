@@ -1,9 +1,9 @@
 import bisect
+import time
 from itertools import izip
 
 import numpy as np
 import pandas as pd
-import time
 from sklearn.cross_validation import train_test_split as sk_split
 from sklearn.linear_model import LinearRegression as Lin_Reg
 from sklearn.neighbors import KNeighborsRegressor as KNN
@@ -77,20 +77,21 @@ def find_nearest_neighbors(k, sorted_x_list, test_x):
     return find_best_neighbors_range(sorted_x_list, initial_range, test_x)
 
 
-def knn_predict_one_point(k, sorted_train, sorted_x_list, test_x):
+def knn_predict_one_point(k, sorted_x_list, sorted_y_list, test_x):
     neighbors_range = find_nearest_neighbors(k, sorted_x_list, test_x)
     total = 0.0
     for index in range(neighbors_range[0], neighbors_range[1]):
-        total += sorted_train.iloc[index]['y']
+        total += sorted_y_list[index]
     return total / k
 
 
 def knn_predict(k, train, test):
     sorted_train = train.sort_values(by='x')
     sorted_x_list = sorted_train['x'].tolist()
+    sorted_y_list = sorted_train['y'].tolist()
     predicted_test = test.copy()
 
-    predicted_test['y'] = [knn_predict_one_point(k, sorted_train, sorted_x_list, row['x'])
+    predicted_test['y'] = [knn_predict_one_point(k, sorted_x_list, sorted_y_list, row['x'])
                            for index, row in test.iterrows()]
     return predicted_test
 
@@ -199,7 +200,7 @@ def compare_with_sklearn():
     k_list = generate_k_list()
 
     evaluate_our_implementation(df, k_list)
-    # evaluate_sklearn_implementation(df, k_list)
+    evaluate_sklearn_implementation(df, k_list)
 
 
 if __name__ == '__main__':
