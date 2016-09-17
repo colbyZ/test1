@@ -109,13 +109,9 @@ def linear_reg_fit(train):
     return slope, intercept
 
 
-def linear_reg_predict_one_point(test_x, slope, intercept):
-    return intercept + slope * test_x
-
-
 def linear_reg_predict(test, slope, intercept):
     predicted_test = test.copy()
-    predicted_test['y'] = [linear_reg_predict_one_point(row['x'], slope, intercept) for index, row in test.iterrows()]
+    predicted_test['y'] = [intercept + slope * row['x'] for index, row in test.iterrows()]
     return predicted_test
 
 
