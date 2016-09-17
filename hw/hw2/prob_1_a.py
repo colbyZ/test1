@@ -19,10 +19,15 @@ def split(data, m):
     return train, test
 
 
+def knn_predict_one_point(k, sorted_train, test_x):
+    return 0.0
+
+
 def knn_predict(k, train, test):
     sorted_train = train.sort_values(by='x')
-    print sorted_train.head()
-    predicted_test = test
+    predicted_test = test.copy()
+    predicted_values = [knn_predict_one_point(k, sorted_train, row['x']) for index, row in test.iterrows()]
+    predicted_test['y'] = predicted_values
     return predicted_test
 
 
@@ -34,7 +39,7 @@ def compare_with_sklearn():
     train, test = split(df, 0.7)
 
     predicted_test = knn_predict(1, train, test[['x']])
-    # print predicted_test
+    print predicted_test
 
 
 if __name__ == '__main__':
