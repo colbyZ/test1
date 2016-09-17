@@ -20,6 +20,8 @@ def split(data, m):
 
 
 def knn_predict(k, train, test):
+    sorted_train = train.sort_values(by='x')
+    print sorted_train.head()
     predicted_test = test
     return predicted_test
 
@@ -32,7 +34,7 @@ def compare_with_sklearn():
     train, test = split(df, 0.7)
 
     predicted_test = knn_predict(1, train, test[['x']])
-    print predicted_test
+    # print predicted_test
 
 
 if __name__ == '__main__':
