@@ -91,8 +91,21 @@ def knn_predict(k, train, test):
 # linear regression
 
 def linear_reg_fit(train):
-    slope = 0.0
-    intercept = 0.0
+    x_list = train['x'].tolist()
+    y_list = train['y'].tolist()
+
+    x_mean = np.mean(x_list)
+    y_mean = np.mean(y_list)
+
+    numerator_sum = 0.0
+    denominator_sum = 0.0
+    for x, y in izip(x_list, y_list):
+        x_diff = x - x_mean
+        numerator_sum += x_diff * (y - y_mean)
+        denominator_sum += x_diff ** 2
+
+    slope = numerator_sum / denominator_sum
+    intercept = y_mean - slope * x_mean
     return slope, intercept
 
 
@@ -119,6 +132,7 @@ def compare_with_sklearn():
     # print s
 
     slope, intercept = linear_reg_fit(train)
+    print slope, intercept
 
 
 if __name__ == '__main__':
