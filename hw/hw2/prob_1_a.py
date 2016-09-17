@@ -52,12 +52,20 @@ def find_best_neighbors(sorted_x_list, neighbors_range, test_x):
     return best_range
 
 
+def get_initial_range(k, insertion_index, length):
+    left_index = max(0, insertion_index - k / 2)
+    right_index = left_index + k
+    if right_index > length:
+        right_index = length
+        left_index = right_index - k
+    return left_index, right_index
+
+
 def find_nearest_neighbors(k, sorted_x_list, test_x):
     insertion_index = bisect.bisect_left(sorted_x_list, test_x)
-    initial_left_index = max(0, insertion_index - k / 2)
-    neighbors_range = (initial_left_index, initial_left_index + k)
-    best_neighbors = find_best_neighbors(sorted_x_list, neighbors_range, test_x)
-    print neighbors_range, best_neighbors
+    initial_range = get_initial_range(k, insertion_index, len(sorted_x_list))
+    best_neighbors = find_best_neighbors(sorted_x_list, initial_range, test_x)
+    print best_neighbors
 
 
 def knn_predict_one_point(k, sorted_train, sorted_x_list, test_x):
@@ -72,8 +80,8 @@ def knn_predict(k, train, test):
 
     for i, (index, row) in enumerate(test.iterrows()):
         knn_predict_one_point(k, sorted_train, sorted_x_list, row['x'])
-        if i == 0:
-            break
+        # if i == 2:
+        #     break
 
     # predicted_test['y'] = [knn_predict_one_point(k, sorted_train, sorted_x_list, row['x'])
     #                        for index, row in test.iterrows()]
