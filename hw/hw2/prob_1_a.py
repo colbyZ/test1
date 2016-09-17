@@ -134,8 +134,14 @@ def evaluate_our_implementation(df):
     print 'our implementation'
     train, test = split(df, 0.7)
 
+    k_list = list(range(1, 6))
+    k_list.extend(range(10, 21, 5))
+    k_list.extend(range(30, 51, 10))
+    k_list.extend(range(75, 101, 25))
+    k_list.extend(range(150, 351, 50))
+
     test_x = test[['x']]
-    for k in range(1, 101):
+    for k in k_list:
         predicted_test = knn_predict(k, train, test_x)
         s = score(predicted_test, test)
         print 'KNN, k: %d, score: %.4f' % (k, s)
