@@ -1,4 +1,5 @@
 import bisect
+from itertools import izip
 
 import numpy as np
 import pandas as pd
@@ -70,19 +71,34 @@ def find_nearest_neighbors(k, sorted_x_list, test_x):
 def knn_predict_one_point(k, sorted_train, sorted_x_list, test_x):
     neighbors_range = find_nearest_neighbors(k, sorted_x_list, test_x)
     total = 0.0
-    for index in neighbors_range:
+    for index in range(neighbors_range[0], neighbors_range[1]):
         total += sorted_train.iloc[index]['y']
     return total / k
 
 
+def get_column_list(df, column_label):
+    return df[column_label].tolist()
+
+
 def knn_predict(k, train, test):
     sorted_train = train.sort_values(by='x')
-    sorted_x_list = sorted_train['x'].tolist()
+    sorted_x_list = get_column_list(sorted_train, 'x')
     predicted_test = test.copy()
 
     predicted_test['y'] = [knn_predict_one_point(k, sorted_train, sorted_x_list, row['x'])
                            for index, row in test.iterrows()]
     return predicted_test
+
+
+def score(predicted, actual):
+    rss = 0.0
+    tss = 0.0
+    actual_y_list = get_column_list(actual, 'y')
+    actual_y_mean = np.mean(actual_y_list)
+    for predicted_value, actual_value in izip(get_column_list(predicted, 'y'), actual_y_list):
+        rss += (actual_value - predicted_value) ** 2
+        tss += (actual_value - actual_y_mean) ** 2
+    return 1.0 - rss / tss
 
 
 def compare_with_sklearn():
@@ -93,7 +109,8 @@ def compare_with_sklearn():
     train, test = split(df, 0.7)
 
     predicted_test = knn_predict(1, train, test[['x']])
-    print predicted_test
+    s = score(predicted_test, test)
+    print s
 
 
 if __name__ == '__main__':
