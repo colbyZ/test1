@@ -19,12 +19,18 @@ def split(data, m):
     return train, test
 
 
+def knn_predict(k, train, test):
+    print test.head()
+
+
 def compare_with_sklearn():
     np.random.seed(1090)
+
     df = pd.read_csv('dataset/dataset_1_full.txt')
+
     train, test = split(df, 0.7)
-    print train.shape, test.shape
-    print train.head()
+
+    knn_predict(1, train, test[['x']])
 
 
 if __name__ == '__main__':
