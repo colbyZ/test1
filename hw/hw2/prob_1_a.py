@@ -144,12 +144,12 @@ def evaluate_our_implementation(df):
     for k in k_list:
         predicted_test = knn_predict(k, train, test_x)
         s = score(predicted_test, test)
-        print 'KNN, k: %d, score: %.4f' % (k, s)
+        print 'KNN, k: %d, score: %.3f' % (k, s)
 
     slope, intercept = linear_reg_fit(train)
     predicted_test = linear_reg_predict(test_x, slope, intercept)
     s = score(predicted_test, test)
-    print 'linear regression, score: %.4f' % s
+    print 'linear regression, score: %.3f' % s
 
 
 def compare_with_sklearn():
