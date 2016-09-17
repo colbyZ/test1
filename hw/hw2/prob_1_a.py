@@ -3,9 +3,12 @@ from itertools import izip
 
 import numpy as np
 import pandas as pd
+from sklearn.cross_validation import train_test_split as sk_split
+from sklearn.neighbors import KNeighborsRegressor as KNN
 
 
 # split
+
 
 def split(data, m):
     test_size = 1 - m
@@ -130,15 +133,18 @@ def score(predicted, actual):
     return 1.0 - rss / tss
 
 
-def evaluate_our_implementation(df):
-    print 'our implementation'
-    train, test = split(df, 0.7)
-
+def generate_k_list():
     k_list = list(range(1, 6))
     k_list.extend(range(10, 21, 5))
     k_list.extend(range(30, 51, 10))
     k_list.extend(range(75, 101, 25))
     k_list.extend(range(150, 351, 50))
+    return k_list
+
+
+def evaluate_our_implementation(df, k_list):
+    print 'our implementation'
+    train, test = split(df, 0.7)
 
     test_x = test[['x']]
     for k in k_list:
@@ -152,12 +158,33 @@ def evaluate_our_implementation(df):
     print 'linear regression, score: %.3f' % s
 
 
+def reshape(df, column_name):
+    return df[column_name].reshape((len(df), 1))
+
+
+def evaluate_sklearn_implementation(df, k_list):
+    print 'sklearn implementation'
+    train, test = sk_split(df, train_size=0.7)
+
+    x_train = reshape(train, 'x')
+    y_train = reshape(train, 'y')
+    x_test = reshape(test, 'x')
+    y_test = reshape(test, 'y')
+    for k in k_list:
+        neighbors = KNN(n_neighbors=k)
+        neighbors.fit(x_train, y_train)
+        s = neighbors.score(x_test, y_test)
+        print 'KNN, k: %d, score: %.3f' % (k, s)
+
+
 def compare_with_sklearn():
     np.random.seed(1090)
 
     df = pd.read_csv('dataset/dataset_1_full.txt')
+    k_list = generate_k_list()
 
-    evaluate_our_implementation(df)
+    # evaluate_our_implementation(df, k_list)
+    evaluate_sklearn_implementation(df, k_list)
 
 
 if __name__ == '__main__':
