@@ -3,6 +3,7 @@ from itertools import izip
 
 import numpy as np
 import pandas as pd
+import time
 from sklearn.cross_validation import train_test_split as sk_split
 from sklearn.linear_model import LinearRegression as Lin_Reg
 from sklearn.neighbors import KNeighborsRegressor as KNN
@@ -149,14 +150,18 @@ def evaluate_our_implementation(df, k_list):
 
     test_x = test[['x']]
     for k in k_list:
+        start = time.time()
         predicted_test = knn_predict(k, train, test_x)
         s = score(predicted_test, test)
-        print 'KNN, k: %d, score: %.3f' % (k, s)
+        elapsed_time = time.time() - start
+        print 'KNN, k: %d, score: %.3f, time: %.2f' % (k, s, elapsed_time)
 
+    start = time.time()
     slope, intercept = linear_reg_fit(train)
     predicted_test = linear_reg_predict(test_x, slope, intercept)
     s = score(predicted_test, test)
-    print 'linear regression, score: %.3f' % s
+    elapsed_time = time.time() - start
+    print 'linear regression, score: %.3f, time: %.2f' % (s, elapsed_time)
 
 
 def reshape(df, column_name):
@@ -172,15 +177,19 @@ def evaluate_sklearn_implementation(df, k_list):
     x_test = reshape(test, 'x')
     y_test = reshape(test, 'y')
     for k in k_list:
+        start = time.time()
         neighbors = KNN(n_neighbors=k)
         neighbors.fit(x_train, y_train)
         s = neighbors.score(x_test, y_test)
-        print 'KNN, k: %d, score: %.3f' % (k, s)
+        elapsed_time = time.time() - start
+        print 'KNN, k: %d, score: %.3f, time: %.2f' % (k, s, elapsed_time)
 
+    start = time.time()
     regression = Lin_Reg()
     regression.fit(x_train, y_train)
     s = regression.score(x_test, y_test)
-    print 'linear regression, score: %.3f' % s
+    elapsed_time = time.time() - start
+    print 'linear regression, score: %.3f, time: %.2f' % (s, elapsed_time)
 
 
 def compare_with_sklearn():
@@ -190,7 +199,7 @@ def compare_with_sklearn():
     k_list = generate_k_list()
 
     evaluate_our_implementation(df, k_list)
-    evaluate_sklearn_implementation(df, k_list)
+    # evaluate_sklearn_implementation(df, k_list)
 
 
 if __name__ == '__main__':
