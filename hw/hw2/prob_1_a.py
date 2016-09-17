@@ -5,6 +5,8 @@ import numpy as np
 import pandas as pd
 
 
+# split
+
 def split(data, m):
     test_size = 1 - m
     length = len(data)
@@ -114,6 +116,8 @@ def linear_reg_predict(test, slope, intercept):
     predicted_test['y'] = [intercept + slope * row['x'] for index, row in test.iterrows()]
     return predicted_test
 
+
+# score
 
 def score(predicted, actual):
     rss = 0.0
