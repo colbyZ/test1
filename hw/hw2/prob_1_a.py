@@ -109,8 +109,13 @@ def linear_reg_fit(train):
     return slope, intercept
 
 
+def linear_reg_predict_one_point(test_x, slope, intercept):
+    return intercept + slope * test_x
+
+
 def linear_reg_predict(test, slope, intercept):
     predicted_test = test.copy()
+    predicted_test['y'] = [linear_reg_predict_one_point(row['x'], slope, intercept) for index, row in test.iterrows()]
     return predicted_test
 
 
@@ -139,7 +144,8 @@ def compare_with_sklearn():
 
     slope, intercept = linear_reg_fit(train)
     predicted_test = linear_reg_predict(test_x, slope, intercept)
-    # print predicted_test.head()
+    s = score(predicted_test, test)
+    print s
 
 
 if __name__ == '__main__':
