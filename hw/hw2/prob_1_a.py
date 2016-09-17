@@ -22,6 +22,8 @@ def split(data, m):
     return train, test
 
 
+# knn
+
 def distance(x1, x2):
     return abs(x1 - x2)
 
@@ -86,6 +88,14 @@ def knn_predict(k, train, test):
     return predicted_test
 
 
+# linear regression
+
+def linear_reg_fit(train):
+    slope = 0.0
+    intercept = 0.0
+    return slope, intercept
+
+
 def score(predicted, actual):
     rss = 0.0
     tss = 0.0
@@ -104,9 +114,11 @@ def compare_with_sklearn():
 
     train, test = split(df, 0.7)
 
-    predicted_test = knn_predict(1, train, test[['x']])
-    s = score(predicted_test, test)
-    print s
+    # predicted_test = knn_predict(1, train, test[['x']])
+    # s = score(predicted_test, test)
+    # print s
+
+    slope, intercept = linear_reg_fit(train)
 
 
 if __name__ == '__main__':
