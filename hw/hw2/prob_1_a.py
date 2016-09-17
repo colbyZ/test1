@@ -20,6 +20,7 @@ def split(data, m):
 
 
 def compare_with_sklearn():
+    np.random.seed(1090)
     df = pd.read_csv('dataset/dataset_1_full.txt')
     train, test = split(df, 0.7)
     print train.shape, test.shape
