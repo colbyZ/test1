@@ -20,7 +20,8 @@ def split(data, m):
 
 
 def knn_predict(k, train, test):
-    print test.head()
+    predicted_test = test
+    return predicted_test
 
 
 def compare_with_sklearn():
@@ -30,7 +31,8 @@ def compare_with_sklearn():
 
     train, test = split(df, 0.7)
 
-    knn_predict(1, train, test[['x']])
+    predicted_test = knn_predict(1, train, test[['x']])
+    print predicted_test
 
 
 if __name__ == '__main__':
