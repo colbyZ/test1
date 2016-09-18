@@ -4,12 +4,12 @@ from sklearn.linear_model import LinearRegression as Lin_Reg
 from sklearn.neighbors import KNeighborsRegressor as KNN
 
 
-# --------  fill_knn
-# input: missing_df (dataframe), full_df (dataframe), no_y_ind (indices of missing values),
+# --------  fill
+# input: regressor (knn or lin_reg), missing_df (dataframe), full_df (dataframe), no_y_ind (indices of missing values),
 #       with_y_ind (indices of non-missing values), k (integer)
 # output: predicted_df (dataframe), r (float)
 
-def fill_knn(missing_df, full_df, no_y_ind, with_y_ind, k):
+def fill(regressor, missing_df, full_df, no_y_ind, with_y_ind):
     # preparing data in array form
     x_train = missing_df.loc[with_y_ind, 'x'].values
     x_train = x_train.reshape((len(with_y_ind), 1))
@@ -17,44 +17,14 @@ def fill_knn(missing_df, full_df, no_y_ind, with_y_ind, k):
     x_test = missing_df.loc[no_y_ind, 'x'].values.reshape((len(no_y_ind), 1))
     y_test = full_df.loc[no_y_ind, 'y'].values
 
-    # fit knn model
-    neighbours = KNN(n_neighbors=k)
-    neighbours.fit(x_train, y_train)
+    # fit model
+    regressor.fit(x_train, y_train)
 
     # predict y-values
-    predicted_y = neighbours.predict(x_test)
+    predicted_y = regressor.predict(x_test)
 
     # score predictions
-    r = neighbours.score(x_test, y_test)
-
-    # fill in missing y-values
-    predicted_df = missing_df.copy()
-    predicted_df.loc[no_y_ind, 'y'] = pd.Series(predicted_y, index=no_y_ind)
-
-    return predicted_df, r
-
-
-# --------  fill_ling_reg
-# input: missing_df (dataframe), full_df (dataframe), no_y_ind (indices of missing values),
-#       with_y_ind (indices of non-missing values), k (integer)
-# output: predicted_df (dataframe), r (float)
-
-def fill_lin_reg(missing_df, full_df, no_y_ind, with_y_ind):
-    # preparing data in array form
-    x_train = missing_df.loc[with_y_ind, 'x'].values.reshape((len(with_y_ind), 1))
-    y_train = missing_df.loc[with_y_ind, 'y'].values
-    x_test = missing_df.loc[no_y_ind, 'x'].values.reshape((len(no_y_ind), 1))
-    y_test = full_df.loc[no_y_ind, 'y'].values
-
-    # fit linear model
-    regression = Lin_Reg()
-    regression.fit(x_train, y_train)
-
-    # predict y-values
-    predicted_y = regression.predict(x_test)
-
-    # score predictions
-    r = regression.score(x_test, y_test)
+    r = regressor.score(x_test, y_test)
 
     # fill in missing y-values
     predicted_df = missing_df.copy()
@@ -111,8 +81,8 @@ def handling_missing_data():
         no_y_ind = missing_df[missing_df['y'].isnull()].index
         with_y_ind = missing_df[missing_df['y'].notnull()].index
 
-        predicted_knn, r_knn = fill_knn(missing_df, full_df, no_y_ind, with_y_ind, k)
-        predicted_lin, r_lin = fill_lin_reg(missing_df, full_df, no_y_ind, with_y_ind)
+        predicted_knn, r_knn = fill(KNN(n_neighbors=k), missing_df, full_df, no_y_ind, with_y_ind)
+        predicted_lin, r_lin = fill(Lin_Reg(), missing_df, full_df, no_y_ind, with_y_ind)
 
         ax_pair = ax_pairs[dataset_i]
         plot_missing(ax_pair[0], ax_pair[1],
