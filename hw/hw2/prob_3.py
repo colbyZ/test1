@@ -2,7 +2,7 @@ import matplotlib.pyplot as plt
 import pandas as pd
 
 
-def residual_plots_a():
+def read_and_visualize_dataset():
     dataset_i = 1
     df = pd.read_csv('./dataset/dataset_%d_full.txt' % dataset_i)
 
@@ -15,4 +15,4 @@ def residual_plots_a():
 
 
 if __name__ == '__main__':
-    residual_plots_a()
+    read_and_visualize_dataset()
