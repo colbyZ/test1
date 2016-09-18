@@ -57,6 +57,17 @@ def plot_missing(ax1, ax2, predicted_knn, r_knn, predicted_lin, r_lin, no_y_ind,
     plot_ax(ax2, predicted_lin, no_y_ind, with_y_ind, 'green', 'Lin Reg, R^2: %.3f' % r_lin)
 
 
+def get_dataset_data(dataset_i):
+    # Read dataset i
+    dataset_i_1 = dataset_i + 1
+    missing_df = pd.read_csv('./dataset/dataset_%d_missing.txt' % dataset_i_1)
+    full_df = pd.read_csv('./dataset/dataset_%d_full.txt' % dataset_i_1)
+
+    no_y_ind = missing_df[missing_df['y'].isnull()].index
+    with_y_ind = missing_df[missing_df['y'].notnull()].index
+    return missing_df, full_df, no_y_ind, with_y_ind
+
+
 def handling_missing_data():
     # number of neighbours
     k = 10
@@ -67,13 +78,7 @@ def handling_missing_data():
     fig, ax_pairs = plt.subplots(n_datasets, 2, figsize=(15, 3.3 * n_datasets))
 
     for dataset_i in range(0, n_datasets):
-        # Read dataset i
-        dataset_i_1 = dataset_i + 1
-        missing_df = pd.read_csv('./dataset/dataset_%d_missing.txt' % dataset_i_1)
-        full_df = pd.read_csv('./dataset/dataset_%d_full.txt' % dataset_i_1)
-
-        no_y_ind = missing_df[missing_df['y'].isnull()].index
-        with_y_ind = missing_df[missing_df['y'].notnull()].index
+        missing_df, full_df, no_y_ind, with_y_ind = get_dataset_data(dataset_i)
 
         predicted_knn, r_knn = fill(KNN(n_neighbors=k), missing_df, full_df, no_y_ind, with_y_ind)
         predicted_lin, r_lin = fill(Lin_Reg(), missing_df, full_df, no_y_ind, with_y_ind)
@@ -81,11 +86,16 @@ def handling_missing_data():
         ax_pair = ax_pairs[dataset_i]
         plot_missing(ax_pair[0], ax_pair[1],
                      predicted_knn, r_knn, predicted_lin,
-                     r_lin, no_y_ind, with_y_ind, dataset_i_1)
+                     r_lin, no_y_ind, with_y_ind, dataset_i + 1)
 
     plt.tight_layout()
     plt.show()
 
 
+def impact_of_k_on_knn():
+    pass
+
+
 if __name__ == '__main__':
     handling_missing_data()
+    # impact_of_k_on_knn()
