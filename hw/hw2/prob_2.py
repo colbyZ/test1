@@ -33,6 +33,12 @@ def fill(regressor, missing_df, full_df, no_y_ind, with_y_ind):
     return predicted_df, r
 
 
+def scatter(ax, predicted_df, indices, color):
+    ax.scatter(predicted_df.loc[indices]['x'].values,
+               predicted_df.loc[indices]['y'].values,
+               color=color)
+
+
 # --------  plot_missing
 # input: ax1 (axes), ax2 (axes),
 #       predicted_knn (nx2 dataframe with predicted vals), r_knn (float),
@@ -42,23 +48,13 @@ def fill(regressor, missing_df, full_df, no_y_ind, with_y_ind):
 #       with_y_ind (indices of rows with no missing y-values)
 
 def plot_missing(ax1, ax2, predicted_knn, r_knn, predicted_lin, r_lin, k, no_y_ind, with_y_ind, dataset_i):
-    ax1.scatter(predicted_knn.loc[with_y_ind]['x'].values,
-                predicted_knn.loc[with_y_ind]['y'].values,
-                color='blue')
-
-    ax1.scatter(predicted_knn.loc[no_y_ind]['x'].values,
-                predicted_knn.loc[no_y_ind]['y'].values,
-                color='red')
+    scatter(ax1, predicted_knn, with_y_ind, 'blue')
+    scatter(ax1, predicted_knn, no_y_ind, 'red')
 
     ax1.set_title('Dataset %d, KNN, R^2: %.3f' % (dataset_i, r_knn))
 
-    ax2.scatter(predicted_lin.loc[with_y_ind]['x'].values,
-                predicted_lin.loc[with_y_ind]['y'].values,
-                color='blue')
-
-    ax2.scatter(predicted_lin.loc[no_y_ind]['x'].values,
-                predicted_lin.loc[no_y_ind]['y'].values,
-                color='green')
+    scatter(ax2, predicted_lin, with_y_ind, 'blue')
+    scatter(ax2, predicted_lin, no_y_ind, 'green')
 
     ax2.set_title('Lin Reg, R^2: %.3f' % r_lin)
 
