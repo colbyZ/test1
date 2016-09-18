@@ -36,8 +36,8 @@ def scatter(ax, predicted_df, indices, color):
 
 
 def plot_ax(ax, predicted_df, dataset_data, no_ind_color, title):
-    with_y_ind = dataset_data[3]
     no_y_ind = dataset_data[2]
+    with_y_ind = dataset_data[3]
     scatter(ax, predicted_df, with_y_ind, 'blue')
     scatter(ax, predicted_df, no_y_ind, no_ind_color)
     ax.set_title(title)
