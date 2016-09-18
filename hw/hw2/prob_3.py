@@ -1,4 +1,5 @@
 import matplotlib.pyplot as plt
+import numpy as np
 import pandas as pd
 
 
@@ -20,17 +21,19 @@ def read_and_visualize_dataset():
 def residual_plots():
     df = read_dataset(1)
 
-    fig, axes = plt.subplots(1, 3, figsize=(25, 5))
+    fig, ax = plt.subplots(1, 1, figsize=(12, 5))
     x_values = df[['x']].values
     y_values = df[['y']].values
 
-    titles = ['slope = 0.4, intercept = 0.2', 'slope = 0.4, intercept = 4', 'linear regression model']
-    for i, title in enumerate(titles):
-        ax = axes[i]
-        ax.scatter(x_values, y_values)
-        ax.set_xlabel('x')
-        ax.set_ylabel('y')
-        ax.set_title(title)
+    # titles = ['slope = 0.4, intercept = 0.2', 'slope = 0.4, intercept = 4', 'linear regression model']
+    ax.scatter(x_values, y_values)
+    ax.set_xlabel('x')
+    ax.set_ylabel('y')
+    ax.set_title('Dataset 1')
+
+    x = np.arange(-0.1, 2.0, step=1.2)
+    plt.plot(x, 0.4 * x + 0.2)
+    plt.plot(x, 0.4 * x + 4)
 
     plt.show()
 
