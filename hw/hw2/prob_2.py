@@ -98,10 +98,11 @@ def impact_of_k_on_knn():
     ax1.set_ylabel('r squared')
     ax1.set_title('impact of k on the performance of KNN, k: [1, 345]')
 
+    ax2_k_start = 20
     ax2_k_limit = 60
-    ax2.plot(k_list[:ax2_k_limit], r_sq_list[:ax2_k_limit])
+    ax2.plot(k_list[ax2_k_start:ax2_k_limit], r_sq_list[ax2_k_start:ax2_k_limit])
     ax2.set_xlabel('k')
-    ax2.set_title('k: [1, %d]' % ax2_k_limit)
+    ax2.set_title('k: [%d, %d]' % (ax2_k_start, ax2_k_limit))
 
     plt.show()
 
