@@ -50,9 +50,8 @@ def plot_missing(ax1, ax2, predicted_knn, r_knn, predicted_lin, r_lin, dataset_d
 
 def get_dataset_data(dataset_i):
     # Read dataset i
-    dataset_i_1 = dataset_i + 1
-    missing_df = pd.read_csv('./dataset/dataset_%d_missing.txt' % dataset_i_1)
-    full_df = pd.read_csv('./dataset/dataset_%d_full.txt' % dataset_i_1)
+    missing_df = pd.read_csv('./dataset/dataset_%d_missing.txt' % dataset_i)
+    full_df = pd.read_csv('./dataset/dataset_%d_full.txt' % dataset_i)
 
     no_y_ind = missing_df[missing_df['y'].isnull()].index
     with_y_ind = missing_df[missing_df['y'].notnull()].index
@@ -68,24 +67,24 @@ def handling_missing_data():
     # plot predicted points
     fig, ax_pairs = plt.subplots(n_datasets, 2, figsize=(15, 3.3 * n_datasets))
 
-    for dataset_i in range(0, n_datasets):
-        # missing_df, full_df, no_y_ind, with_y_ind = get_dataset_data(dataset_i)
+    for dataset_i in range(1, n_datasets + 1):
         dataset_data = get_dataset_data(dataset_i)
 
         predicted_knn, r_knn = fill(KNN(n_neighbors=k), dataset_data)
         predicted_lin, r_lin = fill(Lin_Reg(), dataset_data)
 
-        ax_pair = ax_pairs[dataset_i]
+        ax_pair = ax_pairs[dataset_i - 1]
         plot_missing(ax_pair[0], ax_pair[1],
                      predicted_knn, r_knn, predicted_lin,
-                     r_lin, dataset_data, dataset_i + 1)
+                     r_lin, dataset_data, dataset_i)
 
     plt.tight_layout()
     plt.show()
 
 
 def impact_of_k_on_knn():
-    pass
+    for k in range(1, 2):
+        dataset_data = get_dataset_data(1)
 
 
 if __name__ == '__main__':
