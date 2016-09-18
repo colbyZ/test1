@@ -39,6 +39,13 @@ def scatter(ax, predicted_df, indices, color):
                color=color)
 
 
+def plot_ax(ax, predicted_df, no_y_ind, with_y_ind, no_ind_color, title):
+    scatter(ax, predicted_df, with_y_ind, 'blue')
+    scatter(ax, predicted_df, no_y_ind, no_ind_color)
+
+    ax.set_title(title)
+
+
 # --------  plot_missing
 # input: ax1 (axes), ax2 (axes),
 #       predicted_knn (nx2 dataframe with predicted vals), r_knn (float),
@@ -47,15 +54,8 @@ def scatter(ax, predicted_df, indices, color):
 #       with_y_ind (indices of rows with no missing y-values)
 
 def plot_missing(ax1, ax2, predicted_knn, r_knn, predicted_lin, r_lin, no_y_ind, with_y_ind, dataset_i):
-    scatter(ax1, predicted_knn, with_y_ind, 'blue')
-    scatter(ax1, predicted_knn, no_y_ind, 'red')
-
-    ax1.set_title('Dataset %d, KNN, R^2: %.3f' % (dataset_i, r_knn))
-
-    scatter(ax2, predicted_lin, with_y_ind, 'blue')
-    scatter(ax2, predicted_lin, no_y_ind, 'green')
-
-    ax2.set_title('Lin Reg, R^2: %.3f' % r_lin)
+    plot_ax(ax1, predicted_knn, no_y_ind, with_y_ind, 'red', 'Dataset %d, KNN, R^2: %.3f' % (dataset_i, r_knn))
+    plot_ax(ax2, predicted_lin, no_y_ind, with_y_ind, 'green', 'Lin Reg, R^2: %.3f' % r_lin)
 
 
 def handling_missing_data():
