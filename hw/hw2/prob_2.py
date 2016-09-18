@@ -91,6 +91,14 @@ def impact_of_k_on_knn():
         k_list.append(k)
         r_sq_list.append(r_knn)
 
+    print 'first k values:'
+    print k_list[:5]
+    print r_sq_list[:5]
+
+    max_r = max(r_sq_list)
+    max_k = r_sq_list.index(max_r) + 1
+    print 'max R^2: %.3f, k: %d' % (max_r, max_k)
+
     fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(15, 5))
 
     ax1.plot(k_list, r_sq_list)
@@ -98,11 +106,11 @@ def impact_of_k_on_knn():
     ax1.set_ylabel('r squared')
     ax1.set_title('impact of k on the performance of KNN, k: [1, 345]')
 
-    ax2_k_start = 20
-    ax2_k_limit = 60
+    ax2_k_start = 0
+    ax2_k_limit = 79
     ax2.plot(k_list[ax2_k_start:ax2_k_limit], r_sq_list[ax2_k_start:ax2_k_limit])
     ax2.set_xlabel('k')
-    ax2.set_title('k: [%d, %d]' % (ax2_k_start, ax2_k_limit))
+    ax2.set_title('k: [%d, %d]' % (ax2_k_start + 1, ax2_k_limit + 1))
 
     plt.show()
 
