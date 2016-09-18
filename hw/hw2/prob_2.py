@@ -83,10 +83,19 @@ def handling_missing_data():
 
 
 def impact_of_k_on_knn():
-    for k in range(1, 2):
-        dataset_data = get_dataset_data(1)
+    dataset_data = get_dataset_data(1)
+    k_list = []
+    r_sq_list = []
+    for k in range(1, 346):
+        _, r_knn = fill(KNN(n_neighbors=k), dataset_data)
+        k_list.append(k)
+        r_sq_list.append(r_knn)
+    plt.plot(k_list, r_sq_list)
+    plt.xlabel('k')
+    plt.ylabel('r squared')
+    plt.show()
 
 
 if __name__ == '__main__':
-    handling_missing_data()
-    # impact_of_k_on_knn()
+    # handling_missing_data()
+    impact_of_k_on_knn()
