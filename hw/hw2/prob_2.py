@@ -93,6 +93,7 @@ def impact_of_k_on_knn():
     plt.plot(k_list, r_sq_list)
     plt.xlabel('k')
     plt.ylabel('r squared')
+    plt.title('impact of k on the performance of KNN, k: [1, 345]')
     plt.show()
 
 
