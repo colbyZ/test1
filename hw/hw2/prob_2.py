@@ -4,12 +4,8 @@ from sklearn.linear_model import LinearRegression as Lin_Reg
 from sklearn.neighbors import KNeighborsRegressor as KNN
 
 
-# --------  fill
-# input: regressor (knn or lin_reg), missing_df (dataframe), full_df (dataframe), no_y_ind (indices of missing values),
-#       with_y_ind (indices of non-missing values), k (integer)
-# output: predicted_df (dataframe), r (float)
-
-def fill(regressor, missing_df, full_df, no_y_ind, with_y_ind):
+def fill(regressor, dataset_data):
+    missing_df, full_df, no_y_ind, with_y_ind = dataset_data
     # preparing data in array form
     x_train = missing_df.loc[with_y_ind, 'x'].values
     x_train = x_train.reshape((len(with_y_ind), 1))
@@ -39,22 +35,17 @@ def scatter(ax, predicted_df, indices, color):
                color=color)
 
 
-def plot_ax(ax, predicted_df, no_y_ind, with_y_ind, no_ind_color, title):
+def plot_ax(ax, predicted_df, dataset_data, no_ind_color, title):
+    with_y_ind = dataset_data[3]
+    no_y_ind = dataset_data[2]
     scatter(ax, predicted_df, with_y_ind, 'blue')
     scatter(ax, predicted_df, no_y_ind, no_ind_color)
     ax.set_title(title)
 
 
-# --------  plot_missing
-# input: ax1 (axes), ax2 (axes),
-#       predicted_knn (nx2 dataframe with predicted vals), r_knn (float),
-#       predicted_lin (nx2 dataframe with predicted vals), r_lin (float),
-#       no_y_ind (indices of rows with missing y-values),
-#       with_y_ind (indices of rows with no missing y-values)
-
-def plot_missing(ax1, ax2, predicted_knn, r_knn, predicted_lin, r_lin, no_y_ind, with_y_ind, dataset_i):
-    plot_ax(ax1, predicted_knn, no_y_ind, with_y_ind, 'red', 'Dataset %d, KNN, R^2: %.3f' % (dataset_i, r_knn))
-    plot_ax(ax2, predicted_lin, no_y_ind, with_y_ind, 'green', 'Lin Reg, R^2: %.3f' % r_lin)
+def plot_missing(ax1, ax2, predicted_knn, r_knn, predicted_lin, r_lin, dataset_data, dataset_i):
+    plot_ax(ax1, predicted_knn, dataset_data, 'red', 'Dataset %d, KNN, R^2: %.3f' % (dataset_i, r_knn))
+    plot_ax(ax2, predicted_lin, dataset_data, 'green', 'Lin Reg, R^2: %.3f' % r_lin)
 
 
 def get_dataset_data(dataset_i):
@@ -78,15 +69,16 @@ def handling_missing_data():
     fig, ax_pairs = plt.subplots(n_datasets, 2, figsize=(15, 3.3 * n_datasets))
 
     for dataset_i in range(0, n_datasets):
-        missing_df, full_df, no_y_ind, with_y_ind = get_dataset_data(dataset_i)
+        # missing_df, full_df, no_y_ind, with_y_ind = get_dataset_data(dataset_i)
+        dataset_data = get_dataset_data(dataset_i)
 
-        predicted_knn, r_knn = fill(KNN(n_neighbors=k), missing_df, full_df, no_y_ind, with_y_ind)
-        predicted_lin, r_lin = fill(Lin_Reg(), missing_df, full_df, no_y_ind, with_y_ind)
+        predicted_knn, r_knn = fill(KNN(n_neighbors=k), dataset_data)
+        predicted_lin, r_lin = fill(Lin_Reg(), dataset_data)
 
         ax_pair = ax_pairs[dataset_i]
         plot_missing(ax_pair[0], ax_pair[1],
                      predicted_knn, r_knn, predicted_lin,
-                     r_lin, no_y_ind, with_y_ind, dataset_i + 1)
+                     r_lin, dataset_data, dataset_i + 1)
 
     plt.tight_layout()
     plt.show()
