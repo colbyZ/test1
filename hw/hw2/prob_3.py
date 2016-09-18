@@ -19,7 +19,20 @@ def read_and_visualize_dataset():
 
 def residual_plots():
     df = read_dataset(1)
-    print df.head()
+
+    fig, axes = plt.subplots(1, 3, figsize=(25, 5))
+    x_values = df[['x']].values
+    y_values = df[['y']].values
+
+    titles = ['slope = 0.4, intercept = 0.2', 'slope = 0.4, intercept = 4', 'linear regression model']
+    for i, title in enumerate(titles):
+        ax = axes[i]
+        ax.scatter(x_values, y_values)
+        ax.set_xlabel('x')
+        ax.set_ylabel('y')
+        ax.set_title(title)
+
+    plt.show()
 
 
 if __name__ == '__main__':
