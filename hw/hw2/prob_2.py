@@ -87,13 +87,22 @@ def impact_of_k_on_knn():
     k_list = []
     r_sq_list = []
     for k in range(1, 346):
-        _, r_knn = fill(KNN(n_neighbors=k), dataset_data)
+        predicted_knn, r_knn = fill(KNN(n_neighbors=k), dataset_data)
         k_list.append(k)
         r_sq_list.append(r_knn)
-    plt.plot(k_list, r_sq_list)
-    plt.xlabel('k')
-    plt.ylabel('r squared')
-    plt.title('impact of k on the performance of KNN, k: [1, 345]')
+
+    fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(15, 5))
+
+    ax1.plot(k_list, r_sq_list)
+    ax1.set_xlabel('k')
+    ax1.set_ylabel('r squared')
+    ax1.set_title('impact of k on the performance of KNN, k: [1, 345]')
+
+    ax2_n = 60
+    ax2.plot(k_list[:ax2_n], r_sq_list[:ax2_n])
+    ax2.set_xlabel('k')
+    ax2.set_title('k: [1, %d]' % ax2_n)
+
     plt.show()
 
 
