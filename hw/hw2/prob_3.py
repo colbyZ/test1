@@ -32,8 +32,9 @@ def residual_plots():
     ax.set_title('Dataset 1')
 
     x = np.arange(-0.1, 2.0, step=1.2)
-    plt.plot(x, 0.4 * x + 0.2)
-    plt.plot(x, 0.4 * x + 4)
+    plt.plot(x, 0.4 * x + 0.2, label='slope = 0.4, intercept = 0.2')
+    plt.plot(x, 0.4 * x + 4, label='slope = 0.4, intercept = 4')
+    plt.legend(loc='upper left')
 
     plt.show()
 
