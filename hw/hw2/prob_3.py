@@ -72,7 +72,7 @@ def residual_plots():
     lin_reg = Lin_Reg()
     lin_reg.fit(x_train, y_train)
 
-    fig, axes = plt.subplots(3, 1, figsize=(12, 15))
+    fig, axes = plt.subplots(3, 2, figsize=(12, 15))
 
     fit_list = [
         (0.4, 0.2, 'slope = 0.4, intercept = 0.2'),
@@ -80,13 +80,13 @@ def residual_plots():
         (lin_reg.coef_[0][0], lin_reg.intercept_[0], 'linear regression model'),
     ]
     for i, fit in enumerate(fit_list):
-        ax = axes[i]
+        ax1 = axes[i][0]
         residuals = compute_residuals(x_values, y_values, fit[0], fit[1])
-        ax.scatter(x_values, residuals)
-        ax.set_xlabel('x')
-        ax.set_ylabel('residuals')
-        ax.set_title(fit[2])
-        ax.plot((-0.1, 1.1), (0, 0))
+        ax1.scatter(x_values, residuals)
+        ax1.set_xlabel('x')
+        ax1.set_ylabel('residuals')
+        ax1.set_title(fit[2])
+        ax1.plot((-0.1, 1.1), (0, 0))
 
     plt.show()
 
