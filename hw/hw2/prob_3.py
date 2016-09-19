@@ -50,6 +50,7 @@ def visualize_fit():
     ax.plot(x, lin_reg.coef_[0][0] * x + lin_reg.intercept_[0], label='linear regression model')
     ax.legend(loc='upper left')
 
+    plt.tight_layout()
     plt.show()
 
 
@@ -88,6 +89,12 @@ def residual_plots():
         ax1.set_title(fit[2])
         ax1.plot((-0.1, 1.1), (0, 0))
 
+        ax2 = axes[i][1]
+        ax2.hist(residuals, 30)
+        ax2.set_xlabel('residuals')
+        ax2.set_title('residual histogram')
+
+    plt.tight_layout()
     plt.show()
 
 
