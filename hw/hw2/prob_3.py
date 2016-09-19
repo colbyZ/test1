@@ -66,14 +66,27 @@ def residual_plots():
     x_values = df['x'].values
     y_values = df['y'].values
 
-    fig, ax = plt.subplots(1, 1, figsize=(12, 5))
+    x_train = reshape(df, 'x')
+    y_train = reshape(df, 'y')
 
-    residuals = compute_residuals(x_values, y_values, 0.4, 0.2)
+    lin_reg = Lin_Reg()
+    lin_reg.fit(x_train, y_train)
 
-    ax.scatter(x_values, residuals)
-    ax.set_xlabel('x')
-    ax.set_ylabel('residuals')
-    ax.set_title('slope = 0.4, intercept = 0.2')
+    fig, axes = plt.subplots(3, 1, figsize=(12, 15))
+
+    fit_list = [
+        (0.4, 0.2, 'slope = 0.4, intercept = 0.2'),
+        (0.4, 4, 'slope = 0.4, intercept = 4'),
+        (lin_reg.coef_[0][0], lin_reg.intercept_[0], 'linear regression model'),
+    ]
+    for i, fit in enumerate(fit_list):
+        ax = axes[i]
+        residuals = compute_residuals(x_values, y_values, fit[0], fit[1])
+        ax.scatter(x_values, residuals)
+        ax.set_xlabel('x')
+        ax.set_ylabel('residuals')
+        ax.set_title(fit[2])
+        ax.plot((-0.1, 1.1), (0, 0))
 
     plt.show()
 
