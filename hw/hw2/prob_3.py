@@ -30,7 +30,6 @@ def residual_plots():
     x_values = df[['x']].values
     y_values = df[['y']].values
 
-    # titles = ['slope = 0.4, intercept = 0.2', 'slope = 0.4, intercept = 4', 'linear regression model']
     ax.scatter(x_values, y_values)
     ax.set_xlabel('x')
     ax.set_ylabel('y')
