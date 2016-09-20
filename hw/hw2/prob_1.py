@@ -1,9 +1,9 @@
 import bisect
+import itertools
 import time
 from collections import namedtuple
 from itertools import izip, islice
 
-import itertools
 import numpy as np
 import pandas as pd
 from sklearn.cross_validation import train_test_split as sk_split
@@ -14,7 +14,6 @@ Range = namedtuple('Range', ['left', 'right'])
 
 
 # split
-
 
 def split(data, m):
     test_size = 1 - m
@@ -139,11 +138,13 @@ def score(predicted, actual):
 
 
 def generate_k_list():
-    return list(itertools.chain(range(1, 6),
-                                range(10, 21, 5),
-                                range(30, 51, 10),
-                                range(75, 101, 25),
-                                range(150, 351, 50)))
+    return list(itertools.chain(
+        range(1, 6),
+        range(10, 21, 5),
+        range(30, 51, 10),
+        range(75, 101, 25),
+        range(150, 351, 50),
+    ))
 
 
 def evaluate_our_implementation(df, k_list):

@@ -101,7 +101,7 @@ def impact_of_k_on_knn():
 
     ax1.plot(k_list, r_sq_list)
     ax1.set_xlabel('k')
-    ax1.set_ylabel('r squared')
+    ax1.set_ylabel('$R^2$')
     ax1.set_title('impact of k on the performance of KNN, k: [1, 345]')
 
     ax2_k_start = 0
@@ -114,5 +114,5 @@ def impact_of_k_on_knn():
 
 
 if __name__ == '__main__':
-    handling_missing_data()
-    # impact_of_k_on_knn()
+    # handling_missing_data()
+    impact_of_k_on_knn()
