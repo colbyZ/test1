@@ -1,12 +1,16 @@
 import bisect
 import time
-from itertools import izip
+from collections import namedtuple
+from itertools import izip, islice
 
+import itertools
 import numpy as np
 import pandas as pd
 from sklearn.cross_validation import train_test_split as sk_split
 from sklearn.linear_model import LinearRegression as Lin_Reg
 from sklearn.neighbors import KNeighborsRegressor as KNN
+
+Range = namedtuple('Range', ['left', 'right'])
 
 
 # split
@@ -36,27 +40,27 @@ def distance(x1, x2):
 
 
 def find_best_neighbors_range(sorted_x_list, neighbors_range, test_x):
-    current_left_index = neighbors_range[0]
-    current_right_index = neighbors_range[1]
-    best_range = current_left_index, current_right_index
+    current_left_index, current_right_index = neighbors_range
+    best_range = neighbors_range
     while current_right_index < len(sorted_x_list):
         left_distance = distance(test_x, sorted_x_list[current_left_index])
         right_distance = distance(test_x, sorted_x_list[current_right_index])
         if left_distance <= right_distance:
             break
-        best_range = current_left_index, current_right_index
+        best_range = Range(current_left_index, current_right_index)
         current_left_index += 1
         current_right_index += 1
-    if best_range[0] == neighbors_range[0]:
+
+    if best_range.left == neighbors_range.left:
         # we didn't find better neighbors on the right, so we'll search left
-        current_left_index = neighbors_range[0] - 1
-        current_right_index = neighbors_range[1] - 1
+        current_left_index = neighbors_range.left - 1
+        current_right_index = neighbors_range.right - 1
         while current_left_index >= 0:
             left_distance = distance(test_x, sorted_x_list[current_left_index])
             right_distance = distance(test_x, sorted_x_list[current_right_index])
             if left_distance >= right_distance:
                 break
-            best_range = current_left_index, current_right_index
+            best_range = Range(current_left_index, current_right_index)
             current_left_index -= 1
             current_right_index -= 1
     return best_range
@@ -68,7 +72,7 @@ def get_initial_range(k, insertion_index, length):
     if right_index > length:
         right_index = length
         left_index = right_index - k
-    return left_index, right_index
+    return Range(left_index, right_index)
 
 
 def find_nearest_neighbors(k, sorted_x_list, test_x):
@@ -79,35 +83,33 @@ def find_nearest_neighbors(k, sorted_x_list, test_x):
 
 def knn_predict_one_point(k, sorted_x_list, sorted_y_list, test_x):
     neighbors_range = find_nearest_neighbors(k, sorted_x_list, test_x)
-    total = 0.0
-    for index in range(neighbors_range[0], neighbors_range[1]):
-        total += sorted_y_list[index]
+    total = sum(islice(sorted_y_list, *neighbors_range))
     return total / k
 
 
 def knn_predict(k, train, test):
     sorted_train = train.sort_values(by='x')
-    sorted_x_list = sorted_train['x'].tolist()
-    sorted_y_list = sorted_train['y'].tolist()
+    sorted_x_list = sorted_train['x'].values
+    sorted_y_list = sorted_train['y'].values
     predicted_test = test.copy()
 
     predicted_test['y'] = [knn_predict_one_point(k, sorted_x_list, sorted_y_list, row['x'])
-                           for index, row in test.iterrows()]
+                           for _, row in test.iterrows()]
     return predicted_test
 
 
 # linear regression
 
 def linear_reg_fit(train):
-    x_list = train['x'].tolist()
-    y_list = train['y'].tolist()
+    xs = train['x']
+    ys = train['y']
 
-    x_mean = np.mean(x_list)
-    y_mean = np.mean(y_list)
+    x_mean = xs.mean()
+    y_mean = ys.mean()
 
     numerator_sum = 0.0
     denominator_sum = 0.0
-    for x, y in izip(x_list, y_list):
+    for x, y in izip(xs, ys):
         x_diff = x - x_mean
         numerator_sum += x_diff * (y - y_mean)
         denominator_sum += x_diff ** 2
@@ -119,7 +121,7 @@ def linear_reg_fit(train):
 
 def linear_reg_predict(test, slope, intercept):
     predicted_test = test.copy()
-    predicted_test['y'] = [intercept + slope * row['x'] for index, row in test.iterrows()]
+    predicted_test['y'] = [intercept + slope * row['x'] for _, row in test.iterrows()]
     return predicted_test
 
 
@@ -128,21 +130,20 @@ def linear_reg_predict(test, slope, intercept):
 def score(predicted, actual):
     rss = 0.0
     tss = 0.0
-    actual_y_list = actual['y'].tolist()
+    actual_y_list = actual['y']
     actual_y_mean = np.mean(actual_y_list)
-    for predicted_value, actual_value in izip(predicted['y'].tolist(), actual_y_list):
+    for predicted_value, actual_value in izip(predicted['y'], actual_y_list):
         rss += (actual_value - predicted_value) ** 2
         tss += (actual_value - actual_y_mean) ** 2
     return 1.0 - rss / tss
 
 
 def generate_k_list():
-    k_list = list(range(1, 6))
-    k_list.extend(range(10, 21, 5))
-    k_list.extend(range(30, 51, 10))
-    k_list.extend(range(75, 101, 25))
-    k_list.extend(range(150, 351, 50))
-    return k_list
+    return list(itertools.chain(range(1, 6),
+                                range(10, 21, 5),
+                                range(30, 51, 10),
+                                range(75, 101, 25),
+                                range(150, 351, 50)))
 
 
 def evaluate_our_implementation(df, k_list):
@@ -166,7 +167,7 @@ def evaluate_our_implementation(df, k_list):
 
 
 def reshape(df, column_name):
-    return df[column_name].reshape((len(df), 1))
+    return df[column_name].reshape((-1, 1))
 
 
 def evaluate_sklearn_implementation(df, k_list):

@@ -7,11 +7,10 @@ from sklearn.neighbors import KNeighborsRegressor as KNN
 def fill(regressor, dataset_data):
     missing_df, full_df, no_y_ind, with_y_ind = dataset_data
     # preparing data in array form
-    x_train = missing_df.loc[with_y_ind, 'x'].values
-    x_train = x_train.reshape((len(with_y_ind), 1))
-    y_train = missing_df.loc[with_y_ind, 'y'].values
-    x_test = missing_df.loc[no_y_ind, 'x'].values.reshape((len(no_y_ind), 1))
-    y_test = full_df.loc[no_y_ind, 'y'].values
+    x_train = missing_df.loc[with_y_ind, 'x'].reshape(-1, 1)
+    y_train = missing_df.loc[with_y_ind, 'y']
+    x_test = missing_df.loc[no_y_ind, 'x'].reshape(-1, 1)
+    y_test = full_df.loc[no_y_ind, 'y']
 
     # fit model
     regressor.fit(x_train, y_train)
@@ -30,14 +29,13 @@ def fill(regressor, dataset_data):
 
 
 def scatter(ax, predicted_df, indices, color):
-    ax.scatter(predicted_df.loc[indices]['x'].values,
-               predicted_df.loc[indices]['y'].values,
+    ax.scatter(predicted_df.loc[indices]['x'],
+               predicted_df.loc[indices]['y'],
                color=color)
 
 
 def plot_ax(ax, predicted_df, dataset_data, no_ind_color, title):
-    no_y_ind = dataset_data[2]
-    with_y_ind = dataset_data[3]
+    _, _, no_y_ind, with_y_ind = dataset_data
     scatter(ax, predicted_df, with_y_ind, 'blue')
     scatter(ax, predicted_df, no_y_ind, no_ind_color)
     ax.set_title(title)
@@ -116,5 +114,5 @@ def impact_of_k_on_knn():
 
 
 if __name__ == '__main__':
-    # handling_missing_data()
-    impact_of_k_on_knn()
+    handling_missing_data()
+    # impact_of_k_on_knn()

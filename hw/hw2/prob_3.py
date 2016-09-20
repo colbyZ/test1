@@ -6,8 +6,8 @@ import pandas as pd
 from sklearn.linear_model import LinearRegression as Lin_Reg
 
 
-def reshape(df, column_name):
-    return df[column_name].reshape((len(df), 1))
+def reshape_column(df, column_name):
+    return df[column_name].reshape(-1, 1)
 
 
 def read_dataset(dataset_i):
@@ -28,7 +28,7 @@ def read_and_visualize_dataset():
 def visualize_fit():
     df = read_dataset(1)
 
-    x_values = df['x'].values
+    x_values = df['x']
     y_values = df['y'].values
 
     fig, ax = plt.subplots(1, 1, figsize=(12, 5))
@@ -38,8 +38,8 @@ def visualize_fit():
     ax.set_ylabel('y')
     ax.set_title('different linear fits')
 
-    x_train = reshape(df, 'x')
-    y_train = reshape(df, 'y')
+    x_train = reshape_column(df, 'x')
+    y_train = reshape_column(df, 'y')
 
     lin_reg = Lin_Reg()
     lin_reg.fit(x_train, y_train)
@@ -64,11 +64,11 @@ def compute_residuals(x_values, y_values, slope, intercept):
 def residual_plots():
     df = read_dataset(1)
 
-    x_values = df['x'].values
-    y_values = df['y'].values
+    x_values = df['x']
+    y_values = df['y']
 
-    x_train = reshape(df, 'x')
-    y_train = reshape(df, 'y')
+    x_train = reshape_column(df, 'x')
+    y_train = reshape_column(df, 'y')
 
     lin_reg = Lin_Reg()
     lin_reg.fit(x_train, y_train)
@@ -80,13 +80,13 @@ def residual_plots():
         (0.4, 4, 'slope = 0.4, intercept = 4'),
         (lin_reg.coef_[0][0], lin_reg.intercept_[0], 'linear regression model'),
     ]
-    for i, fit in enumerate(fit_list):
+    for i, (slope, intercept, title) in enumerate(fit_list):
         ax1 = axes[i][0]
-        residuals = compute_residuals(x_values, y_values, fit[0], fit[1])
+        residuals = compute_residuals(x_values, y_values, slope, intercept)
         ax1.scatter(x_values, residuals)
         ax1.set_xlabel('x')
         ax1.set_ylabel('residuals')
-        ax1.set_title(fit[2])
+        ax1.set_title(title)
         ax1.plot((-0.1, 1.1), (0, 0))
 
         ax2 = axes[i][1]
