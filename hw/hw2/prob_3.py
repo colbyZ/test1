@@ -6,10 +6,6 @@ import pandas as pd
 from sklearn.linear_model import LinearRegression as Lin_Reg
 
 
-def reshape_column(df, column_name):
-    return df[column_name].reshape(-1, 1)
-
-
 def read_dataset(dataset_i):
     return pd.read_csv('./dataset/dataset_%d_full.txt' % dataset_i)
 
@@ -23,6 +19,10 @@ def read_and_visualize_dataset():
     ax1.set_ylabel('y')
     ax1.set_title('Dataset 1 scatter plot')
     plt.show()
+
+
+def reshape_column(df, column_name):
+    return df[column_name].reshape(-1, 1)
 
 
 def visualize_fit():
