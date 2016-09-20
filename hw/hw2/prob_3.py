@@ -61,10 +61,13 @@ def visualize_fit():
     plt.show()
 
 
-def compute_residuals(x_values, y_values, slope, intercept):
+LinearFit = namedtuple('LinearFit', ['slope', 'intercept'])
+
+
+def compute_residuals(x_values, y_values, linear_fit):
     residuals = []
     for x, y in izip(x_values, y_values):
-        residuals.append(y - (x * slope + intercept))
+        residuals.append(y - (x * linear_fit.slope + linear_fit.intercept))
     return residuals
 
 
@@ -78,13 +81,13 @@ def residual_plots():
     fig, axes = plt.subplots(3, 2, figsize=(12, 15))
 
     fit_list = [
-        (0.4, 0.2, 'slope = 0.4, intercept = 0.2'),
-        (0.4, 4, 'slope = 0.4, intercept = 4'),
-        (lin_reg.coef_[0][0], lin_reg.intercept_[0], 'linear regression model'),
+        (LinearFit(0.4, 0.2), 'slope = 0.4, intercept = 0.2'),
+        (LinearFit(0.4, 4.0), 'slope = 0.4, intercept = 4'),
+        (LinearFit(lin_reg.coef_[0][0], lin_reg.intercept_[0]), 'linear regression model'),
     ]
-    for i, (slope, intercept, title) in enumerate(fit_list):
+    for i, (linear_fit, title) in enumerate(fit_list):
         ax1 = axes[i][0]
-        residuals = compute_residuals(x_values, y_values, slope, intercept)
+        residuals = compute_residuals(x_values, y_values, linear_fit)
         ax1.scatter(x_values, residuals)
         ax1.set_xlabel('x')
         ax1.set_ylabel('residuals')
@@ -109,5 +112,5 @@ if __name__ == '__main__':
 
     # read_and_visualize_dataset()
     # visualize_fit()
-    # residual_plots()
-    calculate_r_squared_coefs()
+    residual_plots()
+    # calculate_r_squared_coefs()
