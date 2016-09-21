@@ -102,14 +102,29 @@ def residual_plots():
     plt.show()
 
 
+def calculate_r_squared_coef(x_values, y_values, linear_fit):
+    rss = 0.0
+    tss = 0.0
+    y_mean = y_values.mean()
+    for x, y in izip(x_values, y_values):
+        y_hat = x * linear_fit.slope + linear_fit.intercept
+        rss += (y - y_hat) ** 2
+        tss += (y - y_mean) ** 2
+    return 1.0 - rss / tss
+
+
 def calculate_r_squared_coefs():
-    pass
+    df = problem_3a_data.df
+    x_values = df['x']
+    y_values = df['y']
+    for fit_info in problem_3a_data.fit_info_list:
+        print '%s, R^2 = %.3f' % (fit_info.title, calculate_r_squared_coef(x_values, y_values, fit_info.linear_fit))
 
 
 if __name__ == '__main__':
     problem_3a_data = prepare_problem_3a_data()
 
     # read_and_visualize_dataset()
-    visualize_fit()
+    # visualize_fit()
     # residual_plots()
-    # calculate_r_squared_coefs()
+    calculate_r_squared_coefs()
