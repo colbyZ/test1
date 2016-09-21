@@ -69,11 +69,12 @@ def visualize_fit():
     plt.show()
 
 
-def compute_residuals(x_values, y_values, linear_fit):
+def compute_standardized_residuals(x_values, y_values, linear_fit):
     residuals = []
     for x, y in izip(x_values, y_values):
         residuals.append(y - (x * linear_fit.slope + linear_fit.intercept))
-    return residuals
+    std = np.std(residuals)
+    return [r / std for r in residuals]
 
 
 def residual_plots():
@@ -86,16 +87,16 @@ def residual_plots():
 
     for i, fit_info in enumerate(problem_3a_data.fit_info_list):
         ax1 = axes[i][0]
-        residuals = compute_residuals(x_values, y_values, fit_info.linear_fit)
-        ax1.scatter(x_values, residuals)
+        standardized_residuals = compute_standardized_residuals(x_values, y_values, fit_info.linear_fit)
+        ax1.scatter(x_values, standardized_residuals)
         ax1.set_xlabel('x')
-        ax1.set_ylabel('residuals')
+        ax1.set_ylabel('standardized residuals')
         ax1.set_title(fit_info.title)
         ax1.plot((-0.1, 1.1), (0, 0))
 
         ax2 = axes[i][1]
-        ax2.hist(residuals, 30)
-        ax2.set_xlabel('residuals')
+        ax2.hist(standardized_residuals, 30)
+        ax2.set_xlabel('standardized residuals')
         ax2.set_title('residual histogram')
 
     plt.tight_layout()
@@ -143,17 +144,17 @@ def residual_plots_for_other_datasets():
         x = np.arange(-0.1, 2.0, step=1.2)
         ax1.plot(x, lin_reg_fit.slope * x + lin_reg_fit.intercept)
 
-        residuals = compute_residuals(x_values, y_values, lin_reg_fit)
+        standardized_residuals = compute_standardized_residuals(x_values, y_values, lin_reg_fit)
         ax2 = ax_pair[1]
-        ax2.scatter(x_values, residuals)
+        ax2.scatter(x_values, standardized_residuals)
         ax2.set_xlabel('x')
-        ax2.set_ylabel('residuals')
+        ax2.set_ylabel('standardized residuals')
         ax2.set_title('residual plot')
         ax2.plot((-0.1, 1.1), (0, 0))
 
         ax3 = ax_pair[2]
-        ax3.hist(residuals, 30)
-        ax3.set_xlabel('residuals')
+        ax3.hist(standardized_residuals, 30)
+        ax3.set_xlabel('standardized residuals')
         ax3.set_title('residual histogram')
 
     plt.tight_layout()
@@ -175,7 +176,7 @@ if __name__ == '__main__':
 
     # read_and_visualize_dataset()
     # visualize_fit()
-    # residual_plots()
+    residual_plots()
     # calculate_r_squared_coefs()
     # residual_plots_for_other_datasets()
-    r_squared_coef_for_other_datasets()
+    # r_squared_coef_for_other_datasets()
