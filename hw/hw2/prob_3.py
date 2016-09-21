@@ -6,7 +6,9 @@ import numpy as np
 import pandas as pd
 from sklearn.linear_model import LinearRegression as Lin_Reg
 
-Dataset_1_Data = namedtuple('Dataset_1_Data', ['df', 'lin_reg'])
+Problem_3a_Data = namedtuple('Problem_3a_Data', ['df', 'lin_reg_fit', 'fit_info_list'])
+LinearFit = namedtuple('LinearFit', ['slope', 'intercept'])
+FitInfo = namedtuple('FitInfo', ['linear_fit', 'title'])
 
 
 def read_dataset(dataset_i):
@@ -17,17 +19,23 @@ def reshape_column(df, column_name):
     return df[column_name].reshape(-1, 1)
 
 
-def prepare_dataset_1_data():
+def prepare_problem_3a_data():
     df = read_dataset(1)
     x_train = reshape_column(df, 'x')
     y_train = reshape_column(df, 'y')
     lin_reg = Lin_Reg()
     lin_reg.fit(x_train, y_train)
-    return Dataset_1_Data(df, lin_reg)
+    lin_reg_fit = LinearFit(lin_reg.coef_[0][0], lin_reg.intercept_[0])
+    fit_info_list = [
+        FitInfo(LinearFit(0.4, 0.2), 'slope = 0.4, intercept = 0.2'),
+        FitInfo(LinearFit(0.4, 4.0), 'slope = 0.4, intercept = 4'),
+        FitInfo(lin_reg_fit, 'linear regression model'),
+    ]
+    return Problem_3a_Data(df, lin_reg_fit, fit_info_list)
 
 
 def read_and_visualize_dataset():
-    df = dataset_1_data.df
+    df = problem_3a_data.df
 
     fig, ax1 = plt.subplots(1, 1, figsize=(15, 5))
     ax1.scatter(df[['x']].values, df[['y']].values)
@@ -38,11 +46,11 @@ def read_and_visualize_dataset():
 
 
 def visualize_fit():
-    df = dataset_1_data.df
-    lin_reg = dataset_1_data.lin_reg
+    df = problem_3a_data.df
+    lin_reg_fit = problem_3a_data.lin_reg_fit
 
     x_values = df['x']
-    y_values = df['y']
+    y_values = df['y'].values
 
     fig, ax = plt.subplots(1, 1, figsize=(12, 5))
 
@@ -54,14 +62,11 @@ def visualize_fit():
     x = np.arange(-0.1, 2.0, step=1.2)
     ax.plot(x, 0.4 * x + 0.2, label='slope = 0.4, intercept = 0.2')
     ax.plot(x, 0.4 * x + 4, label='slope = 0.4, intercept = 4')
-    ax.plot(x, lin_reg.coef_[0][0] * x + lin_reg.intercept_[0], label='linear regression model')
+    ax.plot(x, lin_reg_fit.slope * x + lin_reg_fit.intercept, label='linear regression model')
     ax.legend(loc='upper left')
 
     plt.tight_layout()
     plt.show()
-
-
-LinearFit = namedtuple('LinearFit', ['slope', 'intercept'])
 
 
 def compute_residuals(x_values, y_values, linear_fit):
@@ -72,26 +77,20 @@ def compute_residuals(x_values, y_values, linear_fit):
 
 
 def residual_plots():
-    df = dataset_1_data.df
-    lin_reg = dataset_1_data.lin_reg
+    df = problem_3a_data.df
 
     x_values = df['x']
     y_values = df['y']
 
     fig, axes = plt.subplots(3, 2, figsize=(12, 15))
 
-    fit_list = [
-        (LinearFit(0.4, 0.2), 'slope = 0.4, intercept = 0.2'),
-        (LinearFit(0.4, 4.0), 'slope = 0.4, intercept = 4'),
-        (LinearFit(lin_reg.coef_[0][0], lin_reg.intercept_[0]), 'linear regression model'),
-    ]
-    for i, (linear_fit, title) in enumerate(fit_list):
+    for i, fit_info in enumerate(problem_3a_data.fit_info_list):
         ax1 = axes[i][0]
-        residuals = compute_residuals(x_values, y_values, linear_fit)
+        residuals = compute_residuals(x_values, y_values, fit_info.linear_fit)
         ax1.scatter(x_values, residuals)
         ax1.set_xlabel('x')
         ax1.set_ylabel('residuals')
-        ax1.set_title(title)
+        ax1.set_title(fit_info.title)
         ax1.plot((-0.1, 1.1), (0, 0))
 
         ax2 = axes[i][1]
@@ -108,9 +107,9 @@ def calculate_r_squared_coefs():
 
 
 if __name__ == '__main__':
-    dataset_1_data = prepare_dataset_1_data()
+    problem_3a_data = prepare_problem_3a_data()
 
     # read_and_visualize_dataset()
-    # visualize_fit()
-    residual_plots()
+    visualize_fit()
+    # residual_plots()
     # calculate_r_squared_coefs()
