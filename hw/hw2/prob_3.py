@@ -122,25 +122,34 @@ def calculate_r_squared_coefs():
 
 
 def residual_plots_for_other_datasets():
-    fig, axes = plt.subplots(5, 1, figsize=(12, 5 * 5))
+    fig, ax_pairs = plt.subplots(5, 2, figsize=(12, 5 * 5))
 
     for i in range(2, 7):
         problem_3_data = prepare_problem_3_data(i)
-        ax = axes[i - 2]
+        ax_pair = ax_pairs[i - 2]
 
         df = problem_3_data.df
         lin_reg_fit = problem_3_data.lin_reg_fit
 
         x_values = df['x']
-        y_values = df['y'].values
+        y_values = df['y']
 
-        ax.scatter(x_values, y_values)
-        ax.set_xlabel('x')
-        ax.set_ylabel('y')
-        ax.set_title('dataset %d' % i)
+        ax1 = ax_pair[0]
+        ax1.scatter(x_values, y_values)
+        ax1.set_xlabel('x')
+        ax1.set_ylabel('y')
+        ax1.set_title('dataset %d' % i)
 
         x = np.arange(-0.1, 2.0, step=1.2)
-        ax.plot(x, lin_reg_fit.slope * x + lin_reg_fit.intercept)
+        ax1.plot(x, lin_reg_fit.slope * x + lin_reg_fit.intercept)
+
+        residuals = compute_residuals(x_values, y_values, lin_reg_fit)
+        ax2 = ax_pair[1]
+        ax2.scatter(x_values, residuals)
+        ax2.set_xlabel('x')
+        ax2.set_ylabel('residuals')
+        ax2.set_title('residual plot')
+        ax2.plot((-0.1, 1.1), (0, 0))
 
     plt.tight_layout()
     plt.show()
