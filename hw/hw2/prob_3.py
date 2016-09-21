@@ -163,7 +163,7 @@ def residual_plots_for_other_datasets():
 def r_squared_coef_for_other_datasets():
     for i in range(2, 7):
         problem_3_data = prepare_problem_3_data(i)
-        df = problem_3a_data.df
+        df = problem_3_data.df
         x_values = df['x']
         y_values = df['y']
         lin_reg_fit = problem_3_data.lin_reg_fit
