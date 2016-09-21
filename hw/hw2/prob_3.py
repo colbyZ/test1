@@ -160,6 +160,16 @@ def residual_plots_for_other_datasets():
     plt.show()
 
 
+def r_squared_coef_for_other_datasets():
+    for i in range(2, 7):
+        problem_3_data = prepare_problem_3_data(i)
+        df = problem_3a_data.df
+        x_values = df['x']
+        y_values = df['y']
+        lin_reg_fit = problem_3_data.lin_reg_fit
+        print 'dataset %d, R^2 = %.3f' % (i, calculate_r_squared_coef(x_values, y_values, lin_reg_fit))
+
+
 if __name__ == '__main__':
     problem_3a_data = prepare_problem_3_data(1)
 
@@ -167,4 +177,5 @@ if __name__ == '__main__':
     # visualize_fit()
     # residual_plots()
     # calculate_r_squared_coefs()
-    residual_plots_for_other_datasets()
+    # residual_plots_for_other_datasets()
+    r_squared_coef_for_other_datasets()
