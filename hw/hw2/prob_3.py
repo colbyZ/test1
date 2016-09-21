@@ -122,7 +122,7 @@ def calculate_r_squared_coefs():
 
 
 def residual_plots_for_other_datasets():
-    fig, ax_pairs = plt.subplots(5, 2, figsize=(12, 5 * 5))
+    fig, ax_pairs = plt.subplots(5, 3, figsize=(6 * 3, 5 * 5))
 
     for i in range(2, 7):
         problem_3_data = prepare_problem_3_data(i)
@@ -150,6 +150,11 @@ def residual_plots_for_other_datasets():
         ax2.set_ylabel('residuals')
         ax2.set_title('residual plot')
         ax2.plot((-0.1, 1.1), (0, 0))
+
+        ax3 = ax_pair[2]
+        ax3.hist(residuals, 30)
+        ax3.set_xlabel('residuals')
+        ax3.set_title('residual histogram')
 
     plt.tight_layout()
     plt.show()
