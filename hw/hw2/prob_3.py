@@ -6,7 +6,7 @@ import numpy as np
 import pandas as pd
 from sklearn.linear_model import LinearRegression as Lin_Reg
 
-Problem_3a_Data = namedtuple('Problem_3a_Data', ['df', 'lin_reg_fit', 'fit_info_list'])
+Problem_3_Data = namedtuple('Problem_3_Data', ['df', 'lin_reg_fit', 'fit_info_list'])
 LinearFit = namedtuple('LinearFit', ['slope', 'intercept'])
 FitInfo = namedtuple('FitInfo', ['linear_fit', 'title'])
 
@@ -19,8 +19,8 @@ def reshape_column(df, column_name):
     return df[column_name].reshape(-1, 1)
 
 
-def prepare_problem_3a_data():
-    df = read_dataset(1)
+def prepare_problem_3_data(dataset_i):
+    df = read_dataset(dataset_i)
     x_train = reshape_column(df, 'x')
     y_train = reshape_column(df, 'y')
     lin_reg = Lin_Reg()
@@ -31,7 +31,7 @@ def prepare_problem_3a_data():
         FitInfo(LinearFit(0.4, 4.0), 'slope = 0.4, intercept = 4'),
         FitInfo(lin_reg_fit, 'linear regression model'),
     ]
-    return Problem_3a_Data(df, lin_reg_fit, fit_info_list)
+    return Problem_3_Data(df, lin_reg_fit, fit_info_list)
 
 
 def read_and_visualize_dataset():
@@ -121,10 +121,36 @@ def calculate_r_squared_coefs():
         print '%s:\nR^2 = %.3f' % (fit_info.title, calculate_r_squared_coef(x_values, y_values, fit_info.linear_fit))
 
 
+def residual_plots_for_other_datasets():
+    fig, axes = plt.subplots(5, 1, figsize=(12, 5 * 5))
+
+    for i in range(2, 7):
+        problem_3_data = prepare_problem_3_data(i)
+        ax = axes[i - 2]
+
+        df = problem_3_data.df
+        lin_reg_fit = problem_3_data.lin_reg_fit
+
+        x_values = df['x']
+        y_values = df['y'].values
+
+        ax.scatter(x_values, y_values)
+        ax.set_xlabel('x')
+        ax.set_ylabel('y')
+        ax.set_title('dataset %d' % i)
+
+        x = np.arange(-0.1, 2.0, step=1.2)
+        ax.plot(x, lin_reg_fit.slope * x + lin_reg_fit.intercept)
+
+    plt.tight_layout()
+    plt.show()
+
+
 if __name__ == '__main__':
-    problem_3a_data = prepare_problem_3a_data()
+    problem_3a_data = prepare_problem_3_data(1)
 
     # read_and_visualize_dataset()
     # visualize_fit()
     # residual_plots()
-    calculate_r_squared_coefs()
+    # calculate_r_squared_coefs()
+    residual_plots_for_other_datasets()
