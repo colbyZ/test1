@@ -118,7 +118,7 @@ def calculate_r_squared_coefs():
     x_values = df['x']
     y_values = df['y']
     for fit_info in problem_3a_data.fit_info_list:
-        print '%s, R^2 = %.3f' % (fit_info.title, calculate_r_squared_coef(x_values, y_values, fit_info.linear_fit))
+        print '%s:\nR^2 = %.3f' % (fit_info.title, calculate_r_squared_coef(x_values, y_values, fit_info.linear_fit))
 
 
 if __name__ == '__main__':
