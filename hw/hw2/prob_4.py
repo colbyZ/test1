@@ -1,3 +1,4 @@
+import operator
 from itertools import izip
 
 import matplotlib.pyplot as plt
@@ -9,14 +10,19 @@ def add_variables(variable_list):
     return (sum(elements) for elements in izip(*variable_list))
 
 
-def show_histogram(zs, mean, std):
+def multiply_variables(variable_list):
+    return (reduce(operator.mul, elements) for elements in izip(*variable_list))
+
+
+def show_histogram(zs, mean=0.0, std=1.0, show_normal=True):
     fig, ax = plt.subplots(1, 1, figsize=(12, 5))
 
     ax.hist(list(zs), 400, normed=True)
 
-    # plot the pdf of the normal distribution
-    xs = np.linspace(mean - 4 * std, mean + 4 * std, num=100)
-    ax.plot(xs, norm.pdf(xs, mean, std))
+    if show_normal:
+        # plot the pdf of the normal distribution
+        xs = np.linspace(mean - 4 * std, mean + 4 * std, num=100)
+        ax.plot(xs, norm.pdf(xs, mean, std))
 
     plt.tight_layout()
     plt.show()
@@ -44,9 +50,16 @@ def add_normal_variables(k):
     show_histogram(zs, 0, np.sqrt(2))
 
 
+def multiply_normal_variables(k):
+    sample_size = 10000000 / k
+    variable_list = create_k_normal_variables(sample_size, k)
+    zs = multiply_variables(variable_list)
+    show_histogram(zs, show_normal=False)
+
+
 if __name__ == '__main__':
     np.random.seed(1090)
 
     # add_uniform_variables(2)
     # add_uniform_variables(7)
-    add_normal_variables(2)
+    multiply_normal_variables(2)
