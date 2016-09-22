@@ -43,7 +43,7 @@ def print_stats(zs):
 def add_uniform_variables(k):
     sample_size = 10000000 / k
     variable_list = create_k_uniform_variables(sample_size, k)
-    zs = add_variables(variable_list)
+    zs = list(add_variables(variable_list))
     print_stats(zs)
     show_histogram(zs, k / 2.0, np.sqrt(k / 12.0))
 
@@ -51,7 +51,7 @@ def add_uniform_variables(k):
 def add_normal_variables(k):
     sample_size = 10000000 / k
     variable_list = create_k_normal_variables(sample_size, k)
-    zs = add_variables(variable_list)
+    zs = list(add_variables(variable_list))
     print_stats(zs)
     show_histogram(zs, 0, np.sqrt(2))
 
