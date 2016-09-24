@@ -1,10 +1,13 @@
 from collections import Counter
 
+import matplotlib.pyplot as plt
 import pandas as pd
 
 
 def taxicab_density_estimation():
     nrows = 100 * 1000
+    # nrows = None
+
     df = pd.read_csv('green_tripdata_2015-01.csv', header=0, index_col=False, usecols=['lpep_pickup_datetime'],
                      parse_dates=['lpep_pickup_datetime'], nrows=nrows)
     day_minute_list = []
@@ -16,6 +19,14 @@ def taxicab_density_estimation():
         day_minute_list.append(day_minute)
     counter = Counter(day_minute_list)
     time_of_the_day_list, num_pickups_list = zip(*counter.items())
+
+    _, ax = plt.subplots(1, 1, figsize=(12, 6))
+
+    ax.plot(time_of_the_day_list, num_pickups_list)
+    ax.set_xlabel('time of the day (in minutes)')
+    ax.set_ylabel('number of pickups')
+
+    plt.show()
 
 
 if __name__ == '__main__':
