@@ -195,7 +195,8 @@ def compute_confidence_intervals_prob_1b():
 
 
 if __name__ == '__main__':
-    dataset_2_data = read_dataset_data("dataset_2.txt")
     # evaluate_model_prob_1a()
-    # plot_histograms_prob_1b()
-    compute_confidence_intervals_prob_1b()
+
+    dataset_2_data = read_dataset_data("dataset_2.txt")
+    plot_histograms_prob_1b()
+    # compute_confidence_intervals_prob_1b()
