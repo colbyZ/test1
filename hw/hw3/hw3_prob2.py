@@ -27,9 +27,10 @@ def read_dataset_data(filename):
 
 
 def polynomial_regression_fit(x_train, y_train, degree_of_the_polynomial):
-    poly_x = x_train
+    x_column = np.vstack(x_train)
+    poly_x = x_column
     for exponent in range(2, degree_of_the_polynomial + 1):
-        new_column = np.power(x_train, exponent)
+        new_column = np.power(x_column, exponent)
         poly_x = np.hstack((poly_x, new_column))
 
     linear_regression = Lin_Reg()
@@ -46,7 +47,16 @@ def calculate_polynomial_value(coefs, intercept, x):
 
 
 def polynomial_regression_predict(coefs, intercept, degree_of_the_polynomial, x_test):
-    return np.array([calculate_polynomial_value(coefs, intercept, x) for x in x_test])
+    return [calculate_polynomial_value(coefs, intercept, x) for x in x_test]
+
+
+def read_dataset3_data():
+    data = loadtxt('dataset_3.txt')
+
+    y = data[:, -1]
+    x = data[:, 0]
+
+    return DatasetData(x, y)
 
 
 def fit_and_visualize_prob_2a():
@@ -74,7 +84,6 @@ def fit_and_visualize_prob_2a():
 
 def evaluate_polynomial_regression_fit(coefs, intercept, x_test, degree):
     y_predicted = polynomial_regression_predict(coefs, intercept, degree, x_test)
-    print type(y_predicted)
 
 
 def train_test_split_by_index(data, index):
@@ -97,6 +106,6 @@ def compare_errors_prob_2b():
 
 
 if __name__ == '__main__':
-    dataset_3_data = read_dataset_data("dataset_3.txt")
+    dataset_3_data = read_dataset3_data()
     # fit_and_visualize_prob_2a()
     compare_errors_prob_2b()
