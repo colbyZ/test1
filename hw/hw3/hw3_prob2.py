@@ -27,6 +27,8 @@ def read_dataset_data(filename):
     return DatasetData(x, y)
 
 
+# polynomial regression fit
+
 def polynomial_regression_fit(x_train, y_train, degree_of_the_polynomial):
     x_column = np.vstack(x_train)
     poly_x = x_column
@@ -40,6 +42,8 @@ def polynomial_regression_fit(x_train, y_train, degree_of_the_polynomial):
     return linear_regression.coef_, linear_regression.intercept_
 
 
+# polynomial regression predict
+
 def calculate_polynomial_value(coefs, intercept, x):
     poly_sum = intercept
     for i, coef in enumerate(coefs):
@@ -50,6 +54,8 @@ def calculate_polynomial_value(coefs, intercept, x):
 def polynomial_regression_predict(coefs, intercept, degree_of_the_polynomial, x_test):
     return [calculate_polynomial_value(coefs, intercept, x) for x in x_test]
 
+
+# polynomial regression score
 
 def polynomial_regression_score(y_predicted, y_test):
     rss = 0.0
@@ -78,7 +84,7 @@ def fit_and_visualize_prob_2a():
     degrees = [3, 5, 10, 25]
 
     degrees_len = len(degrees)
-    _, axes = plt.subplots(degrees_len, 1, figsize=(12, 6 * degrees_len))
+    _, axes = plt.subplots(degrees_len, 1, figsize=(8, 5 * degrees_len))
 
     xs = np.linspace(0.01, 0.99)
     for i, degree in enumerate(degrees):
