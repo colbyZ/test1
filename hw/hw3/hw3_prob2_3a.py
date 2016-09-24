@@ -137,7 +137,42 @@ def compare_errors_prob_2b():
     ax.legend(loc='lower right')
     ax.set_xlabel('degree of the polynomial')
     ax.set_ylabel('$R^2$')
-    ax.set_title('$R^2$ for the training and test sets as a functions of the degree')
+    ax.set_title('$R^2$ for the training and test sets as a function of the degree')
+
+    plt.show()
+
+
+def compute_aic(n, rss, degree):
+    return n * np.log(rss / n) + 2 * degree
+
+
+def compute_bic(n, rss, degree):
+    return n * np.log(rss / n) + np.log(n) * degree
+
+
+def compute_aic_and_bic():
+    x, y = dataset_3_data
+
+    _, ax = plt.subplots(1, 1, figsize=(12, 6))
+
+    degrees = range(1, 16)
+    n = len(x)
+    aic_list = []
+    bic_list = []
+    for degree in degrees:
+        coefs, intercept = polynomial_regression_fit(x, y, degree)
+        r_sq, rss = evaluate_polynomial_regression_fit(coefs, intercept, x, y, degree)
+        aic = compute_aic(n, rss, degree)
+        aic_list.append(aic)
+        bic = compute_bic(n, rss, degree)
+        bic_list.append(bic)
+        print 'degree: %2d, AIC: %.1f, BIC: %.1f' % (degree, aic, bic)
+
+    ax.plot(degrees, aic_list, label='AIC')
+    ax.plot(degrees, bic_list, label='BIC')
+    ax.legend(loc='upper right')
+    ax.set_xlabel('degree of the polynomial')
+    ax.set_title('AIC and BIC as functions of the degree')
 
     plt.show()
 
@@ -145,4 +180,5 @@ def compare_errors_prob_2b():
 if __name__ == '__main__':
     dataset_3_data = read_dataset3_data()
     # fit_and_visualize_prob_2a()
-    compare_errors_prob_2b()
+    # compare_errors_prob_2b()
+    compute_aic_and_bic()
