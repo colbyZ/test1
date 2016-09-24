@@ -131,6 +131,7 @@ def compare_errors_prob_2b():
     ax.legend(loc='lower right')
     ax.set_xlabel('degree of the polynomial')
     ax.set_ylabel('$R^2$')
+    ax.set_title('$R^2$ for the training and test sets as a functions of the degree')
 
     plt.show()
 
