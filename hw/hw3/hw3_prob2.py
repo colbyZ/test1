@@ -11,7 +11,7 @@ def loadtxt(file_name):
     return np.loadtxt('datasets/%s' % file_name, delimiter=',', skiprows=1)
 
 
-def split(data):
+def split_y_x(data):
     y = data[:, -1]
     x = data[:, :-1]
     return y, x
@@ -21,7 +21,7 @@ def read_dataset_data(filename):
     # Load train set
     data = loadtxt(filename)
 
-    y, x = split(data)
+    y, x = split_y_x(data)
 
     return DatasetData(x, y)
 
@@ -72,9 +72,20 @@ def fit_and_visualize_prob_2a():
     plt.show()
 
 
+def train_test_split_by_index(data, index):
+    train = data[:index]
+    test = data[index:]
+    return train, test
+
+
 def compare_errors_prob_2b():
     x, y = dataset_3_data
-    print x.shape, y.shape
+    mid_index = len(x) / 2
+
+    x_train, x_test = train_test_split_by_index(x, mid_index)
+    y_train, y_test = train_test_split_by_index(y, mid_index)
+
+    print y_train
 
 
 if __name__ == '__main__':
