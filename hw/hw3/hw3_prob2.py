@@ -1,3 +1,4 @@
+import matplotlib.pyplot as plt
 import numpy as np
 from sklearn.linear_model import LinearRegression as Lin_Reg
 
@@ -24,11 +25,39 @@ def polynomial_regression_fit(x_train, y_train, degree_of_the_polynomial):
     return linear_regression.coef_, linear_regression.intercept_
 
 
+def calculate_polynomial_value(x, coefs, intercept):
+    poly_sum = intercept
+    for i, coef in enumerate(coefs):
+        poly_sum += coef * pow(x, i + 1)
+    return poly_sum
+
+
+def calculate_polynomial_values(xs, coefs, intercept):
+    return [calculate_polynomial_value(x, coefs, intercept) for x in xs]
+
+
 def fit_and_visualize_prob_2b():
     data = loadtxt("dataset_3.txt")
     y, x = split(data)
 
-    coefs, intercept = polynomial_regression_fit(x, y, 3)
+    degrees = [3, 5, 10, 25]
+
+    degrees_len = len(degrees)
+    fig, axes = plt.subplots(degrees_len, 1, figsize=(12, 6 * degrees_len))
+
+    xs = np.linspace(0.01, 0.99)
+    for i, degree in enumerate(degrees):
+        ax = axes[i]
+        coefs, intercept = polynomial_regression_fit(x, y, degree)
+        ax.scatter(x, y, color='blue')
+
+        ax.plot(xs, calculate_polynomial_values(xs, coefs, intercept), color='red')
+
+        ax.set_xlabel('x')
+        ax.set_ylabel('y')
+        ax.set_title('degree of the polynomial: %d' % degree)
+
+    plt.show()
 
 
 if __name__ == '__main__':
