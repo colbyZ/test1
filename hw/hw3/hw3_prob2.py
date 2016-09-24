@@ -1,4 +1,5 @@
 from collections import namedtuple
+from itertools import izip
 
 import matplotlib.pyplot as plt
 import numpy as np
@@ -50,6 +51,18 @@ def polynomial_regression_predict(coefs, intercept, degree_of_the_polynomial, x_
     return [calculate_polynomial_value(coefs, intercept, x) for x in x_test]
 
 
+def polynomial_regression_score(y_predicted, y_test):
+    rss = 0.0
+    tss = 0.0
+    y_mean = np.mean(y_test)
+    for predicted_value, actual_value in izip(y_predicted, y_test):
+        rss += (actual_value - predicted_value) ** 2
+        tss += (actual_value - y_mean) ** 2
+
+    r_squared = 1.0 - rss / tss
+    return r_squared, rss
+
+
 def read_dataset3_data():
     data = loadtxt('dataset_3.txt')
 
@@ -82,8 +95,9 @@ def fit_and_visualize_prob_2a():
     plt.show()
 
 
-def evaluate_polynomial_regression_fit(coefs, intercept, x_test, degree):
+def evaluate_polynomial_regression_fit(coefs, intercept, x_test, y_test, degree):
     y_predicted = polynomial_regression_predict(coefs, intercept, degree, x_test)
+    return polynomial_regression_score(y_predicted, y_test)
 
 
 def train_test_split_by_index(data, index):
@@ -99,10 +113,11 @@ def compare_errors_prob_2b():
     x_train, x_test = train_test_split_by_index(x, mid_index)
     y_train, y_test = train_test_split_by_index(y, mid_index)
 
-    for degree in range(1, 2):
+    for degree in range(1, 16):
         coefs, intercept = polynomial_regression_fit(x_train, y_train, degree)
-        evaluate_polynomial_regression_fit(coefs, intercept, x_train, degree)
-        # evaluate_polynomial_regression_fit(coefs, intercept, x_test, degree)
+        r_sq_train, _ = evaluate_polynomial_regression_fit(coefs, intercept, x_train, y_train, degree)
+        r_sq_test, _ = evaluate_polynomial_regression_fit(coefs, intercept, x_test, y_test, degree)
+        print 'degree: %2d, train R^2: %.4f, test R^2: %.4f' % (degree, r_sq_train, r_sq_test)
 
 
 if __name__ == '__main__':
