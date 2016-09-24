@@ -78,7 +78,7 @@ def fit_and_visualize_prob_2a():
     degrees = [3, 5, 10, 25]
 
     degrees_len = len(degrees)
-    fig, axes = plt.subplots(degrees_len, 1, figsize=(12, 6 * degrees_len))
+    _, axes = plt.subplots(degrees_len, 1, figsize=(12, 6 * degrees_len))
 
     xs = np.linspace(0.01, 0.99)
     for i, degree in enumerate(degrees):
@@ -113,11 +113,26 @@ def compare_errors_prob_2b():
     x_train, x_test = train_test_split_by_index(x, mid_index)
     y_train, y_test = train_test_split_by_index(y, mid_index)
 
-    for degree in range(1, 16):
+    _, ax = plt.subplots(1, 1, figsize=(12, 6))
+
+    r_sq_train_list = []
+    r_sq_test_list = []
+    degrees = range(1, 16)
+    for degree in degrees:
         coefs, intercept = polynomial_regression_fit(x_train, y_train, degree)
         r_sq_train, _ = evaluate_polynomial_regression_fit(coefs, intercept, x_train, y_train, degree)
+        r_sq_train_list.append(r_sq_train)
         r_sq_test, _ = evaluate_polynomial_regression_fit(coefs, intercept, x_test, y_test, degree)
+        r_sq_test_list.append(r_sq_test)
         print 'degree: %2d, train R^2: %.4f, test R^2: %.4f' % (degree, r_sq_train, r_sq_test)
+
+    ax.plot(degrees, r_sq_train_list, label='train')
+    ax.plot(degrees, r_sq_test_list, label='test')
+    ax.legend(loc='lower right')
+    ax.set_xlabel('degree of the polynomial')
+    ax.set_ylabel('$R^2$')
+
+    plt.show()
 
 
 if __name__ == '__main__':
