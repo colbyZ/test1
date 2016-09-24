@@ -6,6 +6,7 @@
       <w>loadtxt</w>
       <w>pinv</w>
       <w>pred</w>
+      <w>subsamples</w>
       <w>vals</w>
     </words>
   </dictionary>

@@ -1,3 +1,4 @@
+import matplotlib.pyplot as plt
 import numpy as np
 
 
@@ -98,5 +99,71 @@ def evaluate_model_prob_1a():
     print 'R^2 score on test set: %.3f' % r_squared
 
 
+def plot_histograms_prob_1b():
+    np.random.seed(1090)
+
+    # Load train set
+    data = loadtxt("dataset_2.txt")
+
+    y, x = split(data)
+
+    # Record size of the data set
+    n = x.shape[0]
+    d = x.shape[1]
+    subsample_size = 100
+
+    # No. of subsamples
+    num_samples = 200
+
+    # Linear regression with all 5 predictors
+
+    # Create a n x d array to store coefficients for 100 subsamples
+    coefs_multiple = np.zeros((num_samples, d))
+
+    print 'Linear regression with all predictors'
+
+    # Repeat for 200 subsamples
+    for i in range(num_samples):
+        # Generate a random subsample of <subsample_size> data points
+        random_indices = np.random.choice(n, subsample_size)
+        x_subsample = x[random_indices, :]
+        y_subsample = y[random_indices]
+
+        # Fit linear regression model on subsample
+        w, c = multiple_linear_regression_fit(x_subsample, y_subsample)
+
+        # Store the coefficient for the model we obtain
+        coefs_multiple[i, :] = w
+
+    # Plot histogram of coefficients, and report their confidence intervals
+    fig, axes = plt.subplots(1, d, figsize=(20, 3))
+
+    # Repeat for each coefficient
+    for j in range(d):
+        # Compute mean for the j-th coefficient from subsamples
+        coef_j_mean = coefs_multiple[:, j].mean()
+
+        # Compute confidence interval at 95% confidence level
+        conf_int_left = np.percentile(coefs_multiple[:, j], 2.5)
+        conf_int_right = np.percentile(coefs_multiple[:, j], 97.5)
+
+        # Plot histogram of coefficient values
+        ax = axes[j]
+        ax.hist(coefs_multiple[:, j], 15, alpha=0.5)
+
+        # Plot vertical lines at mean and left, right extremes of confidence interval
+        ax.axvline(x=coef_j_mean, linewidth=3)
+        ax.axvline(x=conf_int_left, linewidth=1, c='r')
+        ax.axvline(x=conf_int_right, linewidth=1, c='r')
+
+        # Set plot labels
+        ax.set_title('[%.4f, %.4f]' % (conf_int_left, conf_int_right))
+        ax.set_xlabel('Predictor %d' % (j + 1))
+        ax.set_ylabel('Frequency')
+
+    plt.show()
+
+
 if __name__ == '__main__':
-    evaluate_model_prob_1a()
+    # evaluate_model_prob_1a()
+    plot_histograms_prob_1b()
