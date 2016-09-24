@@ -19,7 +19,9 @@ def read_dataset3_data():
 
 
 def compute_aic_and_bic():
-    pass
+    x, y = dataset_3_data
+
+    print x.shape, y.shape
 
 
 if __name__ == '__main__':
