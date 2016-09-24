@@ -4,6 +4,8 @@ import matplotlib.pyplot as plt
 import numpy as np
 import statsmodels.api as sm
 
+DatasetData = namedtuple('DatasetData', ['x', 'y'])
+
 
 # Functions for fitting and evaluating multiple linear regression
 
@@ -102,16 +104,13 @@ def evaluate_model_prob_1a():
     print 'R^2 score on test set: %.3f' % r_squared
 
 
-Dataset_2_Data = namedtuple('Dataset_2_Data', ['x', 'y'])
-
-
-def read_dataset_2_data():
+def read_dataset_data(filename):
     # Load train set
-    data = loadtxt("dataset_2.txt")
+    data = loadtxt(filename)
 
     y, x = split(data)
 
-    return Dataset_2_Data(x, y)
+    return DatasetData(x, y)
 
 
 def plot_histograms_prob_1b():
@@ -196,7 +195,7 @@ def compute_confidence_intervals_prob_1b():
 
 
 if __name__ == '__main__':
-    dataset_2_data = read_dataset_2_data()
+    dataset_2_data = read_dataset_data("dataset_2.txt")
     # evaluate_model_prob_1a()
     # plot_histograms_prob_1b()
     compute_confidence_intervals_prob_1b()

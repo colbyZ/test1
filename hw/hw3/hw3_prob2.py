@@ -1,6 +1,10 @@
+from collections import namedtuple
+
 import matplotlib.pyplot as plt
 import numpy as np
 from sklearn.linear_model import LinearRegression as Lin_Reg
+
+DatasetData = namedtuple('DatasetData', ['x', 'y'])
 
 
 def loadtxt(file_name):
@@ -11,6 +15,15 @@ def split(data):
     y = data[:, -1]
     x = data[:, :-1]
     return y, x
+
+
+def read_dataset_data(filename):
+    # Load train set
+    data = loadtxt(filename)
+
+    y, x = split(data)
+
+    return DatasetData(x, y)
 
 
 def polynomial_regression_fit(x_train, y_train, degree_of_the_polynomial):
@@ -37,8 +50,7 @@ def calculate_polynomial_values(xs, coefs, intercept):
 
 
 def fit_and_visualize_prob_2a():
-    data = loadtxt("dataset_3.txt")
-    y, x = split(data)
+    x, y = dataset_3_data
 
     degrees = [3, 5, 10, 25]
 
@@ -60,5 +72,12 @@ def fit_and_visualize_prob_2a():
     plt.show()
 
 
+def compare_errors_prob_2b():
+    x, y = dataset_3_data
+    print x.shape, y.shape
+
+
 if __name__ == '__main__':
-    fit_and_visualize_prob_2a()
+    dataset_3_data = read_dataset_data("dataset_3.txt")
+    # fit_and_visualize_prob_2a()
+    compare_errors_prob_2b()
