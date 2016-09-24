@@ -17,12 +17,13 @@ def taxicab_density_estimation():
         hour = datetime.hour
         day_minute = minute + 60 * hour
         day_minute_list.append(day_minute)
+
     counter = Counter(day_minute_list)
-    time_of_the_day_list, num_pickups_list = zip(*counter.items())
+    xs, ys = zip(*counter.items())
 
     _, ax = plt.subplots(1, 1, figsize=(12, 6))
 
-    ax.plot(time_of_the_day_list, num_pickups_list)
+    ax.plot(xs, ys)
     ax.set_xlabel('time of the day (in minutes)')
     ax.set_ylabel('number of pickups')
 
