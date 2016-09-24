@@ -36,7 +36,7 @@ def calculate_polynomial_values(xs, coefs, intercept):
     return [calculate_polynomial_value(x, coefs, intercept) for x in xs]
 
 
-def fit_and_visualize_prob_2b():
+def fit_and_visualize_prob_2a():
     data = loadtxt("dataset_3.txt")
     y, x = split(data)
 
@@ -61,4 +61,4 @@ def fit_and_visualize_prob_2b():
 
 
 if __name__ == '__main__':
-    fit_and_visualize_prob_2b()
+    fit_and_visualize_prob_2a()
