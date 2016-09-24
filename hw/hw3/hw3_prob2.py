@@ -38,15 +38,15 @@ def polynomial_regression_fit(x_train, y_train, degree_of_the_polynomial):
     return linear_regression.coef_, linear_regression.intercept_
 
 
-def calculate_polynomial_value(x, coefs, intercept):
+def calculate_polynomial_value(coefs, intercept, x):
     poly_sum = intercept
     for i, coef in enumerate(coefs):
         poly_sum += coef * pow(x, i + 1)
     return poly_sum
 
 
-def calculate_polynomial_values(xs, coefs, intercept):
-    return [calculate_polynomial_value(x, coefs, intercept) for x in xs]
+def polynomial_regression_predict(coefs, intercept, degree_of_the_polynomial, x_test):
+    return [calculate_polynomial_value(coefs, intercept, x) for x in x_test]
 
 
 def fit_and_visualize_prob_2a():
@@ -63,7 +63,7 @@ def fit_and_visualize_prob_2a():
         coefs, intercept = polynomial_regression_fit(x, y, degree)
         ax.scatter(x, y, color='blue')
 
-        ax.plot(xs, calculate_polynomial_values(xs, coefs, intercept), color='red')
+        ax.plot(xs, polynomial_regression_predict(coefs, intercept, degree, xs), color='red')
 
         ax.set_xlabel('x')
         ax.set_ylabel('y')
