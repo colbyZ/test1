@@ -3,6 +3,10 @@
     <words>
       <w>coef</w>
       <w>coefs</w>
+      <w>loadtxt</w>
+      <w>pinv</w>
+      <w>pred</w>
+      <w>vals</w>
     </words>
   </dictionary>
 </component>
