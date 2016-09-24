@@ -1,5 +1,8 @@
+from collections import namedtuple
+
 import matplotlib.pyplot as plt
 import numpy as np
+import statsmodels.api as sm
 
 
 # Functions for fitting and evaluating multiple linear regression
@@ -99,13 +102,22 @@ def evaluate_model_prob_1a():
     print 'R^2 score on test set: %.3f' % r_squared
 
 
-def plot_histograms_prob_1b():
-    np.random.seed(1090)
+Dataset_2_Data = namedtuple('Dataset_2_Data', ['x', 'y'])
 
+
+def read_dataset_2_data():
     # Load train set
     data = loadtxt("dataset_2.txt")
 
     y, x = split(data)
+
+    return Dataset_2_Data(x, y)
+
+
+def plot_histograms_prob_1b():
+    np.random.seed(1090)
+
+    x, y = dataset_2_data
 
     # Record size of the data set
     n = x.shape[0]
@@ -164,6 +176,27 @@ def plot_histograms_prob_1b():
     plt.show()
 
 
+def compute_confidence_intervals_prob_1b():
+    x, y = dataset_2_data
+    d = x.shape[1]
+
+    # Add column of ones to x matrix
+    x = sm.add_constant(x)
+
+    # Create model for linear regression
+    model = sm.OLS(y, x)
+    # Fit model
+    fitted_model = model.fit()
+    # The confidence intervals for our five coefficients are contained in the last five
+    # rows of the fitted_model.conf_int() array
+    conf_int = fitted_model.conf_int()[1:, :]
+
+    for j in range(d):
+        print 'the confidence interval for coefficient %d: [%.4f, %.4f]' % (j + 1, conf_int[j][0], conf_int[j][1])
+
+
 if __name__ == '__main__':
+    dataset_2_data = read_dataset_2_data()
     # evaluate_model_prob_1a()
-    plot_histograms_prob_1b()
+    # plot_histograms_prob_1b()
+    compute_confidence_intervals_prob_1b()
