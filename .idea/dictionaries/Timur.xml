@@ -4,9 +4,12 @@
       <w>coef</w>
       <w>coefs</w>
       <w>loadtxt</w>
+      <w>lpep</w>
+      <w>nrows</w>
       <w>pinv</w>
       <w>pred</w>
       <w>subsamples</w>
+      <w>tripdata</w>
       <w>vals</w>
     </words>
   </dictionary>
