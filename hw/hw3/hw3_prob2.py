@@ -46,7 +46,7 @@ def calculate_polynomial_value(coefs, intercept, x):
 
 
 def polynomial_regression_predict(coefs, intercept, degree_of_the_polynomial, x_test):
-    return [calculate_polynomial_value(coefs, intercept, x) for x in x_test]
+    return np.array([calculate_polynomial_value(coefs, intercept, x) for x in x_test])
 
 
 def fit_and_visualize_prob_2a():
@@ -72,6 +72,11 @@ def fit_and_visualize_prob_2a():
     plt.show()
 
 
+def evaluate_polynomial_regression_fit(coefs, intercept, x_test, degree):
+    y_predicted = polynomial_regression_predict(coefs, intercept, degree, x_test)
+    print type(y_predicted)
+
+
 def train_test_split_by_index(data, index):
     train = data[:index]
     test = data[index:]
@@ -85,7 +90,10 @@ def compare_errors_prob_2b():
     x_train, x_test = train_test_split_by_index(x, mid_index)
     y_train, y_test = train_test_split_by_index(y, mid_index)
 
-    print y_train
+    for degree in range(1, 2):
+        coefs, intercept = polynomial_regression_fit(x_train, y_train, degree)
+        evaluate_polynomial_regression_fit(coefs, intercept, x_train, degree)
+        # evaluate_polynomial_regression_fit(coefs, intercept, x_test, degree)
 
 
 if __name__ == '__main__':
