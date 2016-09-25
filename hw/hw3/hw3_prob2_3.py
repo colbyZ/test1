@@ -240,7 +240,7 @@ def taxicab_density_estimation(xs, ys):
     degrees = [1, 3, 5, 15]
     len_degrees = len(degrees)
     num_axes = 3 + len_degrees
-    _, axes = plt.subplots(num_axes, 1, figsize=(12, 10 * num_axes))
+    _, axes = plt.subplots(num_axes, 1, figsize=(10, 6 * num_axes))
 
     ax0 = axes[0]
     ax0.plot(xs, ys)
