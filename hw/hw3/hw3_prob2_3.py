@@ -192,14 +192,13 @@ def compute_aic_and_bic():
     plt.show()
 
 
-def taxicab_density_estimation():
-    np.random.seed(1090)
-
+def get_counter_data():
     # nrows = 100 * 1000
     nrows = None
 
     df = pd.read_csv('green_tripdata_2015-01.csv', header=0, index_col=False, usecols=['lpep_pickup_datetime'],
                      parse_dates=['lpep_pickup_datetime'], nrows=nrows)
+
     day_minute_list = []
     for index, row in df.iterrows():
         datetime = row[0]
@@ -207,9 +206,16 @@ def taxicab_density_estimation():
         hour = datetime.hour
         day_minute = minute + 60 * hour
         day_minute_list.append(day_minute)
-
+        
     counter = Counter(day_minute_list)
     xs, ys = zip(*counter.items())
+    return xs, ys
+
+
+def taxicab_density_estimation():
+    np.random.seed(1090)
+
+    xs, ys = get_counter_data()
 
     degrees = [1, 2, 3, 4]
     len_degrees = len(degrees)
