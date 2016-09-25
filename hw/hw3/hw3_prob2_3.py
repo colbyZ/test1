@@ -32,6 +32,9 @@ def load_counter_data():
     y = data[:, -1]
     x = data[:, 0]
 
+    x = normalize(x)
+    y = normalize(y)
+
     return x, y
 
 
@@ -139,21 +142,25 @@ def train_test_split_by_index(data, index):
     return train, test
 
 
-def plot_r_sq(ax, x_train, x_test, y_train, y_test):
+def plot_r_sq(ax, x_train, x_test, y_train, y_test, max_degree=15):
     r_sq_train_list = []
     r_sq_test_list = []
     plot_degrees = []
 
-    degrees = range(1, 16)
+    degrees = range(1, max_degree + 1)
     for degree in degrees:
         coefs, intercept = polynomial_regression_fit(x_train, y_train, degree)
         r_sq_train, _ = evaluate_polynomial_regression_fit(coefs, intercept, x_train, y_train, degree)
         r_sq_test, _ = evaluate_polynomial_regression_fit(coefs, intercept, x_test, y_test, degree)
-        print 'degree: %2d, train R^2: %.4f, test R^2: %.4f' % (degree, r_sq_train, r_sq_test)
+        print 'degree: %2d, train R^2: %.5f, test R^2: %.5f' % (degree, r_sq_train, r_sq_test)
 
         r_sq_train_list.append(r_sq_train)
         r_sq_test_list.append(r_sq_test)
         plot_degrees.append(degree)
+
+    max_r_sq_test = np.max(r_sq_test_list)
+    max_r_sq_test_degree = r_sq_test_list.index(max_r_sq_test) + 1
+    print 'max test R^2, degree: %d, value: %.5f' % (max_r_sq_test_degree, max_r_sq_test)
 
     ax.plot(plot_degrees, r_sq_train_list, label='train')
     ax.plot(plot_degrees, r_sq_test_list, label='test')
@@ -185,11 +192,11 @@ def compute_bic(n, rss, degree):
     return n * np.log(rss / n) + np.log(n) * degree
 
 
-def plot_aic_and_bic(ax, x, y):
+def plot_aic_and_bic(ax, x, y, max_degree=15):
     n = len(x)
     aic_list = []
     bic_list = []
-    degrees = range(1, 16)
+    degrees = range(1, max_degree + 1)
     for degree in degrees:
         coefs, intercept = polynomial_regression_fit(x, y, degree)
         r_sq, rss = evaluate_polynomial_regression_fit(coefs, intercept, x, y, degree)
@@ -198,6 +205,14 @@ def plot_aic_and_bic(ax, x, y):
         bic = compute_bic(n, rss, degree)
         bic_list.append(bic)
         print 'degree: %2d, AIC: %.1f, BIC: %.1f' % (degree, aic, bic)
+
+    min_aic = np.min(aic_list)
+    min_aic_degree = aic_list.index(min_aic) + 1
+    print 'min aic, degree: %d, value: %.5f' % (min_aic_degree, min_aic)
+
+    min_bic = np.min(bic_list)
+    min_bic_degree = bic_list.index(min_bic) + 1
+    print 'min bic, degree: %d, value: %.5f' % (min_bic_degree, min_bic)
 
     ax.plot(degrees, aic_list, label='AIC')
     ax.plot(degrees, bic_list, label='BIC')
@@ -216,6 +231,13 @@ def compute_aic_and_bic():
     plt.show()
 
 
+def normalize(xs):
+    xs = np.array(xs, dtype=float)
+    min_x = xs.min()
+    max_x = xs.max()
+    return [(x - min_x) / max_x for x in xs]
+
+
 def get_counter_data(nrows=None):
     df = pd.read_csv('green_tripdata_2015-01.csv', header=0, index_col=False, usecols=['lpep_pickup_datetime'],
                      parse_dates=['lpep_pickup_datetime'], nrows=nrows)
@@ -231,16 +253,16 @@ def get_counter_data(nrows=None):
     counter = Counter(day_minute_list)
     xs, ys = zip(*counter.items())
 
-    return np.array(xs, dtype=float), np.array(ys, dtype=float)
+    return normalize(xs), normalize(ys)
 
 
 def taxicab_density_estimation(xs, ys):
     np.random.seed(1090)
 
-    degrees = [1, 3, 5, 15]
+    degrees = [1, 5, 10, 20, 40]
     len_degrees = len(degrees)
     num_axes = 3 + len_degrees
-    _, axes = plt.subplots(num_axes, 1, figsize=(10, 6 * num_axes))
+    _, axes = plt.subplots(num_axes, 1, figsize=(10, 5 * num_axes))
 
     ax0 = axes[0]
     ax0.plot(xs, ys)
@@ -249,10 +271,11 @@ def taxicab_density_estimation(xs, ys):
 
     x_train, x_test, y_train, y_test = train_test_split(xs, ys, train_size=0.7)
 
-    plot_r_sq(axes[1], x_train, x_test, y_train, y_test)
-    plot_aic_and_bic(axes[2], xs, ys)
+    max_degree = 40
+    plot_r_sq(axes[1], x_train, x_test, y_train, y_test, max_degree=max_degree)
+    plot_aic_and_bic(axes[2], xs, ys, max_degree)
 
-    lin_xs = np.linspace(1, 1440)
+    lin_xs = np.linspace(0.0, 1.0)
     for i, degree in enumerate(degrees):
         ax = axes[3 + i]
         coefs, intercept = polynomial_regression_fit(xs, ys, degree)
@@ -276,8 +299,8 @@ if __name__ == '__main__':
 
     # save_counter_data()
 
-    # counter_xs, counter_ys = get_counter_data()
-    counter_xs, counter_ys = load_counter_data()
+    counter_xs, counter_ys = get_counter_data()
+    # counter_xs, counter_ys = load_counter_data()
 
     # print type(counter_xs.dtype)
 
