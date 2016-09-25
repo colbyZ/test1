@@ -235,7 +235,7 @@ def get_counter_data(nrows=None):
 
 
 def taxicab_density_estimation(xs, ys):
-    # np.random.seed(1090)
+    np.random.seed(1090)
 
     degrees = [1, 3, 5, 15]
     len_degrees = len(degrees)
@@ -247,7 +247,7 @@ def taxicab_density_estimation(xs, ys):
     ax0.set_xlabel('time of the day (in minutes)')
     ax0.set_ylabel('number of pickups')
 
-    x_train, x_test, y_train, y_test = train_test_split(xs, ys, train_size=0.3)
+    x_train, x_test, y_train, y_test = train_test_split(xs, ys, train_size=0.7)
 
     plot_r_sq(axes[1], x_train, x_test, y_train, y_test)
     plot_aic_and_bic(axes[2], xs, ys)
