@@ -33,7 +33,7 @@ def load_counter_data():
     x = data[:, 0]
 
     x = normalize(x)
-    y = normalize(y)
+    # y = normalize(y)
 
     return x, y
 
@@ -235,7 +235,7 @@ def normalize(xs):
     xs = np.array(xs, dtype=float)
     min_x = xs.min()
     max_x = xs.max()
-    return [(x - min_x) / max_x for x in xs]
+    return [1.0 * (x - min_x) / max_x for x in xs]
 
 
 def get_counter_data(nrows=None):
@@ -253,7 +253,7 @@ def get_counter_data(nrows=None):
     counter = Counter(day_minute_list)
     xs, ys = zip(*counter.items())
 
-    return normalize(xs), normalize(ys)
+    return normalize(xs), ys
 
 
 def taxicab_density_estimation(xs, ys):
@@ -299,8 +299,8 @@ if __name__ == '__main__':
 
     # save_counter_data()
 
-    counter_xs, counter_ys = get_counter_data()
-    # counter_xs, counter_ys = load_counter_data()
+    # counter_xs, counter_ys = get_counter_data()
+    counter_xs, counter_ys = load_counter_data()
 
     # print type(counter_xs.dtype)
 
