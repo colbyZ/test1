@@ -115,6 +115,30 @@ def train_test_split_by_index(data, index):
     return train, test
 
 
+def plot_r_sq(ax, x_train, x_test, y_train, y_test):
+    r_sq_train_list = []
+    r_sq_test_list = []
+    plot_degrees = []
+
+    degrees = range(1, 16)
+    for degree in degrees:
+        coefs, intercept = polynomial_regression_fit(x_train, y_train, degree)
+        r_sq_train, _ = evaluate_polynomial_regression_fit(coefs, intercept, x_train, y_train, degree)
+        r_sq_test, _ = evaluate_polynomial_regression_fit(coefs, intercept, x_test, y_test, degree)
+        print 'degree: %2d, train R^2: %.4f, test R^2: %.4f' % (degree, r_sq_train, r_sq_test)
+        if abs(r_sq_train) <= 1.0 and abs(r_sq_test) <= 1.0:
+            r_sq_train_list.append(r_sq_train)
+            r_sq_test_list.append(r_sq_test)
+            plot_degrees.append(degree)
+
+    ax.plot(plot_degrees, r_sq_train_list, label='train')
+    ax.plot(plot_degrees, r_sq_test_list, label='test')
+    ax.legend(loc='lower right')
+    ax.set_xlabel('degree of the polynomial')
+    ax.set_ylabel('$R^2$')
+    ax.set_title('$R^2$ for the training and test sets as a function of the degree')
+
+
 def compare_errors_prob_2b():
     x, y = dataset_3_data
     mid_index = len(x) / 2
@@ -124,23 +148,7 @@ def compare_errors_prob_2b():
 
     _, ax = plt.subplots(1, 1, figsize=(12, 6))
 
-    r_sq_train_list = []
-    r_sq_test_list = []
-    degrees = range(1, 16)
-    for degree in degrees:
-        coefs, intercept = polynomial_regression_fit(x_train, y_train, degree)
-        r_sq_train, _ = evaluate_polynomial_regression_fit(coefs, intercept, x_train, y_train, degree)
-        r_sq_train_list.append(r_sq_train)
-        r_sq_test, _ = evaluate_polynomial_regression_fit(coefs, intercept, x_test, y_test, degree)
-        r_sq_test_list.append(r_sq_test)
-        print 'degree: %2d, train R^2: %.4f, test R^2: %.4f' % (degree, r_sq_train, r_sq_test)
-
-    ax.plot(degrees, r_sq_train_list, label='train')
-    ax.plot(degrees, r_sq_test_list, label='test')
-    ax.legend(loc='lower right')
-    ax.set_xlabel('degree of the polynomial')
-    ax.set_ylabel('$R^2$')
-    ax.set_title('$R^2$ for the training and test sets as a function of the degree')
+    plot_r_sq(ax, x_test, x_train, y_test, y_train)
 
     plt.show()
 
@@ -181,7 +189,9 @@ def compute_aic_and_bic():
 
 
 def taxicab_density_estimation():
-    nrows = 10 * 1000
+    np.random.seed(1090)
+
+    nrows = 100 * 1000
     # nrows = None
 
     df = pd.read_csv('green_tripdata_2015-01.csv', header=0, index_col=False, usecols=['lpep_pickup_datetime'],
@@ -197,21 +207,16 @@ def taxicab_density_estimation():
     counter = Counter(day_minute_list)
     xs, ys = zip(*counter.items())
 
-    _, ax = plt.subplots(1, 1, figsize=(12, 6))
+    _, axes = plt.subplots(2, 1, figsize=(12, 6))
 
-    ax.plot(xs, ys)
-    ax.set_xlabel('time of the day (in minutes)')
-    ax.set_ylabel('number of pickups')
+    ax0 = axes[0]
+    ax0.plot(xs, ys)
+    ax0.set_xlabel('time of the day (in minutes)')
+    ax0.set_ylabel('number of pickups')
 
     x_train, x_test, y_train, y_test = train_test_split(xs, ys, train_size=0.7)
 
-    print len(x_train), len(x_test)
-    print len(y_train), len(y_test)
-
-    degrees = range(1, 16)
-    for degree in degrees:
-        coefs, intercept = polynomial_regression_fit(x_train, y_train, degree)
-        print coefs, intercept
+    plot_r_sq(axes[1], x_test, x_train, y_test, y_train)
 
     plt.show()
 
