@@ -150,10 +150,10 @@ def plot_r_sq(ax, x_train, x_test, y_train, y_test):
         r_sq_train, _ = evaluate_polynomial_regression_fit(coefs, intercept, x_train, y_train, degree)
         r_sq_test, _ = evaluate_polynomial_regression_fit(coefs, intercept, x_test, y_test, degree)
         print 'degree: %2d, train R^2: %.4f, test R^2: %.4f' % (degree, r_sq_train, r_sq_test)
-        if abs(r_sq_train) <= 1.0 and abs(r_sq_test) <= 1.0:
-            r_sq_train_list.append(r_sq_train)
-            r_sq_test_list.append(r_sq_test)
-            plot_degrees.append(degree)
+
+        r_sq_train_list.append(r_sq_train)
+        r_sq_test_list.append(r_sq_test)
+        plot_degrees.append(degree)
 
     ax.plot(plot_degrees, r_sq_train_list, label='train')
     ax.plot(plot_degrees, r_sq_test_list, label='test')
