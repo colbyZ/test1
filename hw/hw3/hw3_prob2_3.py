@@ -161,11 +161,7 @@ def compute_bic(n, rss, degree):
     return n * np.log(rss / n) + np.log(n) * degree
 
 
-def compute_aic_and_bic():
-    x, y = dataset_3_data
-
-    _, ax = plt.subplots(1, 1, figsize=(12, 6))
-
+def plot_aic_and_bic(ax, x, y):
     n = len(x)
     aic_list = []
     bic_list = []
@@ -185,14 +181,22 @@ def compute_aic_and_bic():
     ax.set_xlabel('degree of the polynomial')
     ax.set_title('AIC and BIC as functions of the degree')
 
+
+def compute_aic_and_bic():
+    x, y = dataset_3_data
+
+    _, ax = plt.subplots(1, 1, figsize=(12, 6))
+
+    plot_aic_and_bic(ax, x, y)
+
     plt.show()
 
 
 def taxicab_density_estimation():
     np.random.seed(1090)
 
-    nrows = 100 * 1000
-    # nrows = None
+    # nrows = 100 * 1000
+    nrows = None
 
     df = pd.read_csv('green_tripdata_2015-01.csv', header=0, index_col=False, usecols=['lpep_pickup_datetime'],
                      parse_dates=['lpep_pickup_datetime'], nrows=nrows)
@@ -207,7 +211,7 @@ def taxicab_density_estimation():
     counter = Counter(day_minute_list)
     xs, ys = zip(*counter.items())
 
-    _, axes = plt.subplots(2, 1, figsize=(12, 6))
+    _, axes = plt.subplots(3, 1, figsize=(12, 6 * 3))
 
     ax0 = axes[0]
     ax0.plot(xs, ys)
@@ -217,6 +221,7 @@ def taxicab_density_estimation():
     x_train, x_test, y_train, y_test = train_test_split(xs, ys, train_size=0.7)
 
     plot_r_sq(axes[1], x_test, x_train, y_test, y_train)
+    plot_aic_and_bic(axes[2], xs, ys)
 
     plt.show()
 
