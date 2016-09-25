@@ -211,7 +211,10 @@ def taxicab_density_estimation():
     counter = Counter(day_minute_list)
     xs, ys = zip(*counter.items())
 
-    _, axes = plt.subplots(3, 1, figsize=(12, 6 * 3))
+    degrees = [1, 2, 3, 4]
+    len_degrees = len(degrees)
+    num_axes = 3 + len_degrees
+    _, axes = plt.subplots(num_axes, 1, figsize=(12, 6 * num_axes))
 
     ax0 = axes[0]
     ax0.plot(xs, ys)
@@ -222,6 +225,18 @@ def taxicab_density_estimation():
 
     plot_r_sq(axes[1], x_test, x_train, y_test, y_train)
     plot_aic_and_bic(axes[2], xs, ys)
+
+    lin_xs = np.linspace(1, 1400)
+    for i, degree in enumerate(degrees):
+        ax = axes[3 + i]
+        coefs, intercept = polynomial_regression_fit(xs, ys, degree)
+        ax.scatter(xs, ys, color='blue')
+
+        ax.plot(lin_xs, polynomial_regression_predict(coefs, intercept, degree, lin_xs), color='red')
+
+        ax.set_xlabel('x')
+        ax.set_ylabel('y')
+        ax.set_title('degree of the polynomial: %d' % degree)
 
     plt.show()
 
