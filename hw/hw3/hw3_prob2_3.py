@@ -172,7 +172,7 @@ def compare_errors_prob_2b():
 
     _, ax = plt.subplots(1, 1, figsize=(12, 6))
 
-    plot_r_sq(ax, x_test, x_train, y_test, y_train)
+    plot_r_sq(ax, x_train, x_test, y_train, y_test)
 
     plt.show()
 
@@ -230,11 +230,12 @@ def get_counter_data(nrows=None):
 
     counter = Counter(day_minute_list)
     xs, ys = zip(*counter.items())
-    return xs, ys
+
+    return np.array(xs, dtype=float), np.array(ys, dtype=float)
 
 
 def taxicab_density_estimation(xs, ys):
-    np.random.seed(1090)
+    # np.random.seed(1090)
 
     degrees = [1, 3, 5, 15]
     len_degrees = len(degrees)
@@ -246,9 +247,9 @@ def taxicab_density_estimation(xs, ys):
     ax0.set_xlabel('time of the day (in minutes)')
     ax0.set_ylabel('number of pickups')
 
-    x_train, x_test, y_train, y_test = train_test_split(xs, ys, train_size=0.7)
+    x_train, x_test, y_train, y_test = train_test_split(xs, ys, train_size=0.3)
 
-    plot_r_sq(axes[1], x_test, x_train, y_test, y_train)
+    plot_r_sq(axes[1], x_train, x_test, y_train, y_test)
     plot_aic_and_bic(axes[2], xs, ys)
 
     lin_xs = np.linspace(1, 1440)
@@ -275,7 +276,9 @@ if __name__ == '__main__':
 
     # save_counter_data()
 
-    # xs, ys = get_counter_data()
-    xs, ys = load_counter_data()
+    # counter_xs, counter_ys = get_counter_data()
+    counter_xs, counter_ys = load_counter_data()
 
-    taxicab_density_estimation(xs, ys)
+    # print type(counter_xs.dtype)
+
+    taxicab_density_estimation(counter_xs, counter_ys)
