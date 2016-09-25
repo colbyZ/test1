@@ -235,7 +235,7 @@ def normalize(xs):
     xs = np.array(xs, dtype=float)
     min_x = xs.min()
     max_x = xs.max()
-    return [1.0 * (x - min_x) / max_x for x in xs]
+    return [(x - min_x) / max_x for x in xs]
 
 
 def get_counter_data(nrows=None):
