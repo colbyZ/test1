@@ -192,10 +192,7 @@ def compute_aic_and_bic():
     plt.show()
 
 
-def get_counter_data():
-    # nrows = 100 * 1000
-    nrows = None
-
+def get_counter_data(nrows=None):
     df = pd.read_csv('green_tripdata_2015-01.csv', header=0, index_col=False, usecols=['lpep_pickup_datetime'],
                      parse_dates=['lpep_pickup_datetime'], nrows=nrows)
 
@@ -206,7 +203,7 @@ def get_counter_data():
         hour = datetime.hour
         day_minute = minute + 60 * hour
         day_minute_list.append(day_minute)
-        
+
     counter = Counter(day_minute_list)
     xs, ys = zip(*counter.items())
     return xs, ys
@@ -247,10 +244,32 @@ def taxicab_density_estimation():
     plt.show()
 
 
+def save_counter_data():
+    # nrows = 10 * 1000
+    nrows = None
+
+    xs, ys = get_counter_data(nrows)
+
+    x_column = np.vstack(xs)
+    y_column = np.vstack(ys)
+    table = np.hstack((x_column, y_column))
+
+    df = pd.DataFrame(table)
+    df.columns = ['x', 'y']
+    df.to_csv('tripdata_pickup_counts.csv', index=False)
+
+
+def load_counter_data():
+    df = pd.read_csv('tripdata_pickup_counts.csv')
+    print df
+
+
 if __name__ == '__main__':
     # dataset_3_data = read_dataset3_data()
     # fit_and_visualize_prob_2a()
     # compare_errors_prob_2b()
     # compute_aic_and_bic()
 
-    taxicab_density_estimation()
+    # taxicab_density_estimation()
+    # save_counter_data()
+    load_counter_data()
