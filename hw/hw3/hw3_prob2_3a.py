@@ -1,8 +1,11 @@
+from collections import Counter
 from collections import namedtuple
 from itertools import izip
 
 import matplotlib.pyplot as plt
 import numpy as np
+import pandas as pd
+from sklearn.cross_validation import train_test_split
 from sklearn.linear_model import LinearRegression as Lin_Reg
 
 DatasetData = namedtuple('DatasetData', ['x', 'y'])
@@ -155,10 +158,10 @@ def compute_aic_and_bic():
 
     _, ax = plt.subplots(1, 1, figsize=(12, 6))
 
-    degrees = range(1, 16)
     n = len(x)
     aic_list = []
     bic_list = []
+    degrees = range(1, 16)
     for degree in degrees:
         coefs, intercept = polynomial_regression_fit(x, y, degree)
         r_sq, rss = evaluate_polynomial_regression_fit(coefs, intercept, x, y, degree)
@@ -177,8 +180,46 @@ def compute_aic_and_bic():
     plt.show()
 
 
+def taxicab_density_estimation():
+    nrows = 10 * 1000
+    # nrows = None
+
+    df = pd.read_csv('green_tripdata_2015-01.csv', header=0, index_col=False, usecols=['lpep_pickup_datetime'],
+                     parse_dates=['lpep_pickup_datetime'], nrows=nrows)
+    day_minute_list = []
+    for index, row in df.iterrows():
+        datetime = row[0]
+        minute = datetime.minute
+        hour = datetime.hour
+        day_minute = minute + 60 * hour
+        day_minute_list.append(day_minute)
+
+    counter = Counter(day_minute_list)
+    xs, ys = zip(*counter.items())
+
+    _, ax = plt.subplots(1, 1, figsize=(12, 6))
+
+    ax.plot(xs, ys)
+    ax.set_xlabel('time of the day (in minutes)')
+    ax.set_ylabel('number of pickups')
+
+    x_train, x_test, y_train, y_test = train_test_split(xs, ys, train_size=0.7)
+
+    print len(x_train), len(x_test)
+    print len(y_train), len(y_test)
+
+    degrees = range(1, 16)
+    for degree in degrees:
+        coefs, intercept = polynomial_regression_fit(x_train, y_train, degree)
+        print coefs, intercept
+
+    plt.show()
+
+
 if __name__ == '__main__':
-    dataset_3_data = read_dataset3_data()
+    # dataset_3_data = read_dataset3_data()
     # fit_and_visualize_prob_2a()
     # compare_errors_prob_2b()
-    compute_aic_and_bic()
+    # compute_aic_and_bic()
+
+    taxicab_density_estimation()
