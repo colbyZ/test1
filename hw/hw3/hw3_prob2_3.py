@@ -11,6 +11,30 @@ from sklearn.linear_model import LinearRegression as Lin_Reg
 DatasetData = namedtuple('DatasetData', ['x', 'y'])
 
 
+def save_counter_data():
+    # nrows = 10 * 1000
+    nrows = None
+
+    xs, ys = get_counter_data(nrows)
+
+    x_column = np.vstack(xs)
+    y_column = np.vstack(ys)
+    table = np.hstack((x_column, y_column))
+
+    df = pd.DataFrame(table)
+    df.columns = ['x', 'y']
+    df.to_csv('tripdata_pickup_counts.csv', index=False)
+
+
+def load_counter_data():
+    data = np.loadtxt('tripdata_pickup_counts.csv', delimiter=',', skiprows=1)
+
+    y = data[:, -1]
+    x = data[:, 0]
+
+    return x, y
+
+
 def loadtxt(file_name):
     return np.loadtxt('datasets/%s' % file_name, delimiter=',', skiprows=1)
 
@@ -209,15 +233,13 @@ def get_counter_data(nrows=None):
     return xs, ys
 
 
-def taxicab_density_estimation():
+def taxicab_density_estimation(xs, ys):
     np.random.seed(1090)
 
-    xs, ys = get_counter_data()
-
-    degrees = [1, 2, 3, 4]
+    degrees = [1, 3, 5, 15]
     len_degrees = len(degrees)
     num_axes = 3 + len_degrees
-    _, axes = plt.subplots(num_axes, 1, figsize=(12, 6 * num_axes))
+    _, axes = plt.subplots(num_axes, 1, figsize=(12, 10 * num_axes))
 
     ax0 = axes[0]
     ax0.plot(xs, ys)
@@ -229,7 +251,7 @@ def taxicab_density_estimation():
     plot_r_sq(axes[1], x_test, x_train, y_test, y_train)
     plot_aic_and_bic(axes[2], xs, ys)
 
-    lin_xs = np.linspace(1, 1400)
+    lin_xs = np.linspace(1, 1440)
     for i, degree in enumerate(degrees):
         ax = axes[3 + i]
         coefs, intercept = polynomial_regression_fit(xs, ys, degree)
@@ -241,27 +263,8 @@ def taxicab_density_estimation():
         ax.set_ylabel('y')
         ax.set_title('degree of the polynomial: %d' % degree)
 
+    plt.tight_layout()
     plt.show()
-
-
-def save_counter_data():
-    # nrows = 10 * 1000
-    nrows = None
-
-    xs, ys = get_counter_data(nrows)
-
-    x_column = np.vstack(xs)
-    y_column = np.vstack(ys)
-    table = np.hstack((x_column, y_column))
-
-    df = pd.DataFrame(table)
-    df.columns = ['x', 'y']
-    df.to_csv('tripdata_pickup_counts.csv', index=False)
-
-
-def load_counter_data():
-    df = pd.read_csv('tripdata_pickup_counts.csv')
-    print df
 
 
 if __name__ == '__main__':
@@ -270,6 +273,9 @@ if __name__ == '__main__':
     # compare_errors_prob_2b()
     # compute_aic_and_bic()
 
-    # taxicab_density_estimation()
     # save_counter_data()
-    load_counter_data()
+
+    # xs, ys = get_counter_data()
+    xs, ys = load_counter_data()
+
+    taxicab_density_estimation(xs, ys)
