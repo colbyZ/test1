@@ -270,6 +270,22 @@ def taxicab_plot_data():
     plt.show()
 
 
+def taxicab_plot_r_sq():
+    xs, ys = taxicab_data
+
+    np.random.seed(1090)
+
+    _, ax = plt.subplots(1, 1, figsize=(10, 5))
+
+    x_train, x_test, y_train, y_test = train_test_split(xs, ys, train_size=0.7)
+
+    max_degree = 40
+    plot_r_sq(ax, x_train, x_test, y_train, y_test, max_degree=max_degree)
+
+    plt.tight_layout()
+    plt.show()
+
+
 def taxicab_density_estimation():
     xs, ys = taxicab_data
 
@@ -277,18 +293,15 @@ def taxicab_density_estimation():
 
     degrees = [1, 5, 10, 20, 40]
     len_degrees = len(degrees)
-    num_axes = 2 + len_degrees
+    num_axes = 1 + len_degrees
     _, axes = plt.subplots(num_axes, 1, figsize=(10, 5 * num_axes))
 
-    x_train, x_test, y_train, y_test = train_test_split(xs, ys, train_size=0.7)
-
     max_degree = 40
-    plot_r_sq(axes[0], x_train, x_test, y_train, y_test, max_degree=max_degree)
-    plot_aic_and_bic(axes[1], xs, ys, max_degree)
+    plot_aic_and_bic(axes[0], xs, ys, max_degree)
 
     lin_xs = np.linspace(0.0, 1.0)
     for i, degree in enumerate(degrees):
-        ax = axes[2 + i]
+        ax = axes[1 + i]
         coefs, intercept = polynomial_regression_fit(xs, ys, degree)
         print 'degree: %d, intercept: %.1f' % (degree, intercept)
         for ci, coef in enumerate(coefs):
@@ -318,4 +331,5 @@ if __name__ == '__main__':
 
     # print type(counter_xs.dtype)
 
-    taxicab_plot_data()
+    # taxicab_plot_data()
+    taxicab_plot_r_sq()
