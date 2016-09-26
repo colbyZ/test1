@@ -279,6 +279,9 @@ def taxicab_density_estimation(xs, ys):
     for i, degree in enumerate(degrees):
         ax = axes[3 + i]
         coefs, intercept = polynomial_regression_fit(xs, ys, degree)
+        print 'degree: %d, intercept: %.1f' % (degree, intercept)
+        for ci, coef in enumerate(coefs):
+            print 'coef %d: %.1f' % (ci + 1, coef)
         ax.scatter(xs, ys, color='blue')
 
         ax.plot(lin_xs, polynomial_regression_predict(coefs, intercept, degree, lin_xs), color='red')
