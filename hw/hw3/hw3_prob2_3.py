@@ -286,22 +286,29 @@ def taxicab_plot_r_sq():
     plt.show()
 
 
-def taxicab_density_estimation():
+def taxicab_plot_aic_and_bic():
     xs, ys = taxicab_data
 
-    np.random.seed(1090)
+    _, ax = plt.subplots(1, 1, figsize=(10, 5))
+
+    max_degree = 40
+    plot_aic_and_bic(ax, xs, ys, max_degree)
+
+    plt.tight_layout()
+    plt.show()
+
+
+def taxicab_plot_fits():
+    xs, ys = taxicab_data
 
     degrees = [1, 5, 10, 20, 40]
     len_degrees = len(degrees)
-    num_axes = 1 + len_degrees
+    num_axes = len_degrees
     _, axes = plt.subplots(num_axes, 1, figsize=(10, 5 * num_axes))
-
-    max_degree = 40
-    plot_aic_and_bic(axes[0], xs, ys, max_degree)
 
     lin_xs = np.linspace(0.0, 1.0)
     for i, degree in enumerate(degrees):
-        ax = axes[1 + i]
+        ax = axes[i]
         coefs, intercept = polynomial_regression_fit(xs, ys, degree)
         print 'degree: %d, intercept: %.1f' % (degree, intercept)
         for ci, coef in enumerate(coefs):
@@ -332,4 +339,6 @@ if __name__ == '__main__':
     # print type(counter_xs.dtype)
 
     # taxicab_plot_data()
-    taxicab_plot_r_sq()
+    # taxicab_plot_r_sq()
+    # taxicab_plot_aic_and_bic()
+    taxicab_plot_fits()
