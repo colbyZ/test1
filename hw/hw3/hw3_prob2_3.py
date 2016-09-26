@@ -333,8 +333,8 @@ if __name__ == '__main__':
 
     # save_counter_data()
 
-    # taxicab_data = get_taxicab_data()
-    taxicab_data = load_taxicab_data()
+    taxicab_data = get_taxicab_data()
+    # taxicab_data = load_taxicab_data()
 
     # print type(counter_xs.dtype)
 
