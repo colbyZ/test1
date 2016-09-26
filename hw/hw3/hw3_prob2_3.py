@@ -9,13 +9,14 @@ from sklearn.cross_validation import train_test_split
 from sklearn.linear_model import LinearRegression as Lin_Reg
 
 DatasetData = namedtuple('DatasetData', ['x', 'y'])
+TaxicabData = namedtuple('TaxicabData', ['x', 'y'])
 
 
 def save_counter_data():
     # nrows = 10 * 1000
     nrows = None
 
-    xs, ys = get_counter_data(nrows)
+    xs, ys = get_taxicab_data(nrows)
 
     x_column = np.vstack(xs)
     y_column = np.vstack(ys)
@@ -26,7 +27,7 @@ def save_counter_data():
     df.to_csv('tripdata_pickup_counts.csv', index=False)
 
 
-def load_counter_data():
+def load_taxicab_data():
     data = np.loadtxt('tripdata_pickup_counts.csv', delimiter=',', skiprows=1)
 
     y = data[:, -1]
@@ -238,7 +239,7 @@ def normalize(xs):
     return [(x - min_x) / max_x for x in xs]
 
 
-def get_counter_data(nrows=None):
+def get_taxicab_data(nrows=None):
     df = pd.read_csv('green_tripdata_2015-01.csv', header=0, index_col=False, usecols=['lpep_pickup_datetime'],
                      parse_dates=['lpep_pickup_datetime'], nrows=nrows)
 
@@ -253,31 +254,41 @@ def get_counter_data(nrows=None):
     counter = Counter(day_minute_list)
     xs, ys = zip(*counter.items())
 
-    return normalize(xs), ys
+    return TaxicabData(normalize(xs), ys)
 
 
-def taxicab_density_estimation(xs, ys):
+def taxicab_plot_data():
+    xs, ys = taxicab_data
+
+    _, ax = plt.subplots(1, 1, figsize=(10, 5))
+
+    ax.plot(xs, ys)
+    ax.set_xlabel('"normalized" time of the day (in minutes divided by 1440)')
+    ax.set_ylabel('number of pickups')
+
+    plt.tight_layout()
+    plt.show()
+
+
+def taxicab_density_estimation():
+    xs, ys = taxicab_data
+
     np.random.seed(1090)
 
     degrees = [1, 5, 10, 20, 40]
     len_degrees = len(degrees)
-    num_axes = 3 + len_degrees
+    num_axes = 2 + len_degrees
     _, axes = plt.subplots(num_axes, 1, figsize=(10, 5 * num_axes))
-
-    ax0 = axes[0]
-    ax0.plot(xs, ys)
-    ax0.set_xlabel('"normalized" time of the day (in minutes divided by 1440)')
-    ax0.set_ylabel('number of pickups')
 
     x_train, x_test, y_train, y_test = train_test_split(xs, ys, train_size=0.7)
 
     max_degree = 40
-    plot_r_sq(axes[1], x_train, x_test, y_train, y_test, max_degree=max_degree)
-    plot_aic_and_bic(axes[2], xs, ys, max_degree)
+    plot_r_sq(axes[0], x_train, x_test, y_train, y_test, max_degree=max_degree)
+    plot_aic_and_bic(axes[1], xs, ys, max_degree)
 
     lin_xs = np.linspace(0.0, 1.0)
     for i, degree in enumerate(degrees):
-        ax = axes[3 + i]
+        ax = axes[2 + i]
         coefs, intercept = polynomial_regression_fit(xs, ys, degree)
         print 'degree: %d, intercept: %.1f' % (degree, intercept)
         for ci, coef in enumerate(coefs):
@@ -302,9 +313,9 @@ if __name__ == '__main__':
 
     # save_counter_data()
 
-    # counter_xs, counter_ys = get_counter_data()
-    counter_xs, counter_ys = load_counter_data()
+    # taxicab_data = get_taxicab_data()
+    taxicab_data = load_taxicab_data()
 
     # print type(counter_xs.dtype)
 
-    taxicab_density_estimation(counter_xs, counter_ys)
+    taxicab_plot_data()
