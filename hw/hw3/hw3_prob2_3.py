@@ -266,7 +266,7 @@ def taxicab_density_estimation(xs, ys):
 
     ax0 = axes[0]
     ax0.plot(xs, ys)
-    ax0.set_xlabel('time of the day (in minutes)')
+    ax0.set_xlabel('"normalized" time of the day (in minutes divided by 1440)')
     ax0.set_ylabel('number of pickups')
 
     x_train, x_test, y_train, y_test = train_test_split(xs, ys, train_size=0.7)
