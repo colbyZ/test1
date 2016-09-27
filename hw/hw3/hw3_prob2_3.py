@@ -76,10 +76,7 @@ def polynomial_regression_fit(x_train, y_train, degree_of_the_polynomial):
 # polynomial regression predict
 
 def calculate_polynomial_value(coefs, intercept, x):
-    poly_sum = intercept
-    for i, coef in enumerate(coefs):
-        poly_sum += coef * pow(x, i + 1)
-    return poly_sum
+    return intercept + sum(coef * pow(x, i + 1) for i, coef in enumerate(coefs))
 
 
 def polynomial_regression_predict(coefs, intercept, degree_of_the_polynomial, x_test):
@@ -118,8 +115,7 @@ def fit_and_visualize_prob_2a():
     _, axes = plt.subplots(degrees_len, 1, figsize=(8, 5 * degrees_len))
 
     xs = np.linspace(0.01, 0.99)
-    for i, degree in enumerate(degrees):
-        ax = axes[i]
+    for degree, ax in izip(degrees, axes):
         coefs, intercept = polynomial_regression_fit(x, y, degree)
         ax.scatter(x, y, color='blue')
 
@@ -146,7 +142,6 @@ def train_test_split_by_index(data, index):
 def plot_r_sq(ax, x_train, x_test, y_train, y_test, max_degree=15):
     r_sq_train_list = []
     r_sq_test_list = []
-    plot_degrees = []
 
     degrees = range(1, max_degree + 1)
     for degree in degrees:
@@ -157,14 +152,13 @@ def plot_r_sq(ax, x_train, x_test, y_train, y_test, max_degree=15):
 
         r_sq_train_list.append(r_sq_train)
         r_sq_test_list.append(r_sq_test)
-        plot_degrees.append(degree)
 
     max_r_sq_test = np.max(r_sq_test_list)
     max_r_sq_test_degree = r_sq_test_list.index(max_r_sq_test) + 1
     print 'max test R^2, degree: %d, value: %.5f' % (max_r_sq_test_degree, max_r_sq_test)
 
-    ax.plot(plot_degrees, r_sq_train_list, label='train')
-    ax.plot(plot_degrees, r_sq_test_list, label='test')
+    ax.plot(degrees, r_sq_train_list, label='train')
+    ax.plot(degrees, r_sq_test_list, label='test')
     ax.legend(loc='lower right')
     ax.set_xlabel('degree of the polynomial')
     ax.set_ylabel('$R^2$')
@@ -173,7 +167,7 @@ def plot_r_sq(ax, x_train, x_test, y_train, y_test, max_degree=15):
 
 def compare_errors_prob_2b():
     x, y = dataset_3_data
-    mid_index = len(x) / 2
+    mid_index = len(x) // 2
 
     x_train, x_test = train_test_split_by_index(x, mid_index)
     y_train, y_test = train_test_split_by_index(y, mid_index)
@@ -244,12 +238,9 @@ def get_taxicab_data(nrows=None):
                      parse_dates=['lpep_pickup_datetime'], nrows=nrows)
 
     day_minute_list = []
-    for index, row in df.iterrows():
+    for _, row in df.iterrows():
         datetime = row[0]
-        minute = datetime.minute
-        hour = datetime.hour
-        day_minute = minute + 60 * hour
-        day_minute_list.append(day_minute)
+        day_minute_list.append(datetime.minute + 60 * datetime.hour)
 
     counter = Counter(day_minute_list)
     xs, ys = zip(*counter.items())
@@ -279,8 +270,7 @@ def taxicab_plot_r_sq():
 
     x_train, x_test, y_train, y_test = train_test_split(xs, ys, train_size=0.7)
 
-    max_degree = 40
-    plot_r_sq(ax, x_train, x_test, y_train, y_test, max_degree=max_degree)
+    plot_r_sq(ax, x_train, x_test, y_train, y_test, max_degree=40)
 
     plt.tight_layout()
     plt.show()
@@ -291,8 +281,7 @@ def taxicab_plot_aic_and_bic():
 
     _, ax = plt.subplots(1, 1, figsize=(10, 5))
 
-    max_degree = 40
-    plot_aic_and_bic(ax, xs, ys, max_degree)
+    plot_aic_and_bic(ax, xs, ys, max_degree=40)
 
     plt.tight_layout()
     plt.show()
@@ -302,19 +291,17 @@ def taxicab_plot_fits():
     xs, ys = taxicab_data
 
     degrees = [1, 5, 10, 20, 40]
-    len_degrees = len(degrees)
-    num_axes = len_degrees
+    num_axes = len(degrees)
     _, axes = plt.subplots(num_axes, 1, figsize=(10, 5 * num_axes))
 
     lin_xs = np.linspace(0.0, 1.0)
-    for i, degree in enumerate(degrees):
-        ax = axes[i]
+    for degree, ax in izip(degrees, axes):
         coefs, intercept = polynomial_regression_fit(xs, ys, degree)
         print 'degree: %d, intercept: %.1f' % (degree, intercept)
-        for ci, coef in enumerate(coefs):
-            print 'coef %d: %.1f' % (ci + 1, coef)
-        ax.scatter(xs, ys, color='blue')
+        for ci, coef in enumerate(coefs, start=1):
+            print 'coef %d: %.1f' % (ci, coef)
 
+        ax.scatter(xs, ys, color='blue')
         ax.plot(lin_xs, polynomial_regression_predict(coefs, intercept, degree, lin_xs), color='red')
 
         ax.set_xlabel('x')
@@ -333,8 +320,8 @@ if __name__ == '__main__':
 
     # save_counter_data()
 
-    taxicab_data = get_taxicab_data()
-    # taxicab_data = load_taxicab_data()
+    # taxicab_data = get_taxicab_data()
+    taxicab_data = load_taxicab_data()
 
     # print type(counter_xs.dtype)
 

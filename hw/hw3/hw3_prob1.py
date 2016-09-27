@@ -21,7 +21,7 @@ DatasetData = namedtuple('DatasetData', ['x', 'y'])
 
 def multiple_linear_regression_fit(x_train, y_train):
     # Append a column of one's to x
-    n = x_train.shape[0]
+    n = len(x_train)
     ones_col = np.ones((n, 1))
     x_train = np.concatenate((x_train, ones_col), axis=1)
 
@@ -113,14 +113,13 @@ def read_dataset_data(filename):
     return DatasetData(x, y)
 
 
-def plot_histograms_prob_1b():
+def plot_histograms_prob_1b(dataset_2_data):
     np.random.seed(1090)
 
     x, y = dataset_2_data
 
     # Record size of the data set
-    n = x.shape[0]
-    d = x.shape[1]
+    n, d = x.shape
     subsample_size = 100
 
     # No. of subsamples
@@ -175,7 +174,7 @@ def plot_histograms_prob_1b():
     plt.show()
 
 
-def compute_confidence_intervals_prob_1b():
+def compute_confidence_intervals_prob_1b(dataset_2_data):
     x, y = dataset_2_data
     d = x.shape[1]
 
@@ -194,9 +193,13 @@ def compute_confidence_intervals_prob_1b():
         print 'the confidence interval for coefficient %d: [%.4f, %.4f]' % (j + 1, conf_int[j][0], conf_int[j][1])
 
 
-if __name__ == '__main__':
+def main():
     # evaluate_model_prob_1a()
 
     dataset_2_data = read_dataset_data("dataset_2.txt")
-    plot_histograms_prob_1b()
-    # compute_confidence_intervals_prob_1b()
+    # plot_histograms_prob_1b(dataset_2_data)
+    compute_confidence_intervals_prob_1b(dataset_2_data)
+
+
+if __name__ == '__main__':
+    main()

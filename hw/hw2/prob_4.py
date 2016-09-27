@@ -35,7 +35,7 @@ def print_stats(zs):
 
 
 def add_uniform_variables(k):
-    sample_size = 10000000 / k
+    sample_size = 10000000 // k
     variable_list = create_k_uniform_variables(sample_size, k)
     zs = list(add_variables(variable_list))
     print_stats(zs)
@@ -47,7 +47,7 @@ def create_k_normal_variables(n, k):
 
 
 def add_normal_variables(k):
-    sample_size = 10000000 / k
+    sample_size = 10000000 // k
     variable_list = create_k_normal_variables(sample_size, k)
     zs = list(add_variables(variable_list))
     print_stats(zs)
@@ -59,7 +59,7 @@ def multiply_variables(variable_list):
 
 
 def multiply_normal_variables(k):
-    sample_size = 10000000 / k
+    sample_size = 10000000 // k
     variable_list = create_k_normal_variables(sample_size, k)
     zs = list(multiply_variables(variable_list))
     print_stats(zs)
