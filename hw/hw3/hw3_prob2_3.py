@@ -314,6 +314,7 @@ def taxicab_plot_fits(taxicab_data):
 
 def main():
     # dataset_3_data = read_dataset3_data()
+
     # fit_and_visualize_prob_2a(dataset_3_data)
     # compare_errors_prob_2b(dataset_3_data)
     # compute_aic_and_bic(dataset_3_data)
