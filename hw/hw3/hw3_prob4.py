@@ -4,6 +4,18 @@ import numpy as np
 from sklearn.linear_model import LinearRegression as Lin_Reg
 
 
+def polynomial_regression_score(y_predicted, y_test):
+    rss = 0.0
+    tss = 0.0
+    y_mean = np.mean(y_test)
+    for predicted_value, actual_value in izip(y_predicted, y_test):
+        rss += (actual_value - predicted_value) ** 2
+        tss += (actual_value - y_mean) ** 2
+
+    r_squared = 1.0 - rss / tss
+    return r_squared, rss
+
+
 def loadtxt(file_name):
     return np.loadtxt('datasets/%s' % file_name, delimiter=',', skiprows=1)
 
@@ -74,8 +86,9 @@ def prob_4a():
     for degree in range(1, 4):
         coefs, intercept, degree_pair_list = polynomial_regression_fit_prob_4a(x_train, y_train, degree)
         y_predicted = polynomial_regression_predict_prob_4a(coefs, intercept, x_test, degree_pair_list)
+        r_squared, _ = polynomial_regression_score(y_predicted, y_test)
 
-        print len(y_predicted)
+        print 'degree: %d, R^2: %.3f' % (degree, r_squared)
 
 
 def main():
