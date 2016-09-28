@@ -1,3 +1,5 @@
+from itertools import izip
+
 import numpy as np
 from sklearn.linear_model import LinearRegression as Lin_Reg
 
@@ -43,7 +45,23 @@ def polynomial_regression_fit_prob_4a(x_train, y_train, degree_of_the_polynomial
     linear_regression = Lin_Reg()
     linear_regression.fit(poly_x, y_train)
 
-    return linear_regression.coef_, linear_regression.intercept_
+    return linear_regression.coef_, linear_regression.intercept_, degree_pair_list
+
+
+def calculate_polynomial_value_prob_4a(coefs, intercept, xs, degree_pair_list):
+    value = intercept
+
+    for degree_pair, coef in izip(degree_pair_list, coefs):
+        m = coef
+        for degree, x in izip(degree_pair, xs):
+            m *= pow(x, degree)
+        value += m
+
+    return value
+
+
+def polynomial_regression_predict_prob_4a(coefs, intercept, x_test, degree_pair_list):
+    return [calculate_polynomial_value_prob_4a(coefs, intercept, x, degree_pair_list) for x in x_test]
 
 
 def prob_4a():
@@ -54,9 +72,10 @@ def prob_4a():
     y_test, x_test = split_y_x(data_test)
 
     for degree in range(1, 4):
-        coefs, intercept = polynomial_regression_fit_prob_4a(x_train, y_train, degree)
+        coefs, intercept, degree_pair_list = polynomial_regression_fit_prob_4a(x_train, y_train, degree)
+        y_predicted = polynomial_regression_predict_prob_4a(coefs, intercept, x_test, degree_pair_list)
 
-        print degree, intercept, coefs
+        print len(y_predicted)
 
 
 def main():
