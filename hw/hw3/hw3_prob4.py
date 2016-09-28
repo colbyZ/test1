@@ -13,26 +13,32 @@ def split_y_x(data):
 
 
 def add_column(poly_x, new_column):
-    return np.hstack((poly_x, new_column))
+    return np.hstack((poly_x, new_column)) if poly_x is not None else new_column
 
 
-def multiply_columns(x_columns, m1, m2):
-    col1 = np.power(x_columns[0], m1)
-    col2 = np.power(x_columns[1], m2)
-    return np.multiply(col1, col2)
+def get_new_column(x_columns, degree_pair):
+    col = np.vstack(np.ones(len(x_columns[0])))
+    for i in range(2):
+        col = np.multiply(col, np.power(x_columns[i], degree_pair[i]))
+    return col
+
+
+def generate_variable_degrees(degree_of_the_polynomial):
+    pair_list = []
+    for max_degree in range(1, degree_of_the_polynomial + 1):
+        for degree1 in range(0, max_degree + 1):
+            degree2 = max_degree - degree1
+            pair_list.append((degree1, degree2))
+    return pair_list
 
 
 def polynomial_regression_fit_prob_4a(x_train, y_train, degree_of_the_polynomial):
     x_columns = [np.vstack(x_train[:, i]) for i in range(2)]
+    poly_x = None
 
-    poly_x = x_train.copy()
-
-    for exponent in range(2, degree_of_the_polynomial + 1):
-        for i in range(2):
-            poly_x = add_column(poly_x, np.power(x_columns[i], exponent))
-        for m1 in range(1, exponent):
-            m2 = exponent - m1
-            poly_x = add_column(poly_x, multiply_columns(x_columns, m1, m2))
+    degree_pair_list = generate_variable_degrees(degree_of_the_polynomial)
+    for degree_pair in degree_pair_list:
+        poly_x = add_column(poly_x, get_new_column(x_columns, degree_pair))
 
     linear_regression = Lin_Reg()
     linear_regression.fit(poly_x, y_train)
@@ -47,8 +53,10 @@ def prob_4a():
     y_train, x_train = split_y_x(data_train)
     y_test, x_test = split_y_x(data_test)
 
-    coef, intercept = polynomial_regression_fit_prob_4a(x_train, y_train, 3)
-    print coef, intercept
+    for degree in range(1, 4):
+        coefs, intercept = polynomial_regression_fit_prob_4a(x_train, y_train, degree)
+
+        print degree, intercept, coefs
 
 
 def main():
