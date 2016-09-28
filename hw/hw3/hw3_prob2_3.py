@@ -12,6 +12,12 @@ DatasetData = namedtuple('DatasetData', ['x', 'y'])
 TaxicabData = namedtuple('TaxicabData', ['x', 'y'])
 
 
+def split_y_x(data):
+    y = data[:, -1]
+    x = data[:, :-1]
+    return y, x
+
+
 def save_counter_data():
     # nrows = 10 * 1000
     nrows = None
@@ -41,12 +47,6 @@ def load_taxicab_data():
 
 def loadtxt(file_name):
     return np.loadtxt('datasets/%s' % file_name, delimiter=',', skiprows=1)
-
-
-def split_y_x(data):
-    y = data[:, -1]
-    x = data[:, :-1]
-    return y, x
 
 
 def read_dataset_data(filename):

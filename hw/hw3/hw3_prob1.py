@@ -77,7 +77,7 @@ def loadtxt(file_name):
     return np.loadtxt('datasets/%s' % file_name, delimiter=',', skiprows=1)
 
 
-def split(data):
+def split_y_x(data):
     y = data[:, -1]
     x = data[:, :-1]
     return y, x
@@ -90,10 +90,10 @@ def evaluate_model_prob_1a():
 
     # Split predictors from response
     # Training
-    y_train, x_train = split(data_train)
+    y_train, x_train = split_y_x(data_train)
 
     # Testing
-    y_test, x_test = split(data_test)
+    y_test, x_test = split_y_x(data_test)
 
     # Fit multiple linear regression model
     w, c = multiple_linear_regression_fit(x_train, y_train)
@@ -108,7 +108,7 @@ def read_dataset_data(filename):
     # Load train set
     data = loadtxt(filename)
 
-    y, x = split(data)
+    y, x = split_y_x(data)
 
     return DatasetData(x, y)
 
