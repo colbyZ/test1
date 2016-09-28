@@ -106,7 +106,7 @@ def read_dataset3_data():
     return DatasetData(x, y)
 
 
-def fit_and_visualize_prob_2a():
+def fit_and_visualize_prob_2a(dataset_3_data):
     x, y = dataset_3_data
 
     degrees = [3, 5, 10, 25]
@@ -165,7 +165,7 @@ def plot_r_sq(ax, x_train, x_test, y_train, y_test, max_degree=15):
     ax.set_title('$R^2$ for the training and test sets as a function of the degree')
 
 
-def compare_errors_prob_2b():
+def compare_errors_prob_2b(dataset_3_data):
     x, y = dataset_3_data
     mid_index = len(x) // 2
 
@@ -216,7 +216,7 @@ def plot_aic_and_bic(ax, x, y, max_degree=15):
     ax.set_title('AIC and BIC as functions of the degree')
 
 
-def compute_aic_and_bic():
+def compute_aic_and_bic(dataset_3_data):
     x, y = dataset_3_data
 
     _, ax = plt.subplots(1, 1, figsize=(12, 6))
@@ -248,7 +248,7 @@ def get_taxicab_data(nrows=None):
     return TaxicabData(normalize(xs), ys)
 
 
-def taxicab_plot_data():
+def taxicab_plot_data(taxicab_data):
     xs, ys = taxicab_data
 
     _, ax = plt.subplots(1, 1, figsize=(10, 5))
@@ -261,7 +261,7 @@ def taxicab_plot_data():
     plt.show()
 
 
-def taxicab_plot_r_sq():
+def taxicab_plot_r_sq(taxicab_data):
     xs, ys = taxicab_data
 
     np.random.seed(1090)
@@ -276,7 +276,7 @@ def taxicab_plot_r_sq():
     plt.show()
 
 
-def taxicab_plot_aic_and_bic():
+def taxicab_plot_aic_and_bic(taxicab_data):
     xs, ys = taxicab_data
 
     _, ax = plt.subplots(1, 1, figsize=(10, 5))
@@ -287,7 +287,7 @@ def taxicab_plot_aic_and_bic():
     plt.show()
 
 
-def taxicab_plot_fits():
+def taxicab_plot_fits(taxicab_data):
     xs, ys = taxicab_data
 
     degrees = [1, 5, 10, 20, 40]
@@ -312,20 +312,22 @@ def taxicab_plot_fits():
     plt.show()
 
 
-if __name__ == '__main__':
+def main():
     # dataset_3_data = read_dataset3_data()
-    # fit_and_visualize_prob_2a()
-    # compare_errors_prob_2b()
-    # compute_aic_and_bic()
+    # fit_and_visualize_prob_2a(dataset_3_data)
+    # compare_errors_prob_2b(dataset_3_data)
+    # compute_aic_and_bic(dataset_3_data)
 
     # save_counter_data()
 
     # taxicab_data = get_taxicab_data()
     taxicab_data = load_taxicab_data()
 
-    # print type(counter_xs.dtype)
+    # taxicab_plot_data(taxicab_data)
+    # taxicab_plot_r_sq(taxicab_data)
+    # taxicab_plot_aic_and_bic(taxicab_data)
+    taxicab_plot_fits(taxicab_data)
 
-    # taxicab_plot_data()
-    # taxicab_plot_r_sq()
-    # taxicab_plot_aic_and_bic()
-    taxicab_plot_fits()
+
+if __name__ == '__main__':
+    main()
