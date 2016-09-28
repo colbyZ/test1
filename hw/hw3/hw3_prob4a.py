@@ -29,10 +29,6 @@ def split_y_x(data):
 # prob 4a
 
 
-def add_column(poly_x, new_column):
-    return np.hstack((poly_x, new_column)) if poly_x is not None else new_column
-
-
 def get_new_column(x_columns, degree_pair):
     col = np.vstack(np.ones(len(x_columns[0])))
     for i in range(2):
@@ -51,11 +47,13 @@ def generate_variable_degrees(degree_of_the_polynomial):
 
 def polynomial_regression_fit_prob_4a(x_train, y_train, degree_of_the_polynomial):
     x_columns = [np.vstack(x_train[:, i]) for i in range(2)]
-    poly_x = None
 
+    poly_columns = []
     degree_pair_list = generate_variable_degrees(degree_of_the_polynomial)
     for degree_pair in degree_pair_list:
-        poly_x = add_column(poly_x, get_new_column(x_columns, degree_pair))
+        poly_columns.append(get_new_column(x_columns, degree_pair))
+
+    poly_x = np.hstack(poly_columns)
 
     linear_regression = Lin_Reg()
     linear_regression.fit(poly_x, y_train)
