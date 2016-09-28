@@ -26,6 +26,9 @@ def split_y_x(data):
     return y, x
 
 
+# prob 4a
+
+
 def add_column(poly_x, new_column):
     return np.hstack((poly_x, new_column)) if poly_x is not None else new_column
 

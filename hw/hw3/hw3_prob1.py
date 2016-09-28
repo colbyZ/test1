@@ -73,8 +73,8 @@ def multiple_linear_regression_score(w, c, x_test, y_test):
     return r_squared, y_pred
 
 
-def loadtxt(file_name):
-    return np.loadtxt('datasets/%s' % file_name, delimiter=',', skiprows=1)
+def loadtxt(file_name, dtype=float):
+    return np.loadtxt('datasets/%s' % file_name, delimiter=',', skiprows=1, dtype=dtype)
 
 
 def split_y_x(data):
