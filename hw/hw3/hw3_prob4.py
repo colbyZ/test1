@@ -76,7 +76,7 @@ def polynomial_regression_predict_prob_4a(coefs, intercept, x_test, degree_pair_
     return [calculate_polynomial_value_prob_4a(coefs, intercept, x, degree_pair_list) for x in x_test]
 
 
-def prob_4a():
+def polynomial_regression_prob_4a():
     data_train = loadtxt('dataset_1_train.txt')
     data_test = loadtxt('dataset_1_test.txt')
 
@@ -92,7 +92,7 @@ def prob_4a():
 
 
 def main():
-    prob_4a()
+    polynomial_regression_prob_4a()
 
 
 if __name__ == '__main__':
