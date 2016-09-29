@@ -30,7 +30,7 @@ def split_y_x(data):
 
 
 def get_new_column(x_train, degree_pair):
-    return np.prod(x_train ** degree_pair, axis=1)
+    return np.prod(x_train ** degree_pair, axis=1).reshape(-1, 1)
 
 
 def generate_variable_degrees(degree_of_the_polynomial):
@@ -46,7 +46,7 @@ def polynomial_regression_fit_prob_4a(x_train, y_train, degree_of_the_polynomial
     degree_pair_list = generate_variable_degrees(degree_of_the_polynomial)
     poly_columns = [get_new_column(x_train, degree_pair) for degree_pair in degree_pair_list]
 
-    poly_x = np.array(poly_columns).T
+    poly_x = np.hstack(poly_columns)
 
     linear_regression = Lin_Reg()
     linear_regression.fit(poly_x, y_train)
