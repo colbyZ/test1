@@ -59,7 +59,7 @@ def calculate_polynomial_value_prob_4a(coefs, intercept, xs, degree_pair_list):
 
 
 def polynomial_regression_predict_prob_4a(coefs, intercept, x_test, degree_pair_list):
-    return [calculate_polynomial_value_prob_4a(coefs, intercept, xs, degree_pair_list) for xs in x_test]
+    return (calculate_polynomial_value_prob_4a(coefs, intercept, xs, degree_pair_list) for xs in x_test)
 
 
 def polynomial_regression_prob_4a():
