@@ -16,7 +16,7 @@ import numpy as np
 def multiple_linear_regression_fit(x_train, y_train):
     # Append a column of one's to x
     ones_col = np.ones_like(y_train).reshape(-1, 1)
-    x_train = np.concatenate((x_train, ones_col), axis=1)
+    x_train = np.hstack((x_train, ones_col))
 
     # Compute transpose of x
     x_transpose = x_train.T
@@ -80,7 +80,7 @@ def split_y_x(data):
 
 def multiple_weighted_linear_regression_fit(x_train, y_train, weight_matrix):
     ones_col = np.ones_like(y_train).reshape(-1, 1)
-    x_train = np.concatenate((x_train, ones_col), axis=1)
+    x_train = np.hstack((x_train, ones_col))
 
     x_transpose = x_train.T
 
@@ -108,7 +108,6 @@ def weighted_linear_regression_prob_4b():
 
     for noise_weight in np.arange(0.0, 1.0, step=0.05):
         weights = [1.0 if noise_level_str == 'none' else noise_weight for noise_level_str in data_train_noise_levels]
-
         weight_matrix = np.diag(weights)
 
         coefs, intercept = multiple_weighted_linear_regression_fit(x_train, y_train, weight_matrix)

@@ -22,7 +22,7 @@ DatasetData = namedtuple('DatasetData', ['x', 'y'])
 def multiple_linear_regression_fit(x_train, y_train):
     # Append a column of one's to x
     ones_col = np.ones_like(y_train).reshape(-1, 1)
-    x_train = np.concatenate((x_train, ones_col), axis=1)
+    x_train = np.hstack((x_train, ones_col))
 
     # Compute transpose of x
     x_transpose = x_train.T
