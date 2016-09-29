@@ -55,7 +55,7 @@ def polynomial_regression_fit_prob_4a(x_train, y_train, degree_of_the_polynomial
 
 
 def calculate_polynomial_value_prob_4a(coefs, intercept, xs, degree_pair_list):
-    return intercept + sum(coef * np.prod(xs ** degree_pair) for degree_pair, coef in izip(degree_pair_list, coefs))
+    return intercept + (coefs * np.prod(xs ** degree_pair_list, axis=1)).sum()
 
 
 def polynomial_regression_predict_prob_4a(coefs, intercept, x_test, degree_pair_list):
