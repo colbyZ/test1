@@ -35,18 +35,17 @@ def get_new_column(x_train, degree_pair):
 
 def generate_variable_degrees(degree_of_the_polynomial):
     pair_list = []
-    for max_degree in range(1, degree_of_the_polynomial + 1):
-        for degree1 in range(0, max_degree + 1):
+    for max_degree in xrange(1, degree_of_the_polynomial + 1):
+        for degree1 in xrange(max_degree + 1):
             degree2 = max_degree - degree1
             pair_list.append((degree1, degree2))
     return pair_list
 
 
 def polynomial_regression_fit_prob_4a(x_train, y_train, degree_of_the_polynomial):
-    poly_columns = []
     degree_pair_list = generate_variable_degrees(degree_of_the_polynomial)
-    for degree_pair in degree_pair_list:
-        poly_columns.append(get_new_column(x_train, degree_pair))
+    poly_columns = [get_new_column(x_train, degree_pair)
+                    for degree_pair in degree_pair_list]
 
     poly_x = np.array(poly_columns).T
 
