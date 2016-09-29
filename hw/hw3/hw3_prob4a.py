@@ -30,10 +30,7 @@ def split_y_x(data):
 
 
 def get_new_column(x_train, degree_pair):
-    col = np.ones_like(x_train[:, 0])
-    for i in range(2):
-        col *= x_train[:, i] ** degree_pair[i]
-    return col
+    return np.prod(x_train ** degree_pair, axis=1)
 
 
 def generate_variable_degrees(degree_of_the_polynomial):
