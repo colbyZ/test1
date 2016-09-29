@@ -44,8 +44,7 @@ def generate_variable_degrees(degree_of_the_polynomial):
 
 def polynomial_regression_fit_prob_4a(x_train, y_train, degree_of_the_polynomial):
     degree_pair_list = generate_variable_degrees(degree_of_the_polynomial)
-    poly_columns = [get_new_column(x_train, degree_pair)
-                    for degree_pair in degree_pair_list]
+    poly_columns = [get_new_column(x_train, degree_pair) for degree_pair in degree_pair_list]
 
     poly_x = np.array(poly_columns).T
 
