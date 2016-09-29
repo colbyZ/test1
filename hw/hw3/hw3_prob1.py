@@ -21,8 +21,7 @@ DatasetData = namedtuple('DatasetData', ['x', 'y'])
 
 def multiple_linear_regression_fit(x_train, y_train):
     # Append a column of one's to x
-    n = len(x_train)
-    ones_col = np.ones((n, 1))
+    ones_col = np.ones_like(y_train).reshape(-1, 1)
     x_train = np.concatenate((x_train, ones_col), axis=1)
 
     # Compute transpose of x
@@ -194,11 +193,11 @@ def compute_confidence_intervals_prob_1b(dataset_2_data):
 
 
 def main():
-    # evaluate_model_prob_1a()
+    evaluate_model_prob_1a()
 
-    dataset_2_data = read_dataset_data("dataset_2.txt")
+    # dataset_2_data = read_dataset_data("dataset_2.txt")
     # plot_histograms_prob_1b(dataset_2_data)
-    compute_confidence_intervals_prob_1b(dataset_2_data)
+    # compute_confidence_intervals_prob_1b(dataset_2_data)
 
 
 if __name__ == '__main__':

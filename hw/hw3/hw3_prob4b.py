@@ -15,8 +15,7 @@ import numpy as np
 
 def multiple_linear_regression_fit(x_train, y_train):
     # Append a column of one's to x
-    n = len(x_train)
-    ones_col = np.ones((n, 1))
+    ones_col = np.ones_like(y_train).reshape(-1, 1)
     x_train = np.concatenate((x_train, ones_col), axis=1)
 
     # Compute transpose of x
@@ -80,8 +79,7 @@ def split_y_x(data):
 # prob 4b
 
 def multiple_weighted_linear_regression_fit(x_train, y_train, weight_matrix):
-    n = len(x_train)
-    ones_col = np.ones((n, 1))
+    ones_col = np.ones_like(y_train).reshape(-1, 1)
     x_train = np.concatenate((x_train, ones_col), axis=1)
 
     x_transpose = x_train.T
@@ -93,18 +91,6 @@ def multiple_weighted_linear_regression_fit(x_train, y_train, weight_matrix):
     c = w[-1]
 
     return w[:-1], c
-
-
-def multiple_weighted_linear_regression_score(w, c, x_test, y_test, weights):
-    y_pred = x_test.dot(w) + c
-    sq_error = np.square(y_test - y_pred).sum()
-
-    y_mean = y_test.mean()
-    y_variance = np.square(y_test - y_mean).sum()
-
-    r_squared = 1 - sq_error / y_variance
-
-    return r_squared, y_pred
 
 
 def weighted_linear_regression_prob_4b():
@@ -126,7 +112,7 @@ def weighted_linear_regression_prob_4b():
         weight_matrix = np.diag(weights)
 
         coefs, intercept = multiple_weighted_linear_regression_fit(x_train, y_train, weight_matrix)
-        r_squared, _ = multiple_weighted_linear_regression_score(coefs, intercept, x_test, y_test, weights)
+        r_squared, _ = multiple_linear_regression_score(coefs, intercept, x_test, y_test)
 
         print 'weighted linear regression, noise weight: %.2f, test R^2: %.3f' % (noise_weight, r_squared)
 
