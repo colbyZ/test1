@@ -80,6 +80,7 @@ def exhaustive_search_prob_1b(dataset_1_data):
     # Best Subset Selection
     min_bic = float('inf')  # set some initial large value for min BIC score
     best_subset = []  # best subset of predictors
+    best_results = None
 
     num_predictors = x.shape[1]
 
@@ -88,9 +89,22 @@ def exhaustive_search_prob_1b(dataset_1_data):
 
     # Repeat for every possible size of subset
     for size_k in range(1, num_predictors + 1):
-        best_k_subset, best_results = get_best_k_subset(predictor_set, size_k, x, y)
+        k_subset, results = get_best_k_subset(predictor_set, size_k, x, y)
 
-        print best_k_subset, best_results.rsquared, best_results.bic
+        bic = results.bic
+
+        # Update minimum BIC and best predictor subset
+        # If current predictor has a lower BIC score than that of the best subset
+        # we've found so far, remember the current predictor as the best!
+        if bic < min_bic:
+            min_bic = bic
+            best_subset = k_subset
+            best_results = results
+
+        print 'k: %2d, bic: %.3f, R^2: %.3f, subset: %s, ' % (size_k, results.bic, results.rsquared, str(k_subset))
+
+    print 'Best subset by exhaustive search: %s, bic: %.3f, R^2: %.3f' % \
+          (str(best_subset), best_results.bic, best_results.rsquared)
 
 
 def main():
