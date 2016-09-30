@@ -1,18 +1,7 @@
 <component name="ProjectDictionaryState">
-  <dictionary name="Timur">
+  <dictionary name="timur">
     <words>
-      <w>coef</w>
-      <w>coefs</w>
-      <w>dtype</w>
-      <w>hstack</w>
-      <w>loadtxt</w>
-      <w>lpep</w>
-      <w>nrows</w>
-      <w>pinv</w>
-      <w>pred</w>
-      <w>subsamples</w>
-      <w>tripdata</w>
-      <w>vals</w>
+      <w>heatmap</w>
     </words>
   </dictionary>
 </component>

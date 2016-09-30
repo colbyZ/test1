@@ -1,5 +1,5 @@
+import matplotlib.pyplot as plt
 import numpy as np
-import pandas as pd
 
 
 def prob_1a():
@@ -8,10 +8,18 @@ def prob_1a():
 
     # Split predictors and response
     x = data[:, :-1]
-    y = data[:, -1]
 
-    df = pd.DataFrame(data)
-    print repr(df.head())
+    # Compute matrix of correlation coefficients
+    corr_matrix = np.corrcoef(x.T)
+
+    # Display heat map
+    fig, ax = plt.subplots(1, 1, figsize=(6, 6))
+
+    ax.pcolor(corr_matrix)
+
+    ax.set_title('Heatmap of correlation matrix')
+
+    plt.show()
 
 
 def main():
