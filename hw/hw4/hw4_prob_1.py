@@ -1,3 +1,4 @@
+import itertools as it
 from collections import namedtuple
 
 import matplotlib.pyplot as plt
@@ -44,7 +45,16 @@ def exhaustive_search_prob_1b(dataset_1_data):
     # Create all possible subsets of the set of <num_predictors> predictors
     predictor_set = range(num_predictors)  # e.g. predictor set = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
 
-    print predictor_set
+    # Repeat for every possible size of subset
+    for size_k in range(1, num_predictors + 1):
+        # Create all possible subsets of size 'size',
+        # using the 'combination' function from the 'itertools' library
+        subsets_of_size_k = it.combinations(predictor_set, size_k)
+
+        max_r_squared = -float('inf')  # set some initial small value for max R^2 score
+        best_k_subset = []  # best subset of predictors of size k
+
+        print max_r_squared
 
 
 def main():
