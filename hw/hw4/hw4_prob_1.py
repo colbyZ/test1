@@ -103,8 +103,8 @@ def exhaustive_search_prob_1b(dataset_1_data):
 
         print 'k: %2d, bic: %.3f, R^2: %.3f, subset: %s, ' % (size_k, results.bic, results.rsquared, str(k_subset))
 
-    print 'Best subset by exhaustive search: %s, bic: %.3f, R^2: %.3f' % \
-          (str(best_subset), best_results.bic, best_results.rsquared)
+    print 'Best subset by exhaustive search: %s, bic: %.3f, R^2: %.3f' % (
+        str(best_subset), best_results.bic, best_results.rsquared)
 
 
 def main():
