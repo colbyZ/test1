@@ -3,6 +3,7 @@ from collections import namedtuple
 
 import matplotlib.pyplot as plt
 import numpy as np
+import statsmodels.api as sm
 
 Dataset_1_Data = namedtuple('Dataset_1_Data', ['x', 'y'])
 
@@ -35,6 +36,7 @@ def heatmap_prob_1a(dataset_1_data):
 
 def exhaustive_search_prob_1b(dataset_1_data):
     x = dataset_1_data.x
+    y = dataset_1_data.y
 
     # Best Subset Selection
     min_bic = float('inf')  # set some initial large value for min BIC score
@@ -54,7 +56,15 @@ def exhaustive_search_prob_1b(dataset_1_data):
         max_r_squared = -float('inf')  # set some initial small value for max R^2 score
         best_k_subset = []  # best subset of predictors of size k
 
-        print max_r_squared
+        # Iterate over all subsets of our predictor set
+        for predictor_subset in subsets_of_size_k:
+            # Use only a subset of predictors in the training data
+            x_subset = x[:, predictor_subset]
+
+            # Fit and evaluate R^2
+            model = sm.OLS(y, sm.add_constant(x_subset))
+            results = model.fit()
+            r_squared = results.rsquared
 
 
 def main():
