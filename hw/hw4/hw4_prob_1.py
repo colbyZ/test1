@@ -38,6 +38,41 @@ def heatmap_prob_1a(dataset_1_data):
 
 # prob 1b
 
+def get_regression_results(predictor_subset, x, y):
+    # Use only a subset of predictors in the training data
+    x_subset = x[:, predictor_subset]
+
+    # Fit and evaluate R^2
+    model = sm.OLS(y, sm.add_constant(x_subset))
+
+    return model.fit()
+
+
+def get_best_k_subset(predictor_set, size_k, x, y):
+    # Create all possible subsets of size 'size',
+    # using the 'combination' function from the 'itertools' library
+    subsets_of_size_k = it.combinations(predictor_set, size_k)
+
+    max_r_squared = -float('inf')  # set some initial small value for max R^2 score
+    best_k_subset = []  # best subset of predictors of size k
+    best_results = None
+
+    # Iterate over all subsets of our predictor set
+    for predictor_subset in subsets_of_size_k:
+        results = get_regression_results(predictor_subset, x, y)
+        r_squared = results.rsquared
+
+        # Update max R^2 and best predictor subset of size k
+        # If current predictor subset has a higher R^2 score than that of the best subset
+        # we've found so far, remember the current predictor subset as the best!
+        if r_squared > max_r_squared:
+            max_r_squared = r_squared
+            best_k_subset = predictor_subset
+            best_results = results
+
+    return best_k_subset, best_results
+
+
 def exhaustive_search_prob_1b(dataset_1_data):
     x = dataset_1_data.x
     y = dataset_1_data.y
@@ -53,31 +88,9 @@ def exhaustive_search_prob_1b(dataset_1_data):
 
     # Repeat for every possible size of subset
     for size_k in range(1, num_predictors + 1):
-        # Create all possible subsets of size 'size',
-        # using the 'combination' function from the 'itertools' library
-        subsets_of_size_k = it.combinations(predictor_set, size_k)
+        best_k_subset, best_results = get_best_k_subset(predictor_set, size_k, x, y)
 
-        max_r_squared = -float('inf')  # set some initial small value for max R^2 score
-        best_k_subset = []  # best subset of predictors of size k
-
-        # Iterate over all subsets of our predictor set
-        for predictor_subset in subsets_of_size_k:
-            # Use only a subset of predictors in the training data
-            x_subset = x[:, predictor_subset]
-
-            # Fit and evaluate R^2
-            model = sm.OLS(y, sm.add_constant(x_subset))
-            results = model.fit()
-            r_squared = results.rsquared
-
-            # Update max R^2 and best predictor subset of size k
-            # If current predictor subset has a higher R^2 score than that of the best subset
-            # we've found so far, remember the current predictor subset as the best!
-            if r_squared > max_r_squared:
-                max_r_squared = r_squared
-                best_k_subset = predictor_subset
-
-        print max_r_squared, best_k_subset
+        print best_k_subset, best_results.rsquared, best_results.bic
 
 
 def main():
