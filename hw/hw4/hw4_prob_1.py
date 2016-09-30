@@ -39,8 +39,10 @@ def exhaustive_search_prob_1b(dataset_1_data):
     min_bic = float('inf')  # set some initial large value for min BIC score
     best_subset = []  # best subset of predictors
 
-    # Create all possible subsets of the set of 10 predictors
-    predictor_set = range(x.shape[1])  # predictor set = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
+    num_predictors = x.shape[1]
+
+    # Create all possible subsets of the set of <num_predictors> predictors
+    predictor_set = range(num_predictors)  # e.g. predictor set = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
 
     print predictor_set
 
