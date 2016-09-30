@@ -13,10 +13,9 @@ def prob_1a():
     corr_matrix = np.corrcoef(x.T)
 
     # Display heat map
-    fig, ax = plt.subplots(1, 1, figsize=(6, 6))
+    _, ax = plt.subplots(1, 1, figsize=(6, 6))
 
     ax.pcolor(corr_matrix)
-
     ax.set_title('Heatmap of correlation matrix')
 
     plt.show()
