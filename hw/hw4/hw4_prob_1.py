@@ -21,8 +21,13 @@ def prob_1a():
     plt.show()
 
 
+def exhaustive_search_prob_1b():
+    pass
+
+
 def main():
-    prob_1a()
+    # prob_1a()
+    exhaustive_search_prob_1b()
 
 
 if __name__ == '__main__':
