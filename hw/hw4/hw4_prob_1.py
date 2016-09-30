@@ -32,20 +32,24 @@ def heatmap_prob_1a(dataset_1_data):
     plt.show()
 
 
-def exhaustive_search_prob_1b():
+def exhaustive_search_prob_1b(dataset_1_data):
+    x = dataset_1_data.x
+
     # Best Subset Selection
     min_bic = float('inf')  # set some initial large value for min BIC score
     best_subset = []  # best subset of predictors
 
     # Create all possible subsets of the set of 10 predictors
-    predictor_set = range(10)  # predictor set = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
+    predictor_set = range(x.shape[1])  # predictor set = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
+
+    print predictor_set
 
 
 def main():
     dataset_1_data = load_dataset_1()
 
-    heatmap_prob_1a(dataset_1_data)
-    # exhaustive_search_prob_1b()
+    # heatmap_prob_1a(dataset_1_data)
+    exhaustive_search_prob_1b(dataset_1_data)
 
 
 if __name__ == '__main__':
