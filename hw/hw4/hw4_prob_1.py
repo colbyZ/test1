@@ -8,6 +8,8 @@ import statsmodels.api as sm
 Dataset_1_Data = namedtuple('Dataset_1_Data', ['x', 'y'])
 
 
+# prob 1a
+
 def load_dataset_1():
     # Load data
     data = np.loadtxt('datasets/dataset_1.txt', delimiter=',', skiprows=1)
@@ -33,6 +35,8 @@ def heatmap_prob_1a(dataset_1_data):
 
     plt.show()
 
+
+# prob 1b
 
 def exhaustive_search_prob_1b(dataset_1_data):
     x = dataset_1_data.x
@@ -65,6 +69,15 @@ def exhaustive_search_prob_1b(dataset_1_data):
             model = sm.OLS(y, sm.add_constant(x_subset))
             results = model.fit()
             r_squared = results.rsquared
+
+            # Update max R^2 and best predictor subset of size k
+            # If current predictor subset has a higher R^2 score than that of the best subset
+            # we've found so far, remember the current predictor subset as the best!
+            if r_squared > max_r_squared:
+                max_r_squared = r_squared
+                best_k_subset = predictor_subset
+
+        print max_r_squared, best_k_subset
 
 
 def main():
