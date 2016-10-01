@@ -1,5 +1,6 @@
 from collections import namedtuple
 
+import matplotlib.pyplot as plt
 import pandas as pd
 from sklearn.linear_model import LinearRegression as Lin_Reg
 from sklearn.linear_model import Ridge as Ridge_Reg
@@ -80,6 +81,10 @@ def ridge_regression_prob_2c(dataset_2_data):
     train = dataset_2_data.train
     test = dataset_2_data.test
 
+    alpha_list = []
+    train_score_list = []
+    test_score_list = []
+
     for exponent in range(-7, 8):
         alpha = 10 ** exponent
 
@@ -88,6 +93,23 @@ def ridge_regression_prob_2c(dataset_2_data):
         train_score, test_score = score(ridge_regression, train, test)
 
         print 'alpha: %.0e, train R^2: %.3f, test R^2: % .3f' % (alpha, train_score, test_score)
+
+        train_score_list.append(train_score)
+        test_score_list.append(test_score)
+        alpha_list.append(alpha)
+
+    _, ax = plt.subplots(1, 1)
+
+    ax.plot(alpha_list, train_score_list, label='train')
+    ax.plot(alpha_list, test_score_list, label='test')
+
+    ax.set_xscale('log')
+    ax.set_xlabel('$\lambda$')
+    ax.set_ylabel('$R^2$')
+
+    ax.legend(loc='lower right')
+
+    plt.show()
 
 
 def main():
