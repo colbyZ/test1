@@ -73,6 +73,10 @@ def get_best_k_subset(predictor_set, size_k, x, y):
     return best_k_subset, best_results
 
 
+def get_results_stats(results):
+    return 'bic: %.3f, R^2: %.3f' % (results.bic, results.rsquared)
+
+
 def exhaustive_search_prob_1b(dataset_1_data):
     x = dataset_1_data.x
     y = dataset_1_data.y
@@ -101,10 +105,9 @@ def exhaustive_search_prob_1b(dataset_1_data):
             best_subset = k_subset
             best_results = results
 
-        print 'k: %2d, bic: %.3f, R^2: %.3f, subset: %s, ' % (size_k, results.bic, results.rsquared, str(k_subset))
+        print 'k: %2d, %s, subset: %s, ' % (size_k, get_results_stats(results), str(k_subset))
 
-    print 'Best subset by exhaustive search: %s, bic: %.3f, R^2: %.3f' % (
-        str(best_subset), best_results.bic, best_results.rsquared)
+    print 'Best subset by exhaustive search: %s, %s' % (str(best_subset), get_results_stats(best_results))
 
 
 def stepwise_backward_selection_prob_1b(dataset_1_data):
@@ -164,8 +167,8 @@ def main():
     dataset_1_data = load_dataset_1()
 
     # heatmap_prob_1a(dataset_1_data)
-    # exhaustive_search_prob_1b(dataset_1_data)
-    stepwise_backward_selection_prob_1b(dataset_1_data)
+    exhaustive_search_prob_1b(dataset_1_data)
+    # stepwise_backward_selection_prob_1b(dataset_1_data)
 
 
 if __name__ == '__main__':
