@@ -30,14 +30,14 @@ def print_expanded_df_prob_2a(df):
 # prob 2b
 
 def linear_regression_prob_2b(df):
-    pass
+    print df.head()
 
 
 def main():
     expanded_df = encode_categorical_variables_prob_2a()
 
-    print_expanded_df_prob_2a(expanded_df)
-    # linear_regression_prob_2b(expanded_df)
+    # print_expanded_df_prob_2a(expanded_df)
+    linear_regression_prob_2b(expanded_df)
 
 
 if __name__ == '__main__':
