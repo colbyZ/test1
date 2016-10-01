@@ -2,10 +2,19 @@ from collections import namedtuple
 
 import pandas as pd
 from sklearn.linear_model import LinearRegression as Lin_Reg
+from sklearn.linear_model import Ridge as Ridge_Reg
 
 # prob 2a
 
-Dataset_2_Data = namedtuple('Dataset_2_Data', ['x', 'y'])
+Dataset_2_Data = namedtuple('Dataset_2_Data', ['train', 'test'])
+
+XY_Data = namedtuple('XY_Data', ['x', 'y'])
+
+
+def split(df, split_index):
+    train = df[:split_index]
+    test = df[split_index:]
+    return train, test
 
 
 def is_categorical(column):
@@ -27,11 +36,19 @@ def encode_categorical_variables_prob_2a():
             expanded_x_df = expanded_x_df.drop(column_name, axis=1)
             expanded_x_df = pd.concat([expanded_x_df, dummies_df], axis=1)
 
-    return Dataset_2_Data(expanded_x_df, y)
+    split_index = len(expanded_x_df) // 4
+
+    x_train, x_test = split(expanded_x_df, split_index)
+    y_train, y_test = split(y, split_index)
+
+    train = XY_Data(x_train, y_train)
+    test = XY_Data(x_test, y_test)
+
+    return Dataset_2_Data(train, test)
 
 
 def print_expanded_df_prob_2a(dataset_2_data):
-    x = dataset_2_data.x
+    x = dataset_2_data.train.x
 
     print '%d columns:' % len(x.columns)
     print x.columns
@@ -39,35 +56,34 @@ def print_expanded_df_prob_2a(dataset_2_data):
 
 # prob 2b
 
-def split(df, split_index):
-    train = df[:split_index]
-    test = df[split_index:]
-    return train, test
-
-
 def linear_regression_prob_2b(dataset_2_data):
-    x = dataset_2_data.x
-    y = dataset_2_data.y
-
-    split_index = len(x) // 4
-
-    x_train, x_test = split(x, split_index)
-    y_train, y_test = split(y, split_index)
+    train = dataset_2_data.train
+    test = dataset_2_data.test
 
     linear_regression = Lin_Reg()
-    linear_regression.fit(x_train, y_train)
+    linear_regression.fit(*train)
 
-    train_score = linear_regression.score(x_train, y_train)
-    test_score = linear_regression.score(x_test, y_test)
+    train_score = linear_regression.score(*train)
+    test_score = linear_regression.score(*test)
 
     print 'train R^2: %.3f, test R^2: %.3f' % (train_score, test_score)
+
+
+# prob 2c
+
+def ridge_regression_prob_2c(dataset_2_data):
+    train = dataset_2_data.train
+    test = dataset_2_data.test
+
+    ridge_regression = Ridge_Reg()
 
 
 def main():
     dataset_2_data = encode_categorical_variables_prob_2a()
 
     # print_expanded_df_prob_2a(dataset_2_data)
-    linear_regression_prob_2b(dataset_2_data)
+    # linear_regression_prob_2b(dataset_2_data)
+    ridge_regression_prob_2c(dataset_2_data)
 
 
 if __name__ == '__main__':
