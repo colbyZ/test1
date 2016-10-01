@@ -136,11 +136,11 @@ def find_best_predictor_to_add(current_predictors, remaining_predictors, x, y):
     return best_predictor, best_results
 
 
-def stepwise_backward_selection_prob_1b(dataset_1_data):
+def stepwise_forward_selection_prob_1b(dataset_1_data):
     x = dataset_1_data.x
     y = dataset_1_data.y
 
-    #  Step-wise Backward Selection
+    # Step-wise Forward Selection
     d = x.shape[1]  # total no. of predictors
 
     # Keep track of current set of chosen predictors, and the remaining set of predictors
@@ -148,30 +148,30 @@ def stepwise_backward_selection_prob_1b(dataset_1_data):
     remaining_predictors = range(d)
 
     # Set some initial large value for min BIC score for all possible subsets
-    global_min_bic = float('inf')
-    global_results = None
+    min_bic = float('inf')
+    results = None
 
     # Keep track of the best subset of predictors
     best_subset = []
 
     # Iterate over all possible subset sizes, 0 predictors to d predictors
     for size in range(d):
-        best_predictor, best_results = find_best_predictor_to_add(current_predictors, remaining_predictors, x, y)
+        predictor, results = find_best_predictor_to_add(current_predictors, remaining_predictors, x, y)
 
         # Remove best predictor from remaining list, and add best predictor to current list
-        remaining_predictors.remove(best_predictor)
-        current_predictors.append(best_predictor)
+        remaining_predictors.remove(predictor)
+        current_predictors.append(predictor)
 
-        print 'size: %d, %s, subset: %s, ' % (size, get_results_stats(best_results), str(current_predictors))
+        print 'size: %d, %s, subset: %s, ' % (size, get_results_stats(results), str(current_predictors))
 
         # Check if BIC for with the predictor we just added is lower than
         # the global minimum across all subset of predictors
-        if best_results.bic < global_min_bic:
+        if results.bic < min_bic:
             best_subset = current_predictors[:]
-            global_min_bic = best_results.bic
-            global_results = best_results
+            min_bic = results.bic
+            results = results
 
-    print 'Step-wise forward subset selection: %s, %s' % (str(sorted(best_subset)), get_results_stats(global_results))
+    print 'Best step-wise forward subset selection: %s, %s' % (str(sorted(best_subset)), get_results_stats(results))
 
 
 def main():
@@ -179,7 +179,7 @@ def main():
 
     # heatmap_prob_1a(dataset_1_data)
     # exhaustive_search_prob_1b(dataset_1_data)
-    stepwise_backward_selection_prob_1b(dataset_1_data)
+    stepwise_forward_selection_prob_1b(dataset_1_data)
 
 
 if __name__ == '__main__':
