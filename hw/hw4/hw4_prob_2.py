@@ -30,7 +30,13 @@ def print_expanded_df_prob_2a(df):
 # prob 2b
 
 def linear_regression_prob_2b(df):
-    print df.head()
+    split_index = len(df) // 4
+
+    train = df[:split_index]
+    test = df[split_index:]
+
+    print len(train), len(test)
+    print train.head()
 
 
 def main():
