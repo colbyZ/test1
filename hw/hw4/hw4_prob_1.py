@@ -36,7 +36,7 @@ def heatmap_prob_1a(dataset_1_data):
     plt.show()
 
 
-# prob 1b
+# prob 1b, exhaustive search
 
 def get_regression_results(predictor_subset, x, y):
     # Use only a subset of predictors in the training data
@@ -110,6 +110,8 @@ def exhaustive_search_prob_1b(dataset_1_data):
     print 'Best subset by exhaustive search: %s, %s' % (str(best_subset), get_results_stats(best_results))
 
 
+# prob 1b, step-wise backward selection
+
 def find_best_predictor_to_add(current_predictors, remaining_predictors, x, y):
     max_r_squared = -float('inf')  # set some initial small value for max R^2
     best_predictor = -1  # set some throwaway initial number for the best predictor to add
@@ -147,6 +149,7 @@ def stepwise_backward_selection_prob_1b(dataset_1_data):
 
     # Set some initial large value for min BIC score for all possible subsets
     global_min_bic = float('inf')
+    global_results = None
 
     # Keep track of the best subset of predictors
     best_subset = []
@@ -166,9 +169,9 @@ def stepwise_backward_selection_prob_1b(dataset_1_data):
         if best_results.bic < global_min_bic:
             best_subset = current_predictors[:]
             global_min_bic = best_results.bic
+            global_results = best_results
 
-    print 'Step-wise forward subset selection:'
-    print sorted(best_subset)  # add 1 as indices start from 0
+    print 'Step-wise forward subset selection: %s, %s' % (str(sorted(best_subset)), get_results_stats(global_results))
 
 
 def main():
