@@ -1,6 +1,7 @@
 from collections import namedtuple
 
 import pandas as pd
+from sklearn.linear_model import LinearRegression as Lin_Reg
 
 # prob 2a
 
@@ -53,7 +54,13 @@ def linear_regression_prob_2b(dataset_2_data):
     x_train, x_test = split(x, split_index)
     y_train, y_test = split(y, split_index)
 
-    print x_train.shape, x_test.shape
+    linear_regression = Lin_Reg()
+    linear_regression.fit(x_train, y_train)
+
+    train_score = linear_regression.score(x_train, y_train)
+    test_score = linear_regression.score(x_test, y_test)
+
+    print 'train R^2: %.3f, test R^2: %.3f' % (train_score, test_score)
 
 
 def main():
