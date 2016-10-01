@@ -87,7 +87,7 @@ def ridge_regression_prob_2c(dataset_2_data):
         ridge_regression.fit(*train)
         train_score, test_score = score(ridge_regression, train, test)
 
-        print 'alpha: %.0e, train R^2: %.3f, test R^2: %.3f' % (alpha, train_score, test_score)
+        print 'alpha: %.0e, train R^2: %.3f, test R^2: % .3f' % (alpha, train_score, test_score)
 
 
 def main():
