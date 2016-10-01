@@ -5,6 +5,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 import statsmodels.api as sm
 from sklearn.linear_model import Lasso as Lasso_Reg
+from sklearn.linear_model import Ridge as Ridge_Reg
 
 # prob 1a
 
@@ -189,13 +190,28 @@ def lasso_regression_prob_1c(dataset_1_data):
     print 'Predictors with non-zero coefficients:', [i for i, item in enumerate(coefficients) if abs(item) > 0]
 
 
+def ridge_regression_prob_1c(dataset_1_data):
+    x = dataset_1_data.x
+    y = dataset_1_data.y
+
+    # Ridge regression: Fit and evaluate
+    reg = Ridge_Reg(alpha=0.01)
+    reg.fit(x, y)
+    coefficients = reg.coef_
+
+    print 'Ridge:'
+    print 'Coefficients:', coefficients
+    print 'Predictors with non-zero coefficients:', [i for i, item in enumerate(coefficients) if abs(item) > 0]
+
+
 def main():
     dataset_1_data = load_dataset_1()
 
     # heatmap_prob_1a(dataset_1_data)
     # exhaustive_search_prob_1b(dataset_1_data)
     # stepwise_forward_selection_prob_1b(dataset_1_data)
-    lasso_regression_prob_1c(dataset_1_data)
+    # lasso_regression_prob_1c(dataset_1_data)
+    ridge_regression_prob_1c(dataset_1_data)
 
 
 if __name__ == '__main__':
