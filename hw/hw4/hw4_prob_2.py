@@ -56,6 +56,12 @@ def print_expanded_df_prob_2a(dataset_2_data):
 
 # prob 2b
 
+def score(regression, train, test):
+    train_score = regression.score(*train)
+    test_score = regression.score(*test)
+    return train_score, test_score
+
+
 def linear_regression_prob_2b(dataset_2_data):
     train = dataset_2_data.train
     test = dataset_2_data.test
@@ -63,8 +69,7 @@ def linear_regression_prob_2b(dataset_2_data):
     linear_regression = Lin_Reg()
     linear_regression.fit(*train)
 
-    train_score = linear_regression.score(*train)
-    test_score = linear_regression.score(*test)
+    train_score, test_score = score(linear_regression, train, test)
 
     print 'train R^2: %.3f, test R^2: %.3f' % (train_score, test_score)
 
@@ -75,7 +80,14 @@ def ridge_regression_prob_2c(dataset_2_data):
     train = dataset_2_data.train
     test = dataset_2_data.test
 
-    ridge_regression = Ridge_Reg()
+    for exponent in range(-7, 8):
+        alpha = 10 ** exponent
+
+        ridge_regression = Ridge_Reg(alpha=alpha)
+        ridge_regression.fit(*train)
+        train_score, test_score = score(ridge_regression, train, test)
+
+        print 'alpha: %.0e, train R^2: %.3f, test R^2: %.3f' % (alpha, train_score, test_score)
 
 
 def main():
