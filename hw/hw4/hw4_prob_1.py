@@ -107,11 +107,65 @@ def exhaustive_search_prob_1b(dataset_1_data):
         str(best_subset), best_results.bic, best_results.rsquared)
 
 
+def stepwise_backward_selection_prob_1b(dataset_1_data):
+    x = dataset_1_data.x
+    y = dataset_1_data.y
+
+    #  Step-wise Backward Selection
+    d = x.shape[1]  # total no. of predictors
+
+    # Keep track of current set of chosen predictors, and the remaining set of predictors
+    current_predictors = []
+    remaining_predictors = range(d)
+
+    # Set some initial large value for min BIC score for all possible subsets
+    global_min_bic = float('inf')
+
+    # Keep track of the best subset of predictors
+    best_subset = []
+
+    # Iterate over all possible subset sizes, 0 predictors to d predictors
+    for size in range(d):
+        max_r_squared = -float('inf')  # set some initial small value for max R^2
+        best_predictor = -1  # set some throwaway initial number for the best predictor to add
+        bic_with_best_predictor = float('inf')  # set some initial large value for BIC score
+
+        # Iterate over all remaining predictors to find best predictor to add
+        for i in remaining_predictors:
+            # Make copy of current set of predictors
+            predictor_subset = current_predictors[:]
+            # Add predictor 'i'
+            predictor_subset.append(i)
+
+            results = get_regression_results(predictor_subset, x, y)
+            r_squared = results.rsquared
+
+            # Check if we get a higher R^2 value than than current max R^2, if so, update
+            if r_squared > max_r_squared:
+                max_r_squared = r_squared
+                best_predictor = i
+                bic_with_best_predictor = results.bic
+
+        # Remove best predictor from remaining list, and add best predictor to current list
+        remaining_predictors.remove(best_predictor)
+        current_predictors.append(best_predictor)
+
+        # Check if BIC for with the predictor we just added is lower than
+        # the global minimum across all subset of predictors
+        if bic_with_best_predictor < global_min_bic:
+            best_subset = current_predictors[:]
+            global_min_bic = bic_with_best_predictor
+
+    print 'Step-wise forward subset selection:'
+    print sorted(best_subset)  # add 1 as indices start from 0
+
+
 def main():
     dataset_1_data = load_dataset_1()
 
     # heatmap_prob_1a(dataset_1_data)
-    exhaustive_search_prob_1b(dataset_1_data)
+    # exhaustive_search_prob_1b(dataset_1_data)
+    stepwise_backward_selection_prob_1b(dataset_1_data)
 
 
 if __name__ == '__main__':
