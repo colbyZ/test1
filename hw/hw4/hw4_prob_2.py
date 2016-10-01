@@ -98,7 +98,7 @@ def ridge_regression_prob_2c(dataset_2_data):
         test_score_list.append(test_score)
         alpha_list.append(alpha)
 
-    _, ax = plt.subplots(1, 1)
+    _, ax = plt.subplots(1, 1, figsize=(8, 5))
 
     ax.plot(alpha_list, train_score_list, label='train')
     ax.plot(alpha_list, test_score_list, label='test')
