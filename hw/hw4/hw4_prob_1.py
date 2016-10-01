@@ -5,10 +5,10 @@ import matplotlib.pyplot as plt
 import numpy as np
 import statsmodels.api as sm
 
+# prob 1a
+
 Dataset_1_Data = namedtuple('Dataset_1_Data', ['x', 'y'])
 
-
-# prob 1a
 
 def load_dataset_1():
     # Load data
