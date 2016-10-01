@@ -110,6 +110,30 @@ def exhaustive_search_prob_1b(dataset_1_data):
     print 'Best subset by exhaustive search: %s, %s' % (str(best_subset), get_results_stats(best_results))
 
 
+def find_best_predictor_to_add(current_predictors, remaining_predictors, x, y):
+    max_r_squared = -float('inf')  # set some initial small value for max R^2
+    best_predictor = -1  # set some throwaway initial number for the best predictor to add
+    bic_with_best_predictor = float('inf')  # set some initial large value for BIC score
+
+    # Iterate over all remaining predictors to find best predictor to add
+    for i in remaining_predictors:
+        # Make copy of current set of predictors
+        predictor_subset = current_predictors[:]
+        # Add predictor 'i'
+        predictor_subset.append(i)
+
+        results = get_regression_results(predictor_subset, x, y)
+        r_squared = results.rsquared
+
+        # Check if we get a higher R^2 value than than current max R^2, if so, update
+        if r_squared > max_r_squared:
+            max_r_squared = r_squared
+            best_predictor = i
+            bic_with_best_predictor = results.bic
+
+    return best_predictor, bic_with_best_predictor
+
+
 def stepwise_backward_selection_prob_1b(dataset_1_data):
     x = dataset_1_data.x
     y = dataset_1_data.y
@@ -129,25 +153,8 @@ def stepwise_backward_selection_prob_1b(dataset_1_data):
 
     # Iterate over all possible subset sizes, 0 predictors to d predictors
     for size in range(d):
-        max_r_squared = -float('inf')  # set some initial small value for max R^2
-        best_predictor = -1  # set some throwaway initial number for the best predictor to add
-        bic_with_best_predictor = float('inf')  # set some initial large value for BIC score
-
-        # Iterate over all remaining predictors to find best predictor to add
-        for i in remaining_predictors:
-            # Make copy of current set of predictors
-            predictor_subset = current_predictors[:]
-            # Add predictor 'i'
-            predictor_subset.append(i)
-
-            results = get_regression_results(predictor_subset, x, y)
-            r_squared = results.rsquared
-
-            # Check if we get a higher R^2 value than than current max R^2, if so, update
-            if r_squared > max_r_squared:
-                max_r_squared = r_squared
-                best_predictor = i
-                bic_with_best_predictor = results.bic
+        best_predictor, bic_with_best_predictor = find_best_predictor_to_add(current_predictors,
+                                                                             remaining_predictors, x, y)
 
         # Remove best predictor from remaining list, and add best predictor to current list
         remaining_predictors.remove(best_predictor)
@@ -167,8 +174,8 @@ def main():
     dataset_1_data = load_dataset_1()
 
     # heatmap_prob_1a(dataset_1_data)
-    exhaustive_search_prob_1b(dataset_1_data)
-    # stepwise_backward_selection_prob_1b(dataset_1_data)
+    # exhaustive_search_prob_1b(dataset_1_data)
+    stepwise_backward_selection_prob_1b(dataset_1_data)
 
 
 if __name__ == '__main__':
