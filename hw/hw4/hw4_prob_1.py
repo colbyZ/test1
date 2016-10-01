@@ -113,7 +113,7 @@ def exhaustive_search_prob_1b(dataset_1_data):
 def find_best_predictor_to_add(current_predictors, remaining_predictors, x, y):
     max_r_squared = -float('inf')  # set some initial small value for max R^2
     best_predictor = -1  # set some throwaway initial number for the best predictor to add
-    bic_with_best_predictor = float('inf')  # set some initial large value for BIC score
+    best_results = None
 
     # Iterate over all remaining predictors to find best predictor to add
     for i in remaining_predictors:
@@ -129,9 +129,9 @@ def find_best_predictor_to_add(current_predictors, remaining_predictors, x, y):
         if r_squared > max_r_squared:
             max_r_squared = r_squared
             best_predictor = i
-            bic_with_best_predictor = results.bic
+            best_results = results
 
-    return best_predictor, bic_with_best_predictor
+    return best_predictor, best_results
 
 
 def stepwise_backward_selection_prob_1b(dataset_1_data):
@@ -153,18 +153,19 @@ def stepwise_backward_selection_prob_1b(dataset_1_data):
 
     # Iterate over all possible subset sizes, 0 predictors to d predictors
     for size in range(d):
-        best_predictor, bic_with_best_predictor = find_best_predictor_to_add(current_predictors,
-                                                                             remaining_predictors, x, y)
+        best_predictor, best_results = find_best_predictor_to_add(current_predictors, remaining_predictors, x, y)
 
         # Remove best predictor from remaining list, and add best predictor to current list
         remaining_predictors.remove(best_predictor)
         current_predictors.append(best_predictor)
 
+        print 'size: %d, %s, subset: %s, ' % (size, get_results_stats(best_results), str(current_predictors))
+
         # Check if BIC for with the predictor we just added is lower than
         # the global minimum across all subset of predictors
-        if bic_with_best_predictor < global_min_bic:
+        if best_results.bic < global_min_bic:
             best_subset = current_predictors[:]
-            global_min_bic = bic_with_best_predictor
+            global_min_bic = best_results.bic
 
     print 'Step-wise forward subset selection:'
     print sorted(best_subset)  # add 1 as indices start from 0
