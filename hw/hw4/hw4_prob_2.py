@@ -89,7 +89,7 @@ def ridge_regression_prob_2c(dataset_2_data):
     test_score_list = []
 
     for exponent in range(-7, 8):
-        alpha = 10 ** exponent
+        alpha = 10.0 ** exponent
 
         ridge_regression = Ridge_Reg(alpha=alpha, normalize=True)
         ridge_regression.fit(*train)
@@ -130,8 +130,8 @@ def cross_validation_prob_2d(dataset_2_data):
     alpha_list = []
     cv_score_list = []
     for exponent in range(-7, 8):
-        alpha = 10 ** exponent
-        ridge_regression = Ridge_Reg(alpha=alpha)
+        alpha = 10.0 ** exponent
+        ridge_regression = Ridge_Reg(alpha=alpha, normalize=True)
 
         test_score_sum = 0.0
         for train_index, test_index in kf:
