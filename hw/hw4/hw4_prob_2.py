@@ -91,7 +91,7 @@ def ridge_regression_prob_2c(dataset_2_data):
     for exponent in range(-7, 8):
         alpha = 10 ** exponent
 
-        ridge_regression = Ridge_Reg(alpha=alpha)
+        ridge_regression = Ridge_Reg(alpha=alpha, normalize=True)
         ridge_regression.fit(*train)
         train_score, test_score = score(ridge_regression, train, test)
 
