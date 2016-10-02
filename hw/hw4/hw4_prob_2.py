@@ -52,7 +52,7 @@ def encode_categorical_variables_prob_2a():
 def print_expanded_df_prob_2a(dataset_2_data):
     x = dataset_2_data.train.x
 
-    print '%d columns:' % len(x.columns)
+    print '%d predictors:' % len(x.columns)
     print x.columns
 
 
@@ -162,10 +162,10 @@ def cross_validation_prob_2d(dataset_2_data):
 def main():
     dataset_2_data = encode_categorical_variables_prob_2a()
 
-    # print_expanded_df_prob_2a(dataset_2_data)
+    print_expanded_df_prob_2a(dataset_2_data)
     # linear_regression_prob_2b(dataset_2_data)
     # ridge_regression_prob_2c(dataset_2_data)
-    cross_validation_prob_2d(dataset_2_data)
+    # cross_validation_prob_2d(dataset_2_data)
 
 
 if __name__ == '__main__':
