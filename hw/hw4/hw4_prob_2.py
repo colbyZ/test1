@@ -109,6 +109,7 @@ def ridge_regression_prob_2c(dataset_2_data):
     ax.set_xscale('log')
     ax.set_xlabel('$\lambda$')
     ax.set_ylabel('$R^2$')
+    ax.set_ylim([-7.0, 1.5])
     ax.set_title('Ridge regression, train and test scores as functions of $\lambda$')
 
     ax.legend(loc='lower right')
