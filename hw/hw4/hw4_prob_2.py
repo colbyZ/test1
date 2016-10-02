@@ -148,7 +148,7 @@ def cross_validation_prob_2d(dataset_2_data):
 
         alpha_list.append(alpha)
         cv_score_list.append(cv_score)
-        print 'alpha: %.0e, cv score: % .3f' % (alpha, cv_score)
+        print 'alpha: %.0e, cv score: % 7.3f' % (alpha, cv_score)
 
     _, ax = plt.subplots(1, 1, figsize=(8, 5))
 
@@ -167,8 +167,8 @@ def main():
 
     # print_expanded_df_prob_2a(dataset_2_data)
     # linear_regression_prob_2b(dataset_2_data)
-    ridge_regression_prob_2c(dataset_2_data)
-    # cross_validation_prob_2d(dataset_2_data)
+    # ridge_regression_prob_2c(dataset_2_data)
+    cross_validation_prob_2d(dataset_2_data)
 
 
 if __name__ == '__main__':
