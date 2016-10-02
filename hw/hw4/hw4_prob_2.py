@@ -1,4 +1,5 @@
 from collections import namedtuple
+from itertools import izip
 
 import matplotlib.pyplot as plt
 import pandas as pd
@@ -80,11 +81,9 @@ def linear_regression_prob_2b(dataset_2_data):
 
 # prob 2c
 
-def ridge_regression_prob_2c(dataset_2_data):
+def get_ridge_regression_prob_2c_data(dataset_2_data):
     train = dataset_2_data.train
     test = dataset_2_data.test
-
-    print 'train x shape: %s, test x shape: %s' % (str(train.x.shape), str(test.x.shape))
 
     alpha_list = []
     train_score_list = []
@@ -97,11 +96,23 @@ def ridge_regression_prob_2c(dataset_2_data):
         ridge_regression.fit(*train)
         train_score, test_score = score(ridge_regression, train, test)
 
-        print 'alpha: %.0e, train R^2: %.3f, test R^2: % .3f' % (alpha, train_score, test_score)
-
         train_score_list.append(train_score)
         test_score_list.append(test_score)
         alpha_list.append(alpha)
+
+    return alpha_list, train_score_list, test_score_list
+
+
+def ridge_regression_prob_2c(dataset_2_data):
+    train = dataset_2_data.train
+    test = dataset_2_data.test
+
+    print 'train x shape: %s, test x shape: %s' % (str(train.x.shape), str(test.x.shape))
+
+    alpha_list, train_score_list, test_score_list = get_ridge_regression_prob_2c_data(dataset_2_data)
+
+    for alpha, train_score, test_score in izip(alpha_list, train_score_list, test_score_list):
+        print 'alpha: %.0e, train R^2: %.3f, test R^2: % .3f' % (alpha, train_score, test_score)
 
     _, ax = plt.subplots(1, 1, figsize=(8, 5))
 
@@ -153,14 +164,19 @@ def cross_validation_prob_2d(dataset_2_data):
 
         print 'alpha: %.0e, cv score: % 7.3f' % (alpha, cv_score)
 
+    _, _, test_score_list = get_ridge_regression_prob_2c_data(dataset_2_data)
+
     _, ax = plt.subplots(1, 1, figsize=(8, 5))
 
-    ax.plot(alpha_list, cv_score_list)
+    ax.plot(alpha_list, cv_score_list, label='CV $R^2$ score')
+    ax.plot(alpha_list, test_score_list, label='test $R^2$ score')
 
     ax.set_xscale('log')
     ax.set_xlabel('$\lambda$')
-    ax.set_ylabel('CV $R^2$')
-    ax.set_title('Ridge regression, CV $R^2$ score as a function of $\lambda$')
+    ax.set_ylabel('$R^2$')
+    ax.set_title('Ridge regression, CV $R^2$ score (and test $R^2$ score)')
+
+    ax.legend(loc='lower right')
 
     plt.show()
 
