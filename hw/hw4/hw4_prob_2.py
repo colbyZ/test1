@@ -2,6 +2,7 @@ from collections import namedtuple
 
 import matplotlib.pyplot as plt
 import pandas as pd
+from sklearn.cross_validation import KFold
 from sklearn.linear_model import LinearRegression as Lin_Reg
 from sklearn.linear_model import Ridge as Ridge_Reg
 
@@ -117,7 +118,45 @@ def ridge_regression_prob_2c(dataset_2_data):
 
 def cross_validation_prob_2d(dataset_2_data):
     train = dataset_2_data.train
-    test = dataset_2_data.test
+
+    x_fold = train.x
+    y_fold = train.y
+    num_folds = 5
+    kf = KFold(len(x_fold), n_folds=num_folds, shuffle=True, random_state=1090)
+
+    alpha_list = []
+    cv_score_list = []
+    for exponent in range(-7, 8):
+        alpha = 10 ** exponent
+        ridge_regression = Ridge_Reg(alpha=alpha)
+
+        test_score_sum = 0.0
+        for train_index, test_index in kf:
+            x_fold_train = x_fold.iloc[train_index]
+            x_fold_test = x_fold.iloc[test_index]
+
+            y_fold_train = y_fold[train_index]
+            y_fold_test = y_fold[test_index]
+
+            ridge_regression.fit(x_fold_train, y_fold_train)
+            test_score_sum += ridge_regression.score(x_fold_test, y_fold_test)
+
+        cv_score = test_score_sum / num_folds
+
+        alpha_list.append(alpha)
+        cv_score_list.append(cv_score)
+        print 'alpha: %.0e, cv score: % .3f' % (alpha, cv_score)
+
+    _, ax = plt.subplots(1, 1, figsize=(8, 5))
+
+    ax.plot(alpha_list, cv_score_list)
+
+    ax.set_xscale('log')
+    ax.set_xlabel('$\lambda$')
+    ax.set_ylabel('CV $R^2$')
+    ax.set_title('Ridge regression, CV $R^2$ score as a function of $\lambda$')
+
+    plt.show()
 
 
 def main():
