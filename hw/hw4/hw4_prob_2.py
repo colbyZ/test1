@@ -84,6 +84,8 @@ def ridge_regression_prob_2c(dataset_2_data):
     train = dataset_2_data.train
     test = dataset_2_data.test
 
+    print 'train x shape: %s, test x shape: %s' % (str(train.x.shape), str(test.x.shape))
+
     alpha_list = []
     train_score_list = []
     test_score_list = []
@@ -148,6 +150,7 @@ def cross_validation_prob_2d(dataset_2_data):
 
         alpha_list.append(alpha)
         cv_score_list.append(cv_score)
+
         print 'alpha: %.0e, cv score: % 7.3f' % (alpha, cv_score)
 
     _, ax = plt.subplots(1, 1, figsize=(8, 5))
