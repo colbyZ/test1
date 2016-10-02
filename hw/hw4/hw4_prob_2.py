@@ -68,6 +68,8 @@ def linear_regression_prob_2b(dataset_2_data):
     train = dataset_2_data.train
     test = dataset_2_data.test
 
+    print 'x train shape: %s' % str(train.x.shape)
+
     linear_regression = Lin_Reg()
     linear_regression.fit(*train)
 
@@ -162,9 +164,9 @@ def cross_validation_prob_2d(dataset_2_data):
 def main():
     dataset_2_data = encode_categorical_variables_prob_2a()
 
-    print_expanded_df_prob_2a(dataset_2_data)
+    # print_expanded_df_prob_2a(dataset_2_data)
     # linear_regression_prob_2b(dataset_2_data)
-    # ridge_regression_prob_2c(dataset_2_data)
+    ridge_regression_prob_2c(dataset_2_data)
     # cross_validation_prob_2d(dataset_2_data)
 
 
