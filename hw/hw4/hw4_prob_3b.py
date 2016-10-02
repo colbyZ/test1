@@ -61,7 +61,7 @@ def ridge_regression_prob_3b():
         train_score_list.append(train_score)
         test_score_list.append(test_score)
 
-        print train_score, test_score
+        print 'alpha: %.0e, train R^2: %.3f, test R^2: %.3f' % (alpha, train_score, test_score)
 
     # Plot
     plt.plot(alphas, train_score_list, label='train')
