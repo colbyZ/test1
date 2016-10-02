@@ -19,7 +19,7 @@ def get_aug_x_y(reg_param, x_train, y_train):
     return aug_x_train, aug_y_train
 
 
-def ridge(x_train, y_train, reg_param):
+def get_ridge_regression(x_train, y_train, reg_param):
     aug_x_train, aug_y_train = get_aug_x_y(reg_param, x_train, y_train)
 
     model = LinearRegression()
@@ -54,7 +54,7 @@ def ridge_regression_prob_3b():
     test_score_list = []
 
     for alpha in alphas:
-        model = ridge(x_train, y_train, alpha)
+        model = get_ridge_regression(x_train, y_train, alpha)
         train_score = score(model, x_train, y_train, alpha)
         test_score = score(model, x_test, y_test, alpha)
 
