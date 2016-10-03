@@ -7,7 +7,7 @@ from sklearn.cross_validation import KFold
 from sklearn.linear_model import LinearRegression as Lin_Reg
 from sklearn.linear_model import Ridge as Ridge_Reg
 
-from categorical import convert_categorical_columns
+from hw4_categorical import convert_categorical_columns
 
 # prob 2a
 

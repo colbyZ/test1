@@ -1,6 +1,6 @@
 import pandas as pd
 
-from categorical import convert_categorical_columns
+from hw4_categorical import convert_categorical_columns
 
 
 def load_expanded_df():
