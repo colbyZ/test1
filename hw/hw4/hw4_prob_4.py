@@ -28,9 +28,15 @@ def fit_regression_model_prob_4a():
     y = df[y_column_name]
     x = df.drop(y_column_name, axis=1)
 
-    x_train, x_test, y_train, y_test = train_test_split(x, y)
+    random_state = 1090
+    # random_state = None
+
+    x_train, x_test, y_train, y_test = train_test_split(x, y, random_state=random_state)
 
     alphas = [10.0 ** i for i in np.arange(-4.0, -1.1, step=0.1)]
+
+    best_test_score = -float('inf')
+    best_regression = None
 
     for alpha in alphas:
         regression = Lasso_Reg(alpha=alpha, normalize=True, tol=2e-3)
@@ -38,10 +44,17 @@ def fit_regression_model_prob_4a():
         train_score = regression.score(x_train, y_train)
         test_score = regression.score(x_test, y_test)
 
+        if test_score > best_test_score:
+            best_test_score = test_score
+            best_regression = regression
+
         num_non_zero_coefs = sum(abs(coef) > 0.0 for coef in regression.coef_)
 
         print 'alpha: %.2e, test R^2: %.3f, train R^2: %.3f, num_non_zero_coefs: %4d' % (
             alpha, test_score, train_score, num_non_zero_coefs)
+
+    print 'best test score: %.2e' % best_test_score
+    print 'best regression: %s' % str(best_regression)
 
 
 def main():
