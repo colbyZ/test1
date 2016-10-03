@@ -2,7 +2,7 @@ from collections import namedtuple
 
 import matplotlib.pyplot as plt
 import numpy as np
-from sklearn.linear_model import LinearRegression
+from sklearn.linear_model import LinearRegression as Lin_Reg
 from sklearn.preprocessing import StandardScaler
 
 RidgeRegressionModel = namedtuple('RidgeRegressionModel', ['linear_regression', 'x_scaler'])
@@ -32,7 +32,7 @@ def get_ridge_regression(x_train, y_train, reg_param):
 
     aug_x_train, aug_y_train = get_aug_x_y(reg_param, scaled_x_train, y_train)
 
-    linear_regression = LinearRegression()
+    linear_regression = Lin_Reg()
     linear_regression.fit(aug_x_train, aug_y_train)
 
     return RidgeRegressionModel(linear_regression, x_scaler)
