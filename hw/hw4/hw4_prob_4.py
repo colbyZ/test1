@@ -32,13 +32,14 @@ def fit_regression_model_prob_4a():
 
     alphas = [10.0 ** i for i in np.arange(-4.0, -1.1, step=0.1)]
 
+    tolerance = 2e-3
     for alpha in alphas:
-        lasso = Lasso_Reg(alpha=alpha, normalize=True, tol=2e-3)
-        lasso.fit(x_train, y_train)
-        train_score = lasso.score(x_train, y_train)
-        test_score = lasso.score(x_test, y_test)
+        regression = Lasso_Reg(alpha=alpha, normalize=True, tol=tolerance)
+        regression.fit(x_train, y_train)
+        train_score = regression.score(x_train, y_train)
+        test_score = regression.score(x_test, y_test)
 
-        num_non_zero_coefs = sum(abs(coef) > 2e-3 for coef in lasso.coef_)
+        num_non_zero_coefs = sum(abs(coef) > tolerance for coef in regression.coef_)
 
         print 'alpha: %.2e, test R^2: %.3f, train R^2: %.3f, num_non_zero_coefs: %d' % (
             alpha, test_score, train_score, num_non_zero_coefs)
