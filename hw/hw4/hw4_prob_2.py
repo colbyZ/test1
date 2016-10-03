@@ -24,20 +24,26 @@ def is_categorical(column):
     return column.dtype == object or len(column.unique()) < 8
 
 
+def convert_categorical_columns(x_df):
+    expanded_x_df = x_df.copy()
+    for column_name in x_df.columns:
+        column = x_df[column_name]
+        if is_categorical(column):
+            dummies_df = pd.get_dummies(column, prefix=column_name)
+
+            expanded_x_df = expanded_x_df.drop(column_name, axis=1)
+            expanded_x_df = pd.concat([expanded_x_df, dummies_df], axis=1)
+
+    return expanded_x_df
+
+
 def encode_categorical_variables_prob_2a():
     df = pd.read_csv('datasets/dataset_2.txt')
 
     y = df['price']
     x_df = df.drop('price', axis=1)
 
-    expanded_x_df = x_df.copy()
-    for column_name in df.columns:
-        column = df[column_name]
-        if is_categorical(column):
-            dummies_df = pd.get_dummies(column, prefix=column_name)
-
-            expanded_x_df = expanded_x_df.drop(column_name, axis=1)
-            expanded_x_df = pd.concat([expanded_x_df, dummies_df], axis=1)
+    expanded_x_df = convert_categorical_columns(x_df)
 
     split_index = len(expanded_x_df) // 4
 
@@ -184,10 +190,10 @@ def cross_validation_prob_2d(dataset_2_data):
 def main():
     dataset_2_data = encode_categorical_variables_prob_2a()
 
-    # print_expanded_df_prob_2a(dataset_2_data)
+    print_expanded_df_prob_2a(dataset_2_data)
     # linear_regression_prob_2b(dataset_2_data)
     # ridge_regression_prob_2c(dataset_2_data)
-    cross_validation_prob_2d(dataset_2_data)
+    # cross_validation_prob_2d(dataset_2_data)
 
 
 if __name__ == '__main__':
