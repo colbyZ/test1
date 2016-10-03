@@ -1,5 +1,5 @@
-import pandas as pd
 import numpy as np
+import pandas as pd
 from sklearn.cross_validation import train_test_split
 from sklearn.linear_model import Lasso as Lasso_Reg
 
@@ -40,7 +40,8 @@ def fit_regression_model_prob_4a():
 
         num_non_zero_coefs = sum(abs(coef) > 2e-3 for coef in lasso.coef_)
 
-        print 'alpha: %.2e, test R^2: %.3f, train R^2: %.3f, num_non_zero_coefs: %d' % (alpha, test_score, train_score, num_non_zero_coefs)
+        print 'alpha: %.2e, test R^2: %.3f, train R^2: %.3f, num_non_zero_coefs: %d' % (
+            alpha, test_score, train_score, num_non_zero_coefs)
 
 
 def main():
