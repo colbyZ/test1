@@ -48,10 +48,10 @@ def fit_regression_model_prob_4a():
 
         num_non_zero_coefs = sum(abs(coef) > 0.0 for coef in regression.coef_)
 
-        print 'alpha: %.2e, test R^2: % .3f, train R^2: %.3f, num_non_zero_coefs: %4d' % (
+        print 'alpha: %.2e, test R^2: % .4f, train R^2: %.4f, num_non_zero_coefs: %4d' % (
             alpha, test_score, train_score, num_non_zero_coefs)
 
-    print 'best test score: %.3f' % best_test_score
+    print 'best test score: %.4f' % best_test_score
     print 'best regression: %s' % best_regression
 
 
