@@ -3,12 +3,11 @@ import pandas as pd
 from sklearn.cross_validation import train_test_split
 from sklearn.linear_model import Lasso as Lasso_Reg
 
-from hw4_categorical import convert_categorical_columns
+from hw4_common import convert_categorical_columns
 
 
 def load_expanded_df():
-    df = pd.read_csv('datasets/dataset_4_expanded.txt')
-    return df
+    return pd.read_csv('datasets/dataset_4_expanded.txt')
 
 
 # prob 4a
@@ -16,7 +15,6 @@ def load_expanded_df():
 def get_expanded_df():
     df = pd.read_csv('datasets/dataset_4.txt', dtype={'NOEXCH': object})
     expanded_df = convert_categorical_columns(df)
-    # expanded_df.to_csv('dataset_4_expanded.txt')
     return expanded_df
 
 
@@ -54,7 +52,7 @@ def fit_regression_model_prob_4a():
             alpha, test_score, train_score, num_non_zero_coefs)
 
     print 'best test score: %.3f' % best_test_score
-    print 'best regression: %s' % str(best_regression)
+    print 'best regression: %s' % best_regression
 
 
 def main():

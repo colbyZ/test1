@@ -7,19 +7,14 @@ from sklearn.cross_validation import KFold
 from sklearn.linear_model import LinearRegression as Lin_Reg
 from sklearn.linear_model import Ridge as Ridge_Reg
 
-from hw4_categorical import convert_categorical_columns
+from hw4_common import convert_categorical_columns
+from hw4_common import split
 
 # prob 2a
 
 Dataset_2_Data = namedtuple('Dataset_2_Data', ['train', 'test'])
 
 XY_Data = namedtuple('XY_Data', ['x', 'y'])
-
-
-def split(df, split_index):
-    train = df[:split_index]
-    test = df[split_index:]
-    return train, test
 
 
 def encode_categorical_variables_prob_2a():
@@ -60,7 +55,7 @@ def linear_regression_prob_2b(dataset_2_data):
     train = dataset_2_data.train
     test = dataset_2_data.test
 
-    print 'x train shape: %s' % str(train.x.shape)
+    print 'x train shape: %s' % (train.x.shape,)
 
     linear_regression = Lin_Reg()
     linear_regression.fit(*train)
@@ -80,7 +75,7 @@ def get_ridge_regression_prob_2c_data(dataset_2_data):
     train_score_list = []
     test_score_list = []
 
-    for exponent in range(-7, 8):
+    for exponent in xrange(-7, 8):
         alpha = 10.0 ** exponent
 
         ridge_regression = Ridge_Reg(alpha=alpha, normalize=True)
@@ -98,7 +93,7 @@ def ridge_regression_prob_2c(dataset_2_data):
     train = dataset_2_data.train
     test = dataset_2_data.test
 
-    print 'train x shape: %s, test x shape: %s' % (str(train.x.shape), str(test.x.shape))
+    print 'train x shape: %s, test x shape: %s' % (train.x.shape, test.x.shape)
 
     alpha_list, train_score_list, test_score_list = get_ridge_regression_prob_2c_data(dataset_2_data)
 
@@ -123,6 +118,18 @@ def ridge_regression_prob_2c(dataset_2_data):
 
 # prob 2d
 
+def get_ridge_regression_scores(kf, ridge_regression, x_fold, y_fold):
+    for train_index, test_index in kf:
+        x_fold_train = x_fold.iloc[train_index]
+        x_fold_test = x_fold.iloc[test_index]
+
+        y_fold_train = y_fold[train_index]
+        y_fold_test = y_fold[test_index]
+
+        ridge_regression.fit(x_fold_train, y_fold_train)
+        yield ridge_regression.score(x_fold_test, y_fold_test)
+
+
 def cross_validation_prob_2d(dataset_2_data):
     train = dataset_2_data.train
 
@@ -133,20 +140,11 @@ def cross_validation_prob_2d(dataset_2_data):
 
     alpha_list = []
     cv_score_list = []
-    for exponent in range(-7, 8):
+    for exponent in xrange(-7, 8):
         alpha = 10.0 ** exponent
         ridge_regression = Ridge_Reg(alpha=alpha, normalize=True)
 
-        test_score_sum = 0.0
-        for train_index, test_index in kf:
-            x_fold_train = x_fold.iloc[train_index]
-            x_fold_test = x_fold.iloc[test_index]
-
-            y_fold_train = y_fold[train_index]
-            y_fold_test = y_fold[test_index]
-
-            ridge_regression.fit(x_fold_train, y_fold_train)
-            test_score_sum += ridge_regression.score(x_fold_test, y_fold_test)
+        test_score_sum = sum(get_ridge_regression_scores(kf, ridge_regression, x_fold, y_fold))
 
         cv_score = test_score_sum / num_folds
 
@@ -175,10 +173,10 @@ def cross_validation_prob_2d(dataset_2_data):
 def main():
     dataset_2_data = encode_categorical_variables_prob_2a()
 
-    print_expanded_df_prob_2a(dataset_2_data)
+    # print_expanded_df_prob_2a(dataset_2_data)
     # linear_regression_prob_2b(dataset_2_data)
     # ridge_regression_prob_2c(dataset_2_data)
-    # cross_validation_prob_2d(dataset_2_data)
+    cross_validation_prob_2d(dataset_2_data)
 
 
 if __name__ == '__main__':

@@ -35,7 +35,7 @@ def score(m,x_test,y_test, reg_param):
 
 # Load
 data = np.loadtxt('datasets/dataset_3.txt', delimiter=',')
-# len(data) is simpler
+# len(data) is simpler and more general
 n = data.shape[0]
 # n // 2 is simpler
 n = int(np.round(n*0.5))
@@ -50,7 +50,7 @@ y_test = data[n:2*n,100]
 
 # Params
 # 'alphas' could be a better name instead of 'a'
-# this could written as 'alphas = [10.0 ** i for i in range(-2, 3)]'
+# this could written as 'alphas = [10.0 ** i for i in xrange(-2, 3)]'
 a=np.zeros(5)
 # the last element of 'a' is 0.0 instead of expected '10 ** 2'
 # should be 'range(-2, 3)'

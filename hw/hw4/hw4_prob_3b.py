@@ -5,13 +5,9 @@ import numpy as np
 from sklearn.linear_model import LinearRegression as Lin_Reg
 from sklearn.preprocessing import StandardScaler
 
+from hw4_common import split
+
 RidgeRegressionModel = namedtuple('RidgeRegressionModel', ['linear_regression', 'x_scaler'])
-
-
-def split(data, split_index):
-    train = data[:split_index]
-    test = data[split_index:]
-    return train, test
 
 
 # Fit
@@ -19,8 +15,8 @@ def split(data, split_index):
 def get_aug_x_y(reg_param, x, y):
     n = len(x)
     num_predictors = x.shape[1]
-    aug_x = np.concatenate((x, np.sqrt(reg_param) * np.identity(n)))
-    aug_y = np.concatenate((y, np.zeros(num_predictors))).reshape(-1, 1)
+    aug_x = np.vstack((x, np.sqrt(reg_param) * np.identity(n)))
+    aug_y = np.vstack((y, np.zeros(num_predictors))).reshape(-1, 1)
     return aug_x, aug_y
 
 
@@ -60,7 +56,7 @@ def ridge_regression_prob_3b():
     y_train, y_test = split(y, split_index)
 
     # Params
-    alphas = [10.0 ** i for i in range(-2, 3)]
+    alphas = [10.0 ** i for i in xrange(-2, 3)]
 
     train_score_list = []
     test_score_list = []

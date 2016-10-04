@@ -1,4 +1,4 @@
-import itertools as it
+import itertools
 from collections import namedtuple
 
 import matplotlib.pyplot as plt
@@ -17,10 +17,8 @@ def load_dataset_1():
     data = np.loadtxt('datasets/dataset_1.txt', delimiter=',', skiprows=1)
 
     # Split predictors and response
-    x = data[:, :-1]
-    y = data[:, -1]
-
-    return Dataset_1_Data(x, y)
+    return Dataset_1_Data(x=data[:, :-1],
+                          y=data[:, -1])
 
 
 def heatmap_prob_1a(dataset_1_data):
@@ -51,16 +49,11 @@ def get_regression_results(predictor_subset, x, y):
 
 
 def get_best_k_subset(predictor_set, size_k, x, y):
-    # Create all possible subsets of size 'size',
-    # using the 'combination' function from the 'itertools' library
-    subsets_of_size_k = it.combinations(predictor_set, size_k)
-
     max_r_squared = -float('inf')  # set some initial small value for max R^2 score
-    best_k_subset = []  # best subset of predictors of size k
+    best_k_subset = None  # best subset of predictors of size k
     best_results = None
 
-    # Iterate over all subsets of our predictor set
-    for predictor_subset in subsets_of_size_k:
+    for predictor_subset in itertools.combinations(predictor_set, size_k):
         results = get_regression_results(predictor_subset, x, y)
         r_squared = results.rsquared
 
@@ -85,16 +78,16 @@ def exhaustive_search_prob_1b(dataset_1_data):
 
     # Best Subset Selection
     min_bic = float('inf')  # set some initial large value for min BIC score
-    best_subset = []  # best subset of predictors
+    best_subset = None  # best subset of predictors
     best_results = None
 
     num_predictors = x.shape[1]
 
     # Create all possible subsets of the set of <num_predictors> predictors
-    predictor_set = range(num_predictors)  # e.g. predictor set = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
+    predictor_set = xrange(num_predictors)  # e.g. predictor set = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
 
     # Repeat for every possible size of subset
-    for size_k in range(1, num_predictors + 1):
+    for size_k in xrange(1, num_predictors + 1):
         k_subset, results = get_best_k_subset(predictor_set, size_k, x, y)
 
         bic = results.bic
@@ -107,7 +100,7 @@ def exhaustive_search_prob_1b(dataset_1_data):
             best_subset = k_subset
             best_results = results
 
-        print 'k: %2d, %s, subset: %s, ' % (size_k, get_results_stats(results), str(k_subset))
+        print 'k: %2d, %s, subset: %s' % (size_k, get_results_stats(results), str(k_subset))
 
     print 'Best subset by exhaustive search: %s, %s' % (str(best_subset), get_results_stats(best_results))
 
@@ -116,7 +109,7 @@ def exhaustive_search_prob_1b(dataset_1_data):
 
 def find_best_predictor_to_add(current_predictors, remaining_predictors, x, y):
     max_r_squared = -float('inf')  # set some initial small value for max R^2
-    best_predictor = -1  # set some throwaway initial number for the best predictor to add
+    best_predictor = None  # set some throwaway initial number for the best predictor to add
     best_results = None
 
     # Iterate over all remaining predictors to find best predictor to add
@@ -154,17 +147,17 @@ def stepwise_forward_selection_prob_1b(dataset_1_data):
     results = None
 
     # Keep track of the best subset of predictors
-    best_subset = []
+    best_subset = None
 
     # Iterate over all possible subset sizes, 0 predictors to d predictors
-    for size in range(d):
+    for size in xrange(d):
         predictor, results = find_best_predictor_to_add(current_predictors, remaining_predictors, x, y)
 
         # Remove best predictor from remaining list, and add best predictor to current list
         remaining_predictors.remove(predictor)
         current_predictors.append(predictor)
 
-        print 'size: %d, %s, subset: %s, ' % (size, get_results_stats(results), str(current_predictors))
+        print 'size: %d, %s, subset: %s' % (size, get_results_stats(results), current_predictors)
 
         # Check if BIC for with the predictor we just added is lower than
         # the global minimum across all subset of predictors
@@ -173,7 +166,7 @@ def stepwise_forward_selection_prob_1b(dataset_1_data):
             min_bic = results.bic
             results = results
 
-    print 'Best step-wise forward subset selection: %s, %s' % (str(sorted(best_subset)), get_results_stats(results))
+    print 'Best step-wise forward subset selection: %s, %s' % (sorted(best_subset), get_results_stats(results))
 
 
 def lasso_regression_prob_1c(dataset_1_data):
@@ -209,9 +202,9 @@ def main():
 
     # heatmap_prob_1a(dataset_1_data)
     # exhaustive_search_prob_1b(dataset_1_data)
-    # stepwise_forward_selection_prob_1b(dataset_1_data)
+    stepwise_forward_selection_prob_1b(dataset_1_data)
     # lasso_regression_prob_1c(dataset_1_data)
-    ridge_regression_prob_1c(dataset_1_data)
+    # ridge_regression_prob_1c(dataset_1_data)
 
 
 if __name__ == '__main__':
