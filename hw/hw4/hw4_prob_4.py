@@ -32,7 +32,7 @@ def fit_regression_model_prob_4a():
 
     x_train, x_test, y_train, y_test = train_test_split(x, y, random_state=random_state)
 
-    alphas = [10.0 ** i for i in np.arange(-4.0, -1.1, step=0.1)]
+    alphas = np.logspace(-4.0, -1.0, num=40)
 
     best_test_score = -float('inf')
     best_regression = None
