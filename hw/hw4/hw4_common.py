@@ -33,7 +33,7 @@ def plot_train_test_scores(alphas, test_score_list, train_score_list, ylim, lege
     plt.xscale('log')
     plt.xlabel('$\lambda$')
     plt.ylabel('$R^2$')
-    plt.title('train and test R^2 scores as a function of the regularization parameter')
+    plt.title('train and test $R^2$ scores as a function of the regularization parameter')
     plt.ylim(ylim)
     plt.legend(loc=legend_loc)
 
