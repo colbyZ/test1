@@ -4,6 +4,7 @@ from sklearn.cross_validation import train_test_split
 from sklearn.linear_model import Lasso as Lasso_Reg
 
 from hw4_common import convert_categorical_columns
+from hw4_common import plot_train_test_scores
 
 
 def load_expanded_df():
@@ -36,6 +37,9 @@ def fit_regression_model_prob_4a():
     best_test_score = -float('inf')
     best_regression = None
 
+    train_score_list = []
+    test_score_list = []
+
     for alpha in alphas:
         regression = Lasso_Reg(alpha=alpha, normalize=True, tol=2e-3)
         regression.fit(x_train, y_train)
@@ -48,11 +52,16 @@ def fit_regression_model_prob_4a():
 
         num_non_zero_coefs = sum(abs(coef) > 0.0 for coef in regression.coef_)
 
+        train_score_list.append(train_score)
+        test_score_list.append(test_score)
+
         print 'alpha: %.2e, test R^2: % .4f, train R^2: %.4f, num_non_zero_coefs: %4d' % (
             alpha, test_score, train_score, num_non_zero_coefs)
 
     print 'best test score: %.4f' % best_test_score
     print 'best regression: %s' % best_regression
+
+    plot_train_test_scores(alphas, test_score_list, train_score_list, [-0.1, 0.9], 'upper right')
 
 
 def main():

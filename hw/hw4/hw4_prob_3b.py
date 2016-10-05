@@ -1,10 +1,10 @@
 from collections import namedtuple
 
-import matplotlib.pyplot as plt
 import numpy as np
 from sklearn.linear_model import LinearRegression as Lin_Reg
 from sklearn.preprocessing import StandardScaler
 
+from hw4_common import plot_train_test_scores
 from hw4_common import split
 
 RidgeRegressionModel = namedtuple('RidgeRegressionModel', ['linear_regression', 'x_scaler'])
@@ -71,19 +71,7 @@ def ridge_regression_prob_3b():
 
         print 'alpha: %.0e, train R^2: %.3f, test R^2: %.3f' % (alpha, train_score, test_score)
 
-    # Plot
-    plt.plot(alphas, train_score_list, label='train')
-    plt.plot(alphas, test_score_list, label='test')
-
-    plt.xscale('log')
-    plt.xlabel('$\lambda$')
-    plt.ylabel('$R^2$')
-    plt.title('train and test R^2 scores as a function of the regularization parameter')
-    plt.ylim([-5.0, 1.3])
-
-    plt.legend(loc='lower right')
-
-    plt.show()
+    plot_train_test_scores(alphas, test_score_list, train_score_list, [-5.0, 1.3], 'lower right')
 
 
 def main():
