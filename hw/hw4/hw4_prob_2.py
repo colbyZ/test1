@@ -3,6 +3,7 @@ from itertools import izip
 
 import matplotlib.pyplot as plt
 import pandas as pd
+import numpy as np
 from sklearn.cross_validation import KFold
 from sklearn.linear_model import LinearRegression as Lin_Reg
 from sklearn.linear_model import Ridge as Ridge_Reg
@@ -138,17 +139,15 @@ def cross_validation_prob_2d(dataset_2_data):
     num_folds = 5
     kf = KFold(len(x_fold), n_folds=num_folds, shuffle=True, random_state=1090)
 
-    alpha_list = []
+    alpha_list = 10.0 ** np.arange(-7, 8)
     cv_score_list = []
-    for exponent in xrange(-7, 8):
-        alpha = 10.0 ** exponent
+    for alpha in alpha_list:
         ridge_regression = Ridge_Reg(alpha=alpha, normalize=True)
 
         test_score_sum = sum(get_ridge_regression_scores(kf, ridge_regression, x_fold, y_fold))
 
         cv_score = test_score_sum / num_folds
 
-        alpha_list.append(alpha)
         cv_score_list.append(cv_score)
 
         print 'alpha: %.0e, cv score: % 7.3f' % (alpha, cv_score)
