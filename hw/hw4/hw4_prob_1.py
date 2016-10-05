@@ -105,7 +105,7 @@ def exhaustive_search_prob_1b(dataset_1_data):
     print 'Best subset by exhaustive search: %s, %s' % (str(best_subset), get_results_stats(best_results))
 
 
-# prob 1b, step-wise backward selection
+# prob 1b, step-wise forward selection
 
 def find_best_predictor_to_add(current_predictors, remaining_predictors, x, y):
     max_r_squared = -float('inf')  # set some initial small value for max R^2
@@ -169,32 +169,25 @@ def stepwise_forward_selection_prob_1b(dataset_1_data):
     print 'Best step-wise forward subset selection: %s, %s' % (sorted(best_subset), get_results_stats(results))
 
 
-def lasso_regression_prob_1c(dataset_1_data):
+def regression_prob_1c(dataset_1_data, regression, regression_name):
     x = dataset_1_data.x
     y = dataset_1_data.y
 
-    # Lasso regression
-    reg = Lasso_Reg(alpha=0.01)
+    reg = regression(alpha=0.01)
     reg.fit(x, y)
     coefficients = reg.coef_
 
-    print 'Lasso:'
+    print '%s:' % regression_name
     print 'Coefficients:', coefficients
     print 'Predictors with non-zero coefficients:', [i for i, item in enumerate(coefficients) if abs(item) > 0]
+
+
+def lasso_regression_prob_1c(dataset_1_data):
+    regression_prob_1c(dataset_1_data, Lasso_Reg, 'Lasso')
 
 
 def ridge_regression_prob_1c(dataset_1_data):
-    x = dataset_1_data.x
-    y = dataset_1_data.y
-
-    # Ridge regression: Fit and evaluate
-    reg = Ridge_Reg(alpha=0.01)
-    reg.fit(x, y)
-    coefficients = reg.coef_
-
-    print 'Ridge:'
-    print 'Coefficients:', coefficients
-    print 'Predictors with non-zero coefficients:', [i for i, item in enumerate(coefficients) if abs(item) > 0]
+    regression_prob_1c(dataset_1_data, Ridge_Reg, 'Ridge')
 
 
 def main():
@@ -202,9 +195,9 @@ def main():
 
     # heatmap_prob_1a(dataset_1_data)
     # exhaustive_search_prob_1b(dataset_1_data)
-    stepwise_forward_selection_prob_1b(dataset_1_data)
+    # stepwise_forward_selection_prob_1b(dataset_1_data)
     # lasso_regression_prob_1c(dataset_1_data)
-    # ridge_regression_prob_1c(dataset_1_data)
+    ridge_regression_prob_1c(dataset_1_data)
 
 
 if __name__ == '__main__':
