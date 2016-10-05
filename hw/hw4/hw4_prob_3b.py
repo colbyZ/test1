@@ -56,7 +56,7 @@ def ridge_regression_prob_3b():
     y_train, y_test = split(y, split_index)
 
     # Params
-    alphas = 10.0 ** np.arange(-2, 3)
+    alphas = 10.0 ** np.arange(-2, 6)
 
     train_score_list = []
     test_score_list = []
