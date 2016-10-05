@@ -139,9 +139,9 @@ def cross_validation_prob_2d(dataset_2_data):
     num_folds = 5
     kf = KFold(len(x_fold), n_folds=num_folds, shuffle=True, random_state=1090)
 
-    alpha_list = 10.0 ** np.arange(-7, 8)
+    alphas = 10.0 ** np.arange(-7, 8)
     cv_score_list = []
-    for alpha in alpha_list:
+    for alpha in alphas:
         ridge_regression = Ridge_Reg(alpha=alpha, normalize=True)
 
         test_score_sum = sum(get_ridge_regression_scores(kf, ridge_regression, x_fold, y_fold))
@@ -156,8 +156,8 @@ def cross_validation_prob_2d(dataset_2_data):
 
     _, ax = plt.subplots(1, 1, figsize=(8, 5))
 
-    ax.plot(alpha_list, cv_score_list, label='CV $R^2$ score')
-    ax.plot(alpha_list, test_score_list, label='test $R^2$ score')
+    ax.plot(alphas, cv_score_list, label='CV $R^2$ score')
+    ax.plot(alphas, test_score_list, label='test $R^2$ score')
 
     ax.set_xscale('log')
     ax.set_xlabel('$\lambda$')
