@@ -1,3 +1,5 @@
+from itertools import izip
+
 import numpy as np
 import pandas as pd
 from sklearn.cross_validation import train_test_split
@@ -19,29 +21,25 @@ def get_expanded_df():
     return expanded_df
 
 
-def fit_regression_model_prob_4a():
-    # df = get_expanded_df()
-    df = load_expanded_df()
+def print_profits(name, cost, revenue):
+    print '%s, cost: %d, revenue: %d, profit: %d' % (name, cost, revenue, revenue - cost)
 
-    y_column_name = 'TARGET_D'
-    y = df[y_column_name]
-    x = df.drop(y_column_name, axis=1)
 
+def get_best_regression(x, y):
     random_state = 1090
     # random_state = None
 
     x_train, x_test, y_train, y_test = train_test_split(x, y, random_state=random_state)
 
-    alphas = np.logspace(-4.0, -1.0, num=40)
+    alphas = np.logspace(-4.0, -1.0, num=20)
 
     best_test_score = -float('inf')
     best_regression = None
-
     train_score_list = []
     test_score_list = []
 
     for alpha in alphas:
-        regression = Lasso_Reg(alpha=alpha, normalize=True, tol=2e-3)
+        regression = Lasso_Reg(alpha=alpha, normalize=True, tol=5e-3)
         regression.fit(x_train, y_train)
         train_score = regression.score(x_train, y_train)
         test_score = regression.score(x_test, y_test)
@@ -59,7 +57,45 @@ def fit_regression_model_prob_4a():
             alpha, test_score, train_score, num_non_zero_coefs)
 
     print 'best test score: %.4f' % best_test_score
+
+    return best_regression, alphas, test_score_list, train_score_list
+
+
+def fit_regression_model_prob_4a():
+    # df = get_expanded_df()
+    df = load_expanded_df()
+
+    y_column_name = 'TARGET_D'
+    y = df[y_column_name]
+    x = df.drop(y_column_name, axis=1)
+
+    random_state = 1091
+    # random_state = None
+
+    x_train, x_test, y_train, y_test = train_test_split(x, y, random_state=random_state)
+
+    best_regression, alphas, test_score_list, train_score_list = get_best_regression(x_train, y_train)
+
     print 'best regression: %s' % best_regression
+
+    predicted_ys = best_regression.predict(x_test)
+
+    blanket_cost = 0.0
+    blanket_revenue = 0.0
+
+    model_cost = 0.0
+    model_revenue = 0.0
+
+    for predicted_y, y in izip(predicted_ys, y_test):
+        blanket_cost += 7.0
+        blanket_revenue += y
+
+        if predicted_y > 7.0:
+            model_cost += 7.0
+            model_revenue += y
+
+    print_profits('blanket', blanket_cost, blanket_revenue)
+    print_profits('model', model_cost, model_revenue)
 
     plot_train_test_scores(alphas, test_score_list, train_score_list, [-0.1, 0.9], 'upper right')
 
