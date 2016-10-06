@@ -30,7 +30,7 @@ def get_best_regression(x, y):
     random_state = 1090
     # random_state = None
 
-    x_train, x_test, y_train, y_test = train_test_split(x, y, random_state=random_state)
+    x_train, x_test, y_train, y_test = train_test_split(x, y, random_state=random_state, test_size=0.25)
 
     alphas = np.logspace(-4.0, -1.0, num=20)
 
@@ -73,7 +73,7 @@ def fit_regression_model_prob_4():
     random_state = 1091
     # random_state = None
 
-    x_train, x_test, y_train, y_test = train_test_split(x, y, random_state=random_state)
+    x_train, x_test, y_train, y_test = train_test_split(x, y, random_state=random_state, test_size=0.25)
 
     best_regression, alphas, test_score_list, train_score_list = get_best_regression(x_train, y_train)
 
@@ -87,11 +87,13 @@ def fit_regression_model_prob_4():
     model_cost = 0.0
     model_revenue = 0.0
 
+    threshold = 10.0
+
     for predicted_y, y in izip(predicted_ys, y_test):
         blanket_cost += 7.0
         blanket_revenue += y
 
-        if predicted_y > 7.0:
+        if predicted_y > threshold:
             model_cost += 7.0
             model_revenue += y
 
