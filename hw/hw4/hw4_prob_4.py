@@ -98,7 +98,7 @@ def fit_regression_model_prob_4():
     print_profits('blanket', blanket_cost, blanket_revenue)
     print_profits('model', model_cost, model_revenue)
 
-    plot_train_test_scores(alphas, test_score_list, train_score_list, [-0.6, 0.9], 'upper right')
+    plot_train_test_scores(alphas, test_score_list, train_score_list, [-0.6, 0.7], 'upper right')
 
 
 def main():
