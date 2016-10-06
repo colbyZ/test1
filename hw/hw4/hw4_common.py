@@ -19,8 +19,8 @@ def convert_categorical_columns(df):
         if is_categorical(column):
             dummies_df = pd.get_dummies(column, prefix=column_name)
 
-            expanded_df.drop(column_name, axis=1, inplace=True)
-            expanded_df = expanded_df.join(dummies_df)
+            expanded_df = expanded_df.drop(column_name, axis=1)
+            expanded_df = pd.concat([expanded_df, dummies_df], axis=1)
 
     return expanded_df
 

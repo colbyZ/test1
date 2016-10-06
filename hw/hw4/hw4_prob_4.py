@@ -18,6 +18,7 @@ def load_expanded_df():
 def get_expanded_df():
     df = pd.read_csv('datasets/dataset_4.txt', dtype={'NOEXCH': object})
     expanded_df = convert_categorical_columns(df)
+    # expanded_df.to_csv('dataset_4_expanded.txt', index=False)
     return expanded_df
 
 
@@ -61,9 +62,9 @@ def get_best_regression(x, y):
     return best_regression, alphas, test_score_list, train_score_list
 
 
-def fit_regression_model_prob_4a():
-    # df = get_expanded_df()
-    df = load_expanded_df()
+def fit_regression_model_prob_4():
+    df = get_expanded_df()
+    # df = load_expanded_df()
 
     y_column_name = 'TARGET_D'
     y = df[y_column_name]
@@ -97,11 +98,11 @@ def fit_regression_model_prob_4a():
     print_profits('blanket', blanket_cost, blanket_revenue)
     print_profits('model', model_cost, model_revenue)
 
-    plot_train_test_scores(alphas, test_score_list, train_score_list, [-0.1, 0.9], 'upper right')
+    plot_train_test_scores(alphas, test_score_list, train_score_list, [-0.6, 0.9], 'upper right')
 
 
 def main():
-    fit_regression_model_prob_4a()
+    fit_regression_model_prob_4()
 
 
 if __name__ == '__main__':
