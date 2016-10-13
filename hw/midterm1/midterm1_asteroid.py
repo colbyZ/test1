@@ -4,7 +4,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
 from bs4 import BeautifulSoup
-from sklearn.cross_validation import train_test_split, cross_val_score, ShuffleSplit
+from sklearn.cross_validation import cross_val_score, ShuffleSplit
 from sklearn.linear_model import LinearRegression
 from sklearn.pipeline import Pipeline
 from sklearn.preprocessing import PolynomialFeatures
@@ -75,6 +75,7 @@ def show_scatter_plots(df):
 def fit(xs, ys, description_text):
     xs = xs.reshape(-1, 1)
     ys = ys.reshape(-1, 1)
+    num_elements = len(xs)
 
     best_score = -float('inf')
     best_degree = None
@@ -82,7 +83,7 @@ def fit(xs, ys, description_text):
         model = Pipeline([('poly', PolynomialFeatures(degree=degree)),
                           ('linear', LinearRegression())])
 
-        cv = ShuffleSplit(n=len(xs), n_iter=2000, test_size=0.25)
+        cv = ShuffleSplit(n=num_elements, n_iter=2000, test_size=0.25)
 
         score = cross_val_score(model, xs, ys, cv=cv).mean()
 
