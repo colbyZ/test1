@@ -4,6 +4,10 @@ import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
 from bs4 import BeautifulSoup
+from sklearn.cross_validation import train_test_split
+from sklearn.linear_model import LinearRegression
+from sklearn.pipeline import Pipeline
+from sklearn.preprocessing import PolynomialFeatures
 
 ColumnInfo = namedtuple('ColumnInfo', ['values', 'name', 'units'])
 
@@ -68,12 +72,48 @@ def show_scatter_plots(df):
     plt.show()
 
 
+def fit(xs, ys):
+    xs = xs.reshape(-1, 1)
+    ys = ys.reshape(-1, 1)
+
+    x_train, x_test, y_train, y_test = train_test_split(xs, ys)
+
+    print x_train.shape, x_test.shape, y_train.shape, y_test.shape
+
+    best_score = -float('inf')
+    best_degree = None
+    for degree in xrange(1, 20):
+        model = Pipeline([('poly', PolynomialFeatures(degree=degree)),
+                          ('linear', LinearRegression())])
+
+        model = model.fit(x_train, y_train)
+
+        score = model.score(x_test, y_test)
+        print 'degree: %d, score: %.5f' % (degree, score)
+
+        if score > best_score:
+            best_score = score
+            best_degree = degree
+
+    print 'best, degree: %d, score: %.5f' % (best_degree, best_score)
+
+
+def fit_all(df):
+    xs = df['X-Coord']
+    ys = df['Y-Coord']
+    zs = df['Z-Coord']
+
+    fit(xs, zs)
+
+
 def asteroid_analysis():
     df = get_data_frame()
 
     print 'dataframe:\n%s' % df
 
-    show_scatter_plots(df)
+    fit_all(df)
+
+    # show_scatter_plots(df)
 
 
 def main():
