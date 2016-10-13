@@ -72,21 +72,17 @@ def show_scatter_plots(df):
     plt.show()
 
 
-def fit(xs, ys):
+def fit(xs, ys, description_text):
     xs = xs.reshape(-1, 1)
     ys = ys.reshape(-1, 1)
 
-    x_train, x_test, y_train, y_test = train_test_split(xs, ys)
-
-    print x_train.shape, x_test.shape, y_train.shape, y_test.shape
-
     best_score = -float('inf')
     best_degree = None
-    for degree in xrange(1, 10):
+    for degree in xrange(1, 9):
         model = Pipeline([('poly', PolynomialFeatures(degree=degree)),
                           ('linear', LinearRegression())])
 
-        cv = ShuffleSplit(n=len(xs), n_iter=3000)
+        cv = ShuffleSplit(n=len(xs), n_iter=2000, test_size=0.25)
 
         score = cross_val_score(model, xs, ys, cv=cv).mean()
 
@@ -96,7 +92,7 @@ def fit(xs, ys):
             best_score = score
             best_degree = degree
 
-    print 'best, degree: %d, score: %.6f' % (best_degree, best_score)
+    print '%s, best, degree: %d, score: %.6f' % (description_text, best_degree, best_score)
 
 
 def fit_all(df):
@@ -104,7 +100,8 @@ def fit_all(df):
     ys = df['Y-Coord']
     zs = df['Z-Coord']
 
-    fit(xs, zs)
+    fit(zs, xs, 'z vs x')
+    fit(zs, ys, 'z vs y')
 
 
 def asteroid_analysis():
