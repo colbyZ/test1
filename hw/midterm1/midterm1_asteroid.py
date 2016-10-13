@@ -4,7 +4,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
 from bs4 import BeautifulSoup
-from sklearn.cross_validation import train_test_split
+from sklearn.cross_validation import train_test_split, cross_val_score, ShuffleSplit
 from sklearn.linear_model import LinearRegression
 from sklearn.pipeline import Pipeline
 from sklearn.preprocessing import PolynomialFeatures
@@ -82,20 +82,21 @@ def fit(xs, ys):
 
     best_score = -float('inf')
     best_degree = None
-    for degree in xrange(1, 20):
+    for degree in xrange(1, 10):
         model = Pipeline([('poly', PolynomialFeatures(degree=degree)),
                           ('linear', LinearRegression())])
 
-        model = model.fit(x_train, y_train)
+        cv = ShuffleSplit(n=len(xs), n_iter=3000)
 
-        score = model.score(x_test, y_test)
-        print 'degree: %d, score: %.5f' % (degree, score)
+        score = cross_val_score(model, xs, ys, cv=cv).mean()
+
+        print 'degree: %2d, score: %.6f' % (degree, score)
 
         if score > best_score:
             best_score = score
             best_degree = degree
 
-    print 'best, degree: %d, score: %.5f' % (best_degree, best_score)
+    print 'best, degree: %d, score: %.6f' % (best_degree, best_score)
 
 
 def fit_all(df):
