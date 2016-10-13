@@ -38,7 +38,7 @@ def q_7():
         xs = np.random.uniform(0.0, 10.0, n)
         ys = 10.0 + 2.0 * xs + np.random.uniform(-5.0, 5.0, n)
 
-        r_sq = calc_r_sq(xs, ys, 10.0, 2.0)
+        r_sq = calc_r_sq(xs, ys, 15.0, 1.0)
         r_sq_list.append(r_sq)
 
     print '30 - 2x, R^2: %.4f' % np.mean(r_sq_list)
