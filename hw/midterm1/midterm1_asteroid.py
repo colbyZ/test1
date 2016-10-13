@@ -68,7 +68,7 @@ def show_scatter_plots(df):
     plt.show()
 
 
-def asteroid():
+def asteroid_analysis():
     df = get_data_frame()
 
     print 'dataframe:\n%s' % df
@@ -77,7 +77,7 @@ def asteroid():
 
 
 def main():
-    asteroid()
+    asteroid_analysis()
 
 
 if __name__ == '__main__':
