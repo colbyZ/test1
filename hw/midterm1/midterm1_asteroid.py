@@ -56,13 +56,13 @@ def show_scatter_plots(df):
 
     fig, axes = plt.subplots(2, 3, figsize=(20, 10))
 
-    show_scatter_plot(axes[0][0], x_column, z_column)
-    show_scatter_plot(axes[0][1], y_column, z_column)
-    show_scatter_plot(axes[0][2], time_column, z_column)
+    show_scatter_plot(axes[0][0], z_column, x_column)
+    show_scatter_plot(axes[0][1], z_column, y_column)
+    show_scatter_plot(axes[0][2], z_column, time_column)
 
     show_scatter_plot(axes[1][0], x_column, y_column)
-    show_scatter_plot(axes[1][1], time_column, y_column)
-    show_scatter_plot(axes[1][2], x_column, time_column)
+    show_scatter_plot(axes[1][1], time_column, x_column)
+    show_scatter_plot(axes[1][2], time_column, y_column)
 
     plt.tight_layout()
     plt.show()
