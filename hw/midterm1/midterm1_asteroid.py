@@ -88,18 +88,22 @@ def score_line_plot(description_text, ax, degrees, score_list, y_label, y_lim=No
 
 
 def find_interval(xs, ys, description_text, axes):
+    xs = xs.copy()
+
     xs = xs.reshape(-1, 1)
     ys = ys.reshape(-1, 1)
 
+    xs /= 18000.0
+
     best_bic = float('inf')
-    best_results = None
     best_degree = None
 
     aic_list = []
     bic_list = []
     rsq_adj_list = []
+    best_results_dict = {}
 
-    degrees = range(1, 9)
+    degrees = range(1, 20)
     for degree in degrees:
         poly_xs = get_polynomials(xs, degree)
 
@@ -113,12 +117,12 @@ def find_interval(xs, ys, description_text, axes):
         aic_list.append(aic)
         bic_list.append(bic)
         rsq_adj_list.append(rsq_adj)
+        best_results_dict[degree] = results
 
-        print '%s, degree: %d, aic: %.1f, bic: %.1f, R^2 adj: %.4f' % (description_text, degree, aic, bic, rsq_adj)
+        print '%s, degree: %d, aic: %.3f, bic: %.3f, R^2 adj: %.6f' % (description_text, degree, aic, bic, rsq_adj)
 
         if bic < best_bic:
             best_bic = bic
-            best_results = results
             best_degree = degree
 
     score_line_plot(description_text, axes[0], degrees, aic_list, 'aic')
@@ -126,6 +130,8 @@ def find_interval(xs, ys, description_text, axes):
     score_line_plot(description_text, axes[2], degrees, rsq_adj_list, '$R^2$ adjusted', y_lim=[-2.0, 1.1])
 
     print '%s, best, degree: %d, bic: %.1f' % (description_text, best_degree, best_bic)
+
+    best_results = best_results_dict[best_degree]
 
     zeros = np.append([1.0], np.zeros(best_degree))
     predictions = best_results.predict(zeros)
@@ -157,6 +163,49 @@ def find_intervals(df):
     return x_interval, y_interval
 
 
+def poly_fit_plot(ax, xs, ys, y_label):
+    xs = xs.copy()
+    xs = xs.reshape(-1, 1)
+    ys = ys.reshape(-1, 1)
+
+    xs /= 18000.0
+
+    ax.scatter(xs, ys)
+
+    ax.set_xlabel('z')
+    ax.set_ylabel(y_label)
+    ax.set_title('z vs %s' % y_label)
+
+    prediction_xs = np.linspace(0.0, 1.0).reshape(-1, 1)
+
+    for degree in xrange(1, 5):
+        poly_xs = get_polynomials(xs, degree)
+        poly_prediction_xs = get_polynomials(prediction_xs, degree)
+
+        model = sm.OLS(ys, sm.add_constant(poly_xs))
+        results = model.fit()
+
+        predicted_y = results.predict(sm.add_constant(poly_prediction_xs))
+
+        ax.plot(prediction_xs, predicted_y, label='degree %s' % degree)
+
+    ax.legend()
+
+
+def polynomial_fit(df):
+    xs = df['X-Coord']
+    ys = df['Y-Coord']
+    zs = df['Z-Coord']
+
+    _, ax = plt.subplots(2, 1, figsize=(10, 12))
+
+    poly_fit_plot(ax[0], zs, xs, 'x')
+    poly_fit_plot(ax[1], zs, ys, 'y')
+
+    plt.tight_layout()
+    plt.show()
+
+
 def inside(interval, value):
     return interval.lower <= value <= interval.upper
 
@@ -180,7 +229,9 @@ def main():
 
     x_interval, y_interval = find_intervals(df)
 
-    # count_residents(x_interval, y_interval)
+    # polynomial_fit(df)
+
+    count_residents(x_interval, y_interval)
 
 
 if __name__ == '__main__':
