@@ -57,7 +57,7 @@ def show_scatter_plots(df):
     z_column = ColumnInfo(zs, 'z', 'km')
     time_column = ColumnInfo(times, 'time', 'secs')
 
-    fig, axes = plt.subplots(2, 3, figsize=(20, 10))
+    fig, axes = plt.subplots(2, 3, figsize=(20, 12))
 
     show_scatter_plot(axes[0][0], z_column, x_column)
     show_scatter_plot(axes[0][1], z_column, y_column)
@@ -119,6 +119,17 @@ def find_interval(xs, ys, description_text):
     return Interval(lower_limit, upper_limit)
 
 
+def find_intervals(df):
+    xs = df['X-Coord']
+    ys = df['Y-Coord']
+    zs = df['Z-Coord']
+
+    x_interval = find_interval(zs, xs, 'x')
+    y_interval = find_interval(zs, ys, 'y')
+
+    return x_interval, y_interval
+
+
 def inside(interval, value):
     return interval.lower <= value <= interval.upper
 
@@ -133,29 +144,16 @@ def count_residents(x_interval, y_interval):
     print 'residents within the region: %d' % num_residents
 
 
-def fit_all(df):
-    xs = df['X-Coord']
-    ys = df['Y-Coord']
-    zs = df['Z-Coord']
-
-    x_interval = find_interval(zs, xs, 'x')
-    y_interval = find_interval(zs, ys, 'y')
-
-    count_residents(x_interval, y_interval)
-
-
-def asteroid_analysis():
+def main():
     df = get_data_frame()
 
     # print 'dataframe:\n%s' % df
 
-    fit_all(df)
-
     # show_scatter_plots(df)
 
+    x_interval, y_interval = find_intervals(df)
 
-def main():
-    asteroid_analysis()
+    # count_residents(x_interval, y_interval)
 
 
 if __name__ == '__main__':
