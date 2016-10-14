@@ -37,7 +37,7 @@ def get_label_text(column):
     return '%s (%s)' % (column.name, column.units)
 
 
-def show_scatter_plot(ax, x_column, y_column):
+def column_scatter_plot(ax, x_column, y_column):
     ax.scatter(x_column.values, y_column.values)
 
     ax.set_xlabel(get_label_text(x_column))
@@ -46,7 +46,7 @@ def show_scatter_plot(ax, x_column, y_column):
     ax.set_title('%s vs %s (scatter plot)' % (x_column.name, y_column.name))
 
 
-def show_scatter_plots(df):
+def show_column_scatter_plots(df):
     times = df['Time']
     xs = df['X-Coord']
     ys = df['Y-Coord']
@@ -57,15 +57,15 @@ def show_scatter_plots(df):
     z_column = ColumnInfo(zs, 'z', 'km')
     time_column = ColumnInfo(times, 'time', 'secs')
 
-    fig, axes = plt.subplots(2, 3, figsize=(20, 12))
+    _, axes = plt.subplots(2, 3, figsize=(20, 12))
 
-    show_scatter_plot(axes[0][0], z_column, x_column)
-    show_scatter_plot(axes[0][1], z_column, y_column)
-    show_scatter_plot(axes[0][2], z_column, time_column)
+    column_scatter_plot(axes[0][0], z_column, x_column)
+    column_scatter_plot(axes[0][1], z_column, y_column)
+    column_scatter_plot(axes[0][2], z_column, time_column)
 
-    show_scatter_plot(axes[1][0], x_column, y_column)
-    show_scatter_plot(axes[1][1], time_column, x_column)
-    show_scatter_plot(axes[1][2], time_column, y_column)
+    column_scatter_plot(axes[1][0], x_column, y_column)
+    column_scatter_plot(axes[1][1], time_column, x_column)
+    column_scatter_plot(axes[1][2], time_column, y_column)
 
     plt.tight_layout()
     plt.show()
@@ -78,7 +78,16 @@ def get_polynomials(xs, degree):
     return new_xs
 
 
-def find_interval(xs, ys, description_text):
+def score_line_plot(description_text, ax, degrees, score_list, y_label, y_lim=None):
+    ax.plot(degrees, score_list)
+
+    ax.set_xlabel('degree of the polynomial')
+    ax.set_ylabel(y_label)
+    ax.set_title('%s vs degree (%s)' % (y_label, description_text))
+    ax.set_ylim(y_lim)
+
+
+def find_interval(xs, ys, description_text, axes):
     xs = xs.reshape(-1, 1)
     ys = ys.reshape(-1, 1)
 
@@ -86,7 +95,12 @@ def find_interval(xs, ys, description_text):
     best_results = None
     best_degree = None
 
-    for degree in xrange(1, 9):
+    aic_list = []
+    bic_list = []
+    rsq_adj_list = []
+
+    degrees = range(1, 9)
+    for degree in degrees:
         poly_xs = get_polynomials(xs, degree)
 
         model = sm.OLS(ys, sm.add_constant(poly_xs))
@@ -94,14 +108,22 @@ def find_interval(xs, ys, description_text):
 
         aic = results.aic
         bic = results.bic
-        rsquared_adj = results.rsquared_adj
+        rsq_adj = results.rsquared_adj
 
-        print '%s, degree: %d, aic: %.1f, bic: %.1f, R^2 adj: %.4f' % (description_text, degree, aic, bic, rsquared_adj)
+        aic_list.append(aic)
+        bic_list.append(bic)
+        rsq_adj_list.append(rsq_adj)
+
+        print '%s, degree: %d, aic: %.1f, bic: %.1f, R^2 adj: %.4f' % (description_text, degree, aic, bic, rsq_adj)
 
         if bic < best_bic:
             best_bic = bic
             best_results = results
             best_degree = degree
+
+    score_line_plot(description_text, axes[0], degrees, aic_list, 'aic')
+    score_line_plot(description_text, axes[1], degrees, bic_list, 'bic')
+    score_line_plot(description_text, axes[2], degrees, rsq_adj_list, '$R^2$ adjusted', y_lim=[-2.0, 1.1])
 
     print '%s, best, degree: %d, bic: %.1f' % (description_text, best_degree, best_bic)
 
@@ -124,8 +146,13 @@ def find_intervals(df):
     ys = df['Y-Coord']
     zs = df['Z-Coord']
 
-    x_interval = find_interval(zs, xs, 'x')
-    y_interval = find_interval(zs, ys, 'y')
+    _, axes = plt.subplots(2, 3, figsize=(20, 12))
+
+    x_interval = find_interval(zs, xs, 'x', axes[0])
+    y_interval = find_interval(zs, ys, 'y', axes[1])
+
+    plt.tight_layout()
+    plt.show()
 
     return x_interval, y_interval
 
