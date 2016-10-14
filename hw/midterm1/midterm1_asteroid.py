@@ -108,13 +108,13 @@ def find_interval(xs, ys, description_text):
     zeros = np.append([1.0], np.zeros(best_degree))
     predictions = best_results.predict(zeros)
 
-    prstd, iv_l, iv_u = wls_prediction_std(best_results, zeros, alpha=0.1)
+    prstd, iv_l, iv_u = wls_prediction_std(best_results, zeros, alpha=1.0 - np.sqrt(0.9))
 
     prediction = predictions[0]
     lower_limit = iv_l[0]
     upper_limit = iv_u[0]
-    print '%s, prediction: %.2f, 90%% interval: [%.2f-%.2f]' % (description_text, prediction, lower_limit, upper_limit)
-    print
+    print '%s, prediction: %.2f, 94.9%% interval: [%.2f-%.2f]\n' % (
+        description_text, prediction, lower_limit, upper_limit)
 
     return Interval(lower_limit, upper_limit)
 
