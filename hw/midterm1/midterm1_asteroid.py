@@ -11,6 +11,8 @@ ColumnInfo = namedtuple('ColumnInfo', ['values', 'name', 'units'])
 Interval = namedtuple('Interval', ['lower', 'upper'])
 
 
+# get dataframe
+
 def get_row(row_tag, cell_tag_name):
     return [tag.get_text() for tag in row_tag.find_all(cell_tag_name)]
 
@@ -32,6 +34,8 @@ def get_data_frame():
 
     return pd.DataFrame(data_array, columns=header_values)
 
+
+# show scatter plots
 
 def get_label_text(column):
     return '%s (%s)' % (column.name, column.units)
@@ -70,6 +74,8 @@ def show_column_scatter_plots(df):
     plt.tight_layout()
     plt.show()
 
+
+# find_intervals
 
 def get_polynomials(xs, degree):
     new_xs = xs
@@ -163,6 +169,8 @@ def find_intervals(df):
     return x_interval, y_interval
 
 
+# poly fit
+
 def poly_fit_plot(ax, xs, ys, y_label):
     xs = xs.copy()
     xs = xs.reshape(-1, 1)
@@ -206,6 +214,8 @@ def polynomial_fit(df):
     plt.show()
 
 
+# count residents
+
 def inside(interval, value):
     return interval.lower <= value <= interval.upper
 
@@ -225,11 +235,11 @@ def main():
 
     # print 'dataframe:\n%s' % df
 
-    # show_scatter_plots(df)
+    show_column_scatter_plots(df)
 
     x_interval, y_interval = find_intervals(df)
 
-    # polynomial_fit(df)
+    polynomial_fit(df)
 
     count_residents(x_interval, y_interval)
 
