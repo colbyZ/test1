@@ -5,6 +5,9 @@
       <w>logspace</w>
       <w>lxml</w>
       <w>noexch</w>
+      <w>prstd</w>
+      <w>rsquared</w>
+      <w>statsmodels</w>
       <w>ylim</w>
     </words>
   </dictionary>
