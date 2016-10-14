@@ -114,8 +114,23 @@ def find_interval(xs, ys, description_text):
     lower_limit = iv_l[0]
     upper_limit = iv_u[0]
     print '%s, prediction: %.2f, 90%% interval: [%.2f-%.2f]' % (description_text, prediction, lower_limit, upper_limit)
+    print
 
     return Interval(lower_limit, upper_limit)
+
+
+def inside(interval, value):
+    return interval.lower <= value <= interval.upper
+
+
+def count_residents(x_interval, y_interval):
+    df = pd.read_csv('pop_data.csv').fillna(0)
+
+    num_residents = sum(row['residents']
+                        for index, row in df.iterrows()
+                        if inside(x_interval, row['x']) and inside(y_interval, row['y']))
+
+    print 'residents within the region: %d' % num_residents
 
 
 def fit_all(df):
@@ -126,7 +141,7 @@ def fit_all(df):
     x_interval = find_interval(zs, xs, 'x')
     y_interval = find_interval(zs, ys, 'y')
 
-    print x_interval, y_interval
+    count_residents(x_interval, y_interval)
 
 
 def asteroid_analysis():
