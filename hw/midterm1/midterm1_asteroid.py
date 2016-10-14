@@ -5,10 +5,6 @@ import numpy as np
 import pandas as pd
 import statsmodels.api as sm
 from bs4 import BeautifulSoup
-from sklearn.cross_validation import cross_val_score, ShuffleSplit
-from sklearn.linear_model import LinearRegression
-from sklearn.pipeline import Pipeline
-from sklearn.preprocessing import PolynomialFeatures
 from statsmodels.sandbox.regression.predstd import wls_prediction_std
 
 ColumnInfo = namedtuple('ColumnInfo', ['values', 'name', 'units'])
@@ -75,42 +71,6 @@ def show_scatter_plots(df):
     plt.show()
 
 
-def fit(xs, ys, description_text):
-    xs = xs.reshape(-1, 1)
-    ys = ys.reshape(-1, 1)
-    num_elements = len(xs)
-
-    best_score = -float('inf')
-    best_degree = None
-    best_model = None
-
-    for degree in xrange(1, 9):
-        model = Pipeline([('poly', PolynomialFeatures(degree=degree)),
-                          ('linear', LinearRegression())])
-
-        cv = ShuffleSplit(n=num_elements, n_iter=500, test_size=0.25)
-
-        score = cross_val_score(model, xs, ys, cv=cv).mean()
-
-        print 'degree: %2d, score: %.6f' % (degree, score)
-
-        if score > best_score:
-            best_score = score
-            best_degree = degree
-            best_model = model
-
-    print '%s, best, degree: %d, score: %.6f' % (description_text, best_degree, best_score)
-
-    best_model.fit(xs, ys)
-
-    predicted_y = best_model.predict(0.0)
-    print 'predicted %s: %.2f' % (description_text, predicted_y)
-
-    print best_model.named_steps['linear'].coef_
-
-    print
-
-
 def get_polynomials(xs, degree):
     new_xs = xs
     for d in xrange(2, degree + 1):
@@ -162,9 +122,6 @@ def fit_all(df):
     xs = df['X-Coord']
     ys = df['Y-Coord']
     zs = df['Z-Coord']
-
-    # fit(zs, xs, 'x')
-    # fit(zs, ys, 'y')
 
     x_interval = find_interval(zs, xs, 'x')
     y_interval = find_interval(zs, ys, 'y')
